@@ -1,0 +1,56 @@
+[
+  {
+    "titulo": "O tempo do café",
+    "categoria": "Gastronomia",
+    "duracao": "00:24",
+    "imagem": "/img/cafe.webp",
+    "imagemMobile": "/img/cafe-mobile.webp",
+    "video": "",
+    "link": ""
+  },
+  {
+    "titulo": "Entre ruas",
+    "categoria": "Lifestyle",
+    "duracao": "00:32",
+    "imagem": "/img/ruas.webp",
+    "imagemMobile": "/img/ruas-mobile.webp",
+    "video": "",
+    "link": ""
+  },
+  {
+    "titulo": "Corpo em movimento",
+    "categoria": "Moda",
+    "duracao": "00:18",
+    "imagem": "/img/movimento.webp",
+    "imagemMobile": "",
+    "video": "",
+    "link": ""
+  },
+  {
+    "titulo": "À mesa",
+    "categoria": "Gastronomia",
+    "duracao": "00:27",
+    "imagem": "/img/mesa.webp",
+    "imagemMobile": "",
+    "video": "",
+    "link": ""
+  },
+  {
+    "titulo": "Depois das seis",
+    "categoria": "Lifestyle",
+    "duracao": "00:35",
+    "imagem": "/img/seis.webp",
+    "imagemMobile": "",
+    "video": "",
+    "link": ""
+  },
+  {
+    "titulo": "Feito à mão",
+    "categoria": "Produto",
+    "duracao": "00:21",
+    "imagem": "/img/mao.webp",
+    "imagemMobile": "",
+    "video": "",
+    "link": ""
+  }
+]
