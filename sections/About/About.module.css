@@ -1,0 +1,90 @@
+/* Mobile: texto em cima, retrato abaixo; a partir de 768px, retrato à esquerda (layout base) */
+.about {
+  display: grid;
+  gap: 2rem;
+  padding: 2.5rem var(--space-container);
+}
+
+/* Retrato 4:5 com a mesma moldura (mat 6px + outline) dos cards de reel */
+.aboutPortrait {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  margin: 0;
+  overflow: hidden;
+  border: 6px solid var(--color-surface);
+  outline: 1px solid color-mix(in srgb, var(--color-neutral-900) 16%, transparent);
+  border-radius: var(--radius-card);
+  background: repeating-linear-gradient(
+    135deg,
+    var(--color-surface) 0 10px,
+    var(--color-neutral-200) 10px 20px
+  );
+}
+
+.aboutPortraitImage {
+  object-fit: cover;
+}
+
+.aboutContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.aboutTitle {
+  max-width: 40rem;
+  font-size: clamp(2rem, 1.5rem + 1.6vw, 2.75rem); /* 44px no desktop */
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+/* Texto alinhado à esquerda no mobile: justificado em coluna estreita abre buracos */
+.aboutText {
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+.aboutText p + p {
+  margin-top: 0.875rem;
+}
+
+@media (min-width: 768px) {
+  .about {
+    grid-template-columns: 15rem minmax(0, 1fr);
+    gap: 2.5rem;
+    align-items: start;
+  }
+
+  /* No HTML o retrato vem depois do texto; aqui ele vai para a coluna da esquerda */
+  .aboutPortrait {
+    order: -1;
+  }
+
+  .aboutContent {
+    gap: 1.75rem;
+  }
+
+  .aboutText {
+    text-align: justify;
+    hyphens: auto;
+  }
+}
+
+/* Desktop: medidas do design (retrato 300px, gap 80px, texto em 2 colunas) */
+@media (min-width: 1024px) {
+  .about {
+    grid-template-columns: 18.75rem minmax(0, 1fr);
+    gap: 5rem;
+    padding: 4rem var(--space-container);
+  }
+
+  .aboutText {
+    column-count: 2;
+    column-gap: 2.25rem;
+  }
+
+  /* Cada parágrafo fica inteiro na sua coluna, como no design */
+  .aboutText p {
+    break-inside: avoid;
+  }
+}

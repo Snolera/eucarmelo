@@ -1,0 +1,94 @@
+/* Faixa da direita para a esquerda, em todas as telas, sem repetir valores */
+.stats {
+  --stats-gap: 3rem;
+
+  overflow: hidden; /* a faixa respeita o raio da caixa */
+  /* Fundo preto, igual ao do site: só a faixa de números aparece */
+  background: var(--color-bg);
+  border: 0;
+}
+
+/* Degradê nas pontas: os números entram e saem suavemente */
+.statsViewport {
+  container-type: inline-size; /* 100cqi = largura visível da faixa */
+  mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+}
+
+/* Uma única lista: atravessa a caixa inteira e só então recomeça */
+.statsList {
+  display: flex;
+  gap: var(--stats-gap);
+  width: max-content;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  animation: statsMarquee 25s linear infinite;
+}
+
+/* Pausa ao passar o mouse para quem quiser ler com calma */
+.statsList:hover {
+  animation-play-state: paused;
+}
+
+.statsItem {
+  display: flex;
+  align-items: baseline;
+  gap: 1.125rem;
+  padding: 1.5rem 0;
+  white-space: nowrap;
+}
+
+.statsValue {
+  font-family: var(--font-heading);
+  font-size: clamp(2.75rem, 2rem + 2vw, 3.75rem); /* 60px no desktop */
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.statsLabel {
+  font-size: 0.875rem;
+}
+
+/* Começa fora da caixa à direita e termina toda fora à esquerda */
+@keyframes statsMarquee {
+  from {
+    transform: translateX(100cqi);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@media (min-width: 768px) {
+  .stats {
+    --stats-gap: 4.5rem;
+  }
+
+  .statsItem {
+    padding: 2.5rem 0;
+  }
+}
+
+/* Desktop: caixa com metade da largura, centralizada */
+@media (min-width: 1024px) {
+  .stats {
+    width: 50%;
+    margin-inline: auto;
+  }
+}
+
+/* Menos movimento: faixa parada, itens centralizados */
+@media (prefers-reduced-motion: reduce) {
+  .statsViewport {
+    mask-image: none;
+  }
+
+  .statsList {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0 var(--stats-gap);
+    width: 100%;
+    padding: 0 var(--space-container);
+    animation: none;
+  }
+}

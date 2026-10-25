@@ -1,0 +1,127 @@
+/* Mobile-first: logo + botão Menu; links aparecem em linha a partir de 768px */
+.header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem var(--space-page);
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-divider);
+}
+
+/* Visível só quando recebe foco pelo teclado */
+.headerSkip {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 10;
+  padding: 0.5rem 1rem;
+  background: var(--color-text);
+  color: var(--color-bg);
+  border-radius: var(--radius-button);
+  transform: translateY(-200%);
+}
+
+.headerSkip:focus-visible {
+  transform: none;
+}
+
+.headerLogo {
+  font-family: var(--font-heading);
+  font-size: 1.375rem;
+  line-height: 1;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.headerLogo:hover {
+  color: var(--color-text);
+}
+
+/* Ponto do logo em vermelho */
+.headerLogoDot {
+  color: var(--color-logo-dot);
+}
+
+/* Só o ícone, sem caixa; 44×44 mantém a área de toque */
+.headerToggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+/* Painel do menu mobile, abaixo do header */
+.headerNav {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.headerNav--open {
+  display: block;
+}
+
+.headerList {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0.5rem var(--space-page) 1rem;
+  list-style: none;
+}
+
+.headerLink {
+  display: block;
+  padding: 0.75rem 0;
+  color: var(--color-text);
+  font-size: 1.125rem;
+  text-decoration: none;
+}
+
+.headerLink:hover {
+  color: var(--color-accent);
+}
+
+@media (min-width: 768px) {
+  .header {
+    padding: 1.75rem var(--space-container);
+  }
+
+  .headerLogo {
+    font-size: 1.5rem;
+  }
+
+  .headerToggle {
+    display: none;
+  }
+
+  .headerNav {
+    display: block;
+    position: static;
+    background: none;
+    border: 0;
+  }
+
+  .headerList {
+    flex-direction: row;
+    gap: 2.25rem;
+    padding: 0;
+  }
+
+  .headerLink {
+    padding: 0;
+    font-size: 0.875rem;
+  }
+}

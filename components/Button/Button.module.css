@@ -1,0 +1,58 @@
+.button {
+  --button-color: var(--color-text);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 44px; /* área de toque mínima */
+  padding: 0.75rem 1.25rem;
+  border: 1px solid var(--button-color);
+  border-radius: var(--radius-button);
+  background: transparent;
+  color: var(--button-color);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  text-align: center;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.button:hover {
+  color: var(--button-color);
+  background: color-mix(in srgb, var(--button-color) 12%, transparent);
+}
+
+.button:active {
+  background: color-mix(in srgb, var(--button-color) 22%, transparent);
+}
+
+.button svg {
+  flex-shrink: 0;
+}
+
+/* Variantes de cor */
+.button--light {
+  --button-color: var(--color-hero-text);
+}
+
+.button--accent {
+  --button-color: var(--color-accent-light);
+}
+
+.button--white {
+  --button-color: var(--color-text);
+}
+
+/* Tamanhos: 16px (hero) e 19px (contato) */
+.button--md {
+  font-size: 1rem;
+}
+
+.button--lg {
+  font-size: 1.1875rem;
+  padding: 0.875rem 1.75rem;
+}

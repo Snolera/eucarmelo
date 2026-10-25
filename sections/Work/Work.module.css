@@ -1,0 +1,136 @@
+.work {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2.5rem var(--space-container);
+}
+
+.workHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.workTitle {
+  font-size: clamp(2.25rem, 1.6rem + 2.6vw, 3.5rem); /* 56px no desktop */
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+/* — Mobile: carrossel de trilho com 2 cards visíveis — */
+.workCarousel {
+  --gap: 1rem;
+
+  position: relative;
+}
+
+/* clip (e não hidden) impede o navegador de rolar o trilho ao focar um card */
+.workViewport {
+  overflow: clip;
+  overflow-clip-margin: 4px; /* não corta o outline de foco e o da mídia */
+  touch-action: pan-y; /* rolagem vertical nativa; o arrasto lateral é nosso */
+}
+
+.workGrid {
+  display: flex;
+  gap: var(--gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  /* cada passo = 1 card + 1 gap (50% do trilho + metade do gap) */
+  transform: translateX(calc(var(--index, 0) * -1 * (50% + var(--gap) / 2)));
+  transition: transform 450ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.workItem {
+  flex: 0 0 calc((100% - var(--gap)) / 2);
+  min-width: 0;
+}
+
+/* Setas centralizadas abaixo das legendas */
+.workControls {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.workArrow {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--color-card-line);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+/* Área de toque invisível de 44px, mesmo com o botão visual de 36px */
+.workArrow::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+}
+
+.workArrow:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.workArrow:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Anúncio para leitor de tela (visualmente oculto) */
+.workStatus {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .workGrid {
+    transition: none;
+  }
+}
+
+/* — Tablet: grade 2×2; desktop: 4 em linha; cards até 250px — */
+@media (min-width: 768px) {
+  .workControls {
+    display: none;
+  }
+
+  .workViewport {
+    overflow: visible;
+  }
+
+  .workGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 250px));
+    justify-content: center;
+    gap: 2rem 1.5rem;
+    transform: none;
+    transition: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .work {
+    gap: 2.75rem;
+    padding: 4.5rem var(--space-container) 4rem;
+  }
+
+  .workGrid {
+    grid-template-columns: repeat(4, minmax(0, 250px));
+    gap: 1.5rem;
+  }
+}

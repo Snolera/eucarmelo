@@ -1,0 +1,30 @@
+/* Recuo lateral e espaço até o próximo bloco (50px no desktop) */
+.panel {
+  padding: 0 var(--space-page) var(--space-page);
+}
+
+.panelBox {
+  border-radius: var(--radius-container);
+  color: var(--color-text);
+}
+
+/* Cinza sólido do layout base */
+.panelBox--solid {
+  background: var(--color-container);
+  border: 1px solid var(--color-container);
+}
+
+/* Vidro/lente sobre o preto: brilho diagonal translúcido + borda clara + reflexo no topo */
+.panelBox--glass {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.14) 0%,
+    rgba(255, 255, 255, 0.05) 40%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 0 40px rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(18px) saturate(140%);
+}

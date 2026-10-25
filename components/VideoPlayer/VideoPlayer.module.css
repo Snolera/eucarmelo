@@ -1,0 +1,122 @@
+/* Sempre 9:16; a largura se ajusta para caber na altura da tela */
+.player {
+  position: relative;
+  aspect-ratio: 9 / 16;
+  width: min(100%, calc((100dvh - 7rem) * 9 / 16));
+  margin-inline: auto;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  background: repeating-linear-gradient(
+    135deg,
+    var(--color-neutral-800) 0 12px,
+    var(--color-neutral-900) 12px 24px
+  );
+}
+
+.playerVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #000;
+  cursor: pointer;
+}
+
+.playerEmpty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  color: var(--color-neutral-200);
+  font-size: 0.875rem;
+}
+
+.playerEmptyIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}
+
+/* Barra de controles sobre o vídeo, com degradê para garantir contraste */
+.playerControls {
+  position: absolute;
+  inset: auto 0 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 2.5rem 0.75rem 0.75rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75), transparent);
+  color: var(--color-text);
+}
+
+.playerButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.playerButton:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.playerButton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.playerTime {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Range com trilho preenchido via --progress */
+.playerProgress {
+  flex: 1;
+  min-width: 0;
+  height: 4px;
+  margin: 0;
+  appearance: none;
+  border-radius: 2px;
+  background: linear-gradient(
+    to right,
+    var(--color-accent-light) var(--progress, 0%),
+    rgba(255, 255, 255, 0.35) var(--progress, 0%)
+  );
+  cursor: pointer;
+}
+
+.playerProgress:disabled {
+  cursor: not-allowed;
+}
+
+.playerProgress::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--color-text);
+}
+
+.playerProgress::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-text);
+}

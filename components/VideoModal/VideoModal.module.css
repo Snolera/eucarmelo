@@ -1,0 +1,60 @@
+.modal {
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  max-height: 100%;
+  margin: 0;
+  padding: 1rem;
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+}
+
+.modal[open] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal::backdrop {
+  background: rgba(0, 0, 0, 0.88);
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  /* Mesma largura do player 9:16, para o cabeçalho alinhar com o vídeo */
+  width: min(100%, calc((100dvh - 7rem) * 9 / 16));
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.modalTitle {
+  font-size: 1.375rem;
+  line-height: 1.15;
+}
+
+.modalClose {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--color-card-line);
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.modalClose:hover {
+  background: rgba(255, 255, 255, 0.12);
+}

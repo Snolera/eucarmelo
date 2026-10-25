@@ -1,0 +1,93 @@
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  transition: opacity 0.2s ease;
+}
+
+.card:hover {
+  opacity: 0.85;
+}
+
+/* Mídia 9:16 com "mat" de 6px e outline de 1px, como no design */
+.cardMedia {
+  position: relative;
+  aspect-ratio: 9 / 16;
+  overflow: hidden;
+  border: 6px solid var(--color-surface);
+  outline: 1px solid color-mix(in srgb, var(--color-neutral-900) 16%, transparent);
+  border-radius: var(--radius-card);
+  background: repeating-linear-gradient(
+    135deg,
+    var(--color-surface) 0 10px,
+    var(--color-neutral-200) 10px 20px
+  );
+}
+
+.cardPoster {
+  object-fit: cover;
+}
+
+.cardIndex {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  font-size: 0.6875rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-neutral-700);
+}
+
+.cardPlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border: 1px solid var(--color-neutral-900);
+  border-radius: 50%;
+  color: var(--color-neutral-900);
+  transform: translate(-50%, -50%);
+}
+
+/* Nome acima da categoria; lado a lado só na largura do design (1280px) */
+.cardCaption {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  padding-top: 0.625rem;
+  border-top: 1px solid var(--color-card-line);
+}
+
+.cardClient {
+  font-size: clamp(1.125rem, 1rem + 0.5vw, 1.375rem); /* 22px no desktop */
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.cardCategory {
+  font-size: 0.75rem;
+}
+
+/* Botão invisível esticado sobre o card inteiro */
+.cardButton {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-card);
+  background: transparent;
+  cursor: pointer;
+}
+
+@media (min-width: 1280px) {
+  .cardCaption {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+}
