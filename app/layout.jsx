@@ -1,4 +1,4 @@
-import { Cormorant_Garamond, Lora } from "next/font/google";
+import { Cormorant_Garamond, Lora, Space_Grotesk } from "next/font/google";
 import { getSiteUrl } from "@/lib/siteUrl";
 import "./globals.css";
 
@@ -8,6 +8,13 @@ const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
   weight: ["400", "600"],
   style: ["normal", "italic"],
+  display: "swap",
+});
+
+// Títulos H1/H2: fonte variável, um arquivo cobre 300 (light) a 700 (bold)
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
+  subsets: ["latin"],
   display: "swap",
 });
 
@@ -40,7 +47,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="pt-BR" className={`${cormorant.variable} ${lora.variable}`}>
+    <html lang="pt-BR" className={`${cormorant.variable} ${lora.variable} ${spaceGrotesk.variable}`}>
       <body>{children}</body>
     </html>
   );

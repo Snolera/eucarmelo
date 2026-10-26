@@ -1,12 +1,18 @@
+"use client";
+
+import { useRef } from "react";
 import Image from "next/image";
 import { Play } from "lucide-react";
 import styles from "./ReelCard.module.css";
 
 // Card 9:16; o botão cobre o card inteiro (stretched link) e abre o player
+// onOpen recebe a posição da mídia: ponto de partida da transição do player
 export default function ReelCard({ index, client, category, poster, onOpen }) {
+  const mediaRef = useRef(null);
+
   return (
     <article className={styles.card}>
-      <div className={styles.cardMedia}>
+      <div ref={mediaRef} className={styles.cardMedia}>
         {poster && (
           <Image
             src={poster}
@@ -32,7 +38,7 @@ export default function ReelCard({ index, client, category, poster, onOpen }) {
       <button
         type="button"
         className={styles.cardButton}
-        onClick={onOpen}
+        onClick={() => onOpen(mediaRef.current?.getBoundingClientRect())}
         aria-haspopup="dialog"
         aria-label={`Assistir reel ${client}`}
       />

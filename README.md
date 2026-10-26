@@ -15,7 +15,7 @@ Site one-page do **Welinton Carmelo**, videomaker de conteúdo para Instagram (g
 | Framework | **Next.js 16.4** (App Router, Turbopack, `cacheComponents`) |
 | UI | **React 19**, **JavaScript** (sem TypeScript) |
 | Estilos | **CSS Modules** + variáveis globais em `app/globals.css` |
-| Fontes | `next/font/google`: **Cormorant Garamond** (títulos) e **Lora** (corpo) |
+| Fontes | `next/font/google`: **Space Grotesk** (H1/H2), **Cormorant Garamond** (logo, H3, números, botões) e **Lora** (corpo) |
 | Ícones | `lucide-react` (interface) + SVG próprio para as redes sociais |
 | Animação | CSS puro (`transform`); a biblioteca `motion` está instalada, mas ainda não é usada |
 | Testes | **Vitest** + **React Testing Library** + `jest-dom` (ambiente `jsdom`) |
@@ -147,7 +147,8 @@ O ponto de partida foi o **layout 2a** do protótipo de handoff (local, fora do 
 
 ### Tipografia
 
-- **Títulos:** Cormorant Garamond 400 (600 nos nomes de clientes e botões).
+- **H1 e H2:** Space Grotesk (`--font-display`), fonte variável com Light 300, Regular 400, Medium 500 e Bold 700 num único arquivo. Os títulos usam 400 por padrão. Ela não tem itálico, então o `<em>` do H1 usa itálico simulado pelo navegador.
+- **Logo, H3, números e botões:** Cormorant Garamond (`--font-heading`), em 400, e 600 nos nomes de clientes e botões.
 - **Corpo:** Lora 400, 15px, line-height 1.55.
 - **Números:** `font-variant-numeric: tabular-nums`.
 - **Tamanhos fluidos com `clamp()`:**
@@ -184,10 +185,16 @@ Os estilos base são os do mobile, e os breakpoints usam `min-width`: **480px**,
 
 ### Interações e animações
 
+- **Abertura do player (cards e hero):** o player "sai" do elemento clicado e vai até o centro da tela em **240ms** (`OPEN_DURATION` em `VideoModal.jsx`). A técnica é FLIP: o player já abre na posição final, e uma animação de `transform` (Web Animations API) o leva da posição de origem até o centro. Junto, o fundo aparece com fade. Com vídeo, ele já começa tocando (`autoPlay`). **Só nos cards de Trabalhos**, o player também vira 360° no eixo vertical (`rotateY`, como uma carta, com `perspective` para dar profundidade) durante o trajeto, pela prop `spin` do `VideoModal`. Com giro, a transição dura **600ms** (`SPIN_DURATION`), e o fade do fundo acompanha a mesma duração.
 - **Hero:** clicar em **qualquer parte do card** abre o showreel. O CTA do Instagram segue o link normalmente, e o clique não abre o player se a pessoa estiver selecionando texto.
 - **Números:** faixa contínua da direita para a esquerda (`@keyframes`, 25s, `linear`), **sem repetir valores**: entra pela direita e sai toda pela esquerda antes de recomeçar. Pausa com o mouse por cima. A velocidade é o `25s` de `.statsList`.
 - **Trabalhos (mobile):** trilho com `transform: translateX` ligado à variável `--index`, transição de 450ms. Também aceita arrastar com o dedo.
-- **Menos movimento:** com `prefers-reduced-motion`, a faixa para, o carrossel troca de posição sem deslizar e o scroll suave é desligado.
+- **Entrada no scroll (Hero, Números, Trabalhos, Sobre):** cada seção desliza da esquerda e aparece com fade quando **60% dela fica visível**, ou quando ela ocupa 60% da altura da tela (seções mais altas que a tela, comuns no mobile). A entrada acontece uma vez só.
+  - **Proporção:** distância `clamp(1.5rem, 6vw, 4rem)` (24px em 360px, até 64px no desktop) e duração de 550ms no mobile e 700ms a partir de 1024px.
+  - **Implementação:** `components/Reveal` + `hooks/useReveal` (IntersectionObserver). No `Panel`, é a prop `reveal`.
+  - **Hero:** usa `<Reveal immediate>`, uma animação CSS desde a primeira pintura, para não esperar o JavaScript nem atrasar o LCP.
+  - **Sem JavaScript:** o conteúdo só começa escondido com `@media (scripting: enabled)`, então sem JS tudo aparece normalmente.
+- **Menos movimento:** com `prefers-reduced-motion`, as seções aparecem sem deslizar, a faixa para, o carrossel troca de posição sem deslizar e o scroll suave é desligado.
 
 ---
 

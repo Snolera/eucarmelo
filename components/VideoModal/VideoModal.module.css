@@ -20,6 +20,23 @@
   background: rgba(0, 0, 0, 0.88);
 }
 
+/* Fundo escurece junto com a transição do player (duração vem do JSX) */
+.modal[open]::backdrop {
+  animation: modalBackdropIn var(--modal-duration, 240ms) ease-out;
+}
+
+@keyframes modalBackdropIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal[open]::backdrop {
+    animation: none;
+  }
+}
+
 .modalContent {
   display: flex;
   flex-direction: column;

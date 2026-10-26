@@ -6,7 +6,7 @@ import styles from "./Work.module.css";
 
 export default function Work() {
   return (
-    <Panel id="trabalhos" aria-labelledby="work-title" variant="glass" className={styles.work}>
+    <Panel id="trabalhos" aria-labelledby="work-title" variant="glass" reveal className={styles.work}>
       <div className={styles.workHeader}>
         <Kicker>{work.kicker}</Kicker>
         <h2 id="work-title" className={styles.workTitle}>

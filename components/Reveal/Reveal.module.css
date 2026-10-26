@@ -1,0 +1,49 @@
+/* Distância e duração proporcionais à tela: ~24px/550ms no mobile, até 64px/700ms no desktop */
+.reveal {
+  --reveal-distance: clamp(1.5rem, 6vw, 4rem);
+  --reveal-duration: 550ms;
+}
+
+/* Só esconde quando há JavaScript: sem JS, o conteúdo aparece normalmente */
+@media (scripting: enabled) {
+  .reveal[data-revealed="false"] {
+    opacity: 0;
+    transform: translateX(calc(var(--reveal-distance) * -1));
+  }
+
+  .reveal {
+    transition:
+      opacity var(--reveal-duration) ease-out,
+      transform var(--reveal-duration) cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+}
+
+@media (min-width: 1024px) {
+  .reveal {
+    --reveal-duration: 700ms;
+  }
+}
+
+/* Hero: mesma entrada, mas por CSS desde a primeira pintura (não depende do JS) */
+.reveal--immediate {
+  /* backwards: aplica o 1º quadro antes de começar e não deixa transform depois */
+  animation: revealIn var(--reveal-duration) cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+
+@keyframes revealIn {
+  from {
+    opacity: 0;
+    transform: translateX(calc(var(--reveal-distance) * -1));
+  }
+}
+
+/* Menos movimento: aparece direto, sem deslizar */
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal[data-revealed="false"] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    animation: none;
+  }
+}

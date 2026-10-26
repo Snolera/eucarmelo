@@ -11,7 +11,7 @@ export default function VideoPlayer({ src, poster, title, autoPlay = false }) {
   const hasVideo = Boolean(src);
 
   return (
-    <div className={styles.player}>
+    <div className={styles.player} data-video-player>
       {hasVideo ? (
         <video
           {...videoProps}

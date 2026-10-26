@@ -7,7 +7,7 @@ import styles from "./About.module.css";
 // Texto primeiro, retrato abaixo (em todas as telas)
 export default function About() {
   return (
-    <Panel id="sobre" aria-labelledby="about-title" variant="glass" className={styles.about}>
+    <Panel id="sobre" aria-labelledby="about-title" variant="glass" reveal className={styles.about}>
       <div className={styles.aboutContent}>
         <Kicker>{about.kicker}</Kicker>
         <h2 id="about-title" className={styles.aboutTitle}>

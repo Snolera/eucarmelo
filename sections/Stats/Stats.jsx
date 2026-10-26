@@ -6,7 +6,7 @@ import styles from "./Stats.module.css";
 // Futuro: vitrine de marcas atendidas
 export default function Stats() {
   return (
-    <Panel aria-label="Números" className={styles.stats}>
+    <Panel aria-label="Números" reveal className={styles.stats}>
       <div className={styles.statsViewport}>
         <ul className={styles.statsList}>
           {stats.map((item) => (

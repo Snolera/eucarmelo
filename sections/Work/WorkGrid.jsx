@@ -11,7 +11,7 @@ const VISIBLE_MOBILE = 2; // cards visíveis no carrossel mobile
 
 // Mobile: carrossel de trilho com setas; tablet/desktop: grade (via CSS)
 export default function WorkGrid({ items }) {
-  const [active, setActive] = useState(null);
+  const [active, setActive] = useState(null); // { item, originRect }
   const { index, canPrev, canNext, prev, next, reveal, swipeHandlers } = useCarousel({
     total: items.length,
     visible: VISIBLE_MOBILE,
@@ -30,7 +30,7 @@ export default function WorkGrid({ items }) {
                   client={item.client}
                   category={item.category}
                   poster={item.poster}
-                  onOpen={() => setActive(item)}
+                  onOpen={(originRect) => setActive({ item, originRect })}
                 />
               </li>
             ))}
@@ -67,9 +67,11 @@ export default function WorkGrid({ items }) {
       <VideoModal
         open={Boolean(active)}
         onClose={() => setActive(null)}
-        title={active?.client}
-        src={active?.src}
-        poster={active?.poster}
+        title={active?.item.client}
+        src={active?.item.src}
+        poster={active?.item.poster}
+        originRect={active?.originRect}
+        spin
       />
     </>
   );

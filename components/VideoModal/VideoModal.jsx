@@ -1,19 +1,72 @@
 "use client";
 
-import { useEffect, useId, useRef } from "react";
+import { useId, useLayoutEffect, useRef } from "react";
 import { X } from "lucide-react";
 import VideoPlayer from "@/components/VideoPlayer/VideoPlayer";
 import styles from "./VideoModal.module.css";
 
+export const OPEN_DURATION = 240; // ms do elemento clicado até o centro
+export const SPIN_DURATION = 600; // ms com giro (cards de Trabalhos)
+
+const prefersReducedMotion = () =>
+  window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+
+// FLIP: o player já abre no centro e uma animação de transform o faz "sair" do elemento clicado
+// spin: vira 360° no eixo vertical (Y), como carta, durante o trajeto
+// (mesma lista de funções nos 2 quadros, senão 0° = 360° e não gira)
+function animateFromOrigin(content, originRect, spin) {
+  const player = content.querySelector("[data-video-player]") ?? content;
+  const target = player.getBoundingClientRect();
+  const box = content.getBoundingClientRect();
+
+  // Escala uniforme (sem distorcer): o menor fator que cabe na origem
+  const scale =
+    target.width && target.height
+      ? Math.min(originRect.width / target.width, originRect.height / target.height)
+      : 1;
+  const dx = originRect.left + originRect.width / 2 - (target.left + target.width / 2);
+  const dy = originRect.top + originRect.height / 2 - (target.top + target.height / 2);
+
+  // Escala a partir do centro do player (não do bloco título + player)
+  content.style.transformOrigin = `${target.left - box.left + target.width / 2}px ${
+    target.top - box.top + target.height / 2
+  }px`;
+
+  const from = `translate(${dx}px, ${dy}px) scale(${scale})`;
+  // perspective() no início dá profundidade ao giro 3D
+  const keyframes = spin
+    ? [
+        { transform: `perspective(1200px) ${from} rotateY(0deg)`, opacity: 0.6 },
+        { transform: "perspective(1200px) translate(0px, 0px) scale(1) rotateY(360deg)", opacity: 1 },
+      ]
+    : [
+        { transform: from, opacity: 0.6 },
+        { transform: "none", opacity: 1 },
+      ];
+  content.animate(
+    keyframes,
+    { duration: spin ? SPIN_DURATION : OPEN_DURATION, easing: "cubic-bezier(0.2, 0.8, 0.2, 1)" }
+  );
+}
+
 // <dialog> nativo: foco preso, Esc fecha e o fundo fica inerte sem JS extra
-export default function VideoModal({ open, onClose, title, src, poster }) {
+// originRect: posição do elemento clicado, ponto de partida da transição
+// spin: vira 360° no eixo Y durante a transição (usado só nos cards de Trabalhos)
+export default function VideoModal({ open, onClose, title, src, poster, originRect, spin = false }) {
   const dialogRef = useRef(null);
+  const contentRef = useRef(null);
   const titleId = useId();
 
-  useEffect(() => {
+  // Layout effect: abre e posiciona a animação antes do navegador pintar (sem "piscar")
+  useLayoutEffect(() => {
     const dialog = dialogRef.current;
-    if (open && dialog && !dialog.open) dialog.showModal();
-  }, [open]);
+    if (!open || !dialog) return;
+    if (!dialog.open) dialog.showModal();
+
+    const content = contentRef.current;
+    if (!originRect || !content || typeof content.animate !== "function" || prefersReducedMotion()) return;
+    animateFromOrigin(content, originRect, spin);
+  }, [open, originRect, spin]);
 
   if (!open) return null;
 
@@ -30,10 +83,12 @@ export default function VideoModal({ open, onClose, title, src, poster }) {
       ref={dialogRef}
       className={styles.modal}
       aria-labelledby={titleId}
+      // Fade do fundo com a mesma duração da transição do player
+      style={{ "--modal-duration": `${spin ? SPIN_DURATION : OPEN_DURATION}ms` }}
       onClose={onClose}
       onClick={handleClick}
     >
-      <div className={styles.modalContent}>
+      <div ref={contentRef} className={styles.modalContent}>
         <div className={styles.modalHeader}>
           <h2 id={titleId} className={styles.modalTitle}>
             {title}

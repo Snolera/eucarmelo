@@ -24,6 +24,7 @@
 
   /* Fontes (carregadas pelo next/font no layout) */
   --font-heading: var(--font-cormorant), Georgia, serif;
+  --font-display: var(--font-space-grotesk), system-ui, sans-serif; /* H1 e H2 */
   --font-body: var(--font-lora), Georgia, serif;
 
   /* Espaçamentos (mobile-first; crescem nos breakpoints abaixo) */
@@ -81,6 +82,12 @@ h3 {
   font-family: var(--font-heading);
   font-weight: 400;
   margin: 0;
+}
+
+/* Space Grotesk nos títulos principais (pesos 300, 400, 500 e 700 disponíveis) */
+h1,
+h2 {
+  font-family: var(--font-display);
 }
 
 p {
