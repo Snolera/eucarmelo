@@ -6,15 +6,12 @@ import VideoPlayer from "@/components/VideoPlayer/VideoPlayer";
 import styles from "./VideoModal.module.css";
 
 export const OPEN_DURATION = 240; // ms do elemento clicado até o centro
-export const SPIN_DURATION = 600; // ms com giro (cards de Trabalhos)
 
 const prefersReducedMotion = () =>
   window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 
 // FLIP: o player já abre no centro e uma animação de transform o faz "sair" do elemento clicado
-// spin: vira 360° no eixo vertical (Y), como carta, durante o trajeto
-// (mesma lista de funções nos 2 quadros, senão 0° = 360° e não gira)
-function animateFromOrigin(content, originRect, spin) {
+function animateFromOrigin(content, originRect) {
   const player = content.querySelector("[data-video-player]") ?? content;
   const target = player.getBoundingClientRect();
   const box = content.getBoundingClientRect();
@@ -32,27 +29,18 @@ function animateFromOrigin(content, originRect, spin) {
     target.top - box.top + target.height / 2
   }px`;
 
-  const from = `translate(${dx}px, ${dy}px) scale(${scale})`;
-  // perspective() no início dá profundidade ao giro 3D
-  const keyframes = spin
-    ? [
-        { transform: `perspective(1200px) ${from} rotateY(0deg)`, opacity: 0.6 },
-        { transform: "perspective(1200px) translate(0px, 0px) scale(1) rotateY(360deg)", opacity: 1 },
-      ]
-    : [
-        { transform: from, opacity: 0.6 },
-        { transform: "none", opacity: 1 },
-      ];
   content.animate(
-    keyframes,
-    { duration: spin ? SPIN_DURATION : OPEN_DURATION, easing: "cubic-bezier(0.2, 0.8, 0.2, 1)" }
+    [
+      { transform: `translate(${dx}px, ${dy}px) scale(${scale})`, opacity: 0.6 },
+      { transform: "none", opacity: 1 },
+    ],
+    { duration: OPEN_DURATION, easing: "cubic-bezier(0.2, 0.8, 0.2, 1)" }
   );
 }
 
 // <dialog> nativo: foco preso, Esc fecha e o fundo fica inerte sem JS extra
 // originRect: posição do elemento clicado, ponto de partida da transição
-// spin: vira 360° no eixo Y durante a transição (usado só nos cards de Trabalhos)
-export default function VideoModal({ open, onClose, title, src, poster, originRect, spin = false }) {
+export default function VideoModal({ open, onClose, title, src, poster, originRect }) {
   const dialogRef = useRef(null);
   const contentRef = useRef(null);
   const titleId = useId();
@@ -65,8 +53,8 @@ export default function VideoModal({ open, onClose, title, src, poster, originRe
 
     const content = contentRef.current;
     if (!originRect || !content || typeof content.animate !== "function" || prefersReducedMotion()) return;
-    animateFromOrigin(content, originRect, spin);
-  }, [open, originRect, spin]);
+    animateFromOrigin(content, originRect);
+  }, [open, originRect]);
 
   if (!open) return null;
 
@@ -84,7 +72,7 @@ export default function VideoModal({ open, onClose, title, src, poster, originRe
       className={styles.modal}
       aria-labelledby={titleId}
       // Fade do fundo com a mesma duração da transição do player
-      style={{ "--modal-duration": `${spin ? SPIN_DURATION : OPEN_DURATION}ms` }}
+      style={{ "--modal-duration": `${OPEN_DURATION}ms` }}
       onClose={onClose}
       onClick={handleClick}
     >

@@ -10,19 +10,15 @@
   opacity: 0.85;
 }
 
-/* Mídia 9:16 com "mat" de 6px e outline de 1px, como no design */
+/* Mídia 9:16 com "mat" de 6px e outline de 1px; fundo preto até o vídeo/pôster entrar por cima */
 .cardMedia {
   position: relative;
   aspect-ratio: 9 / 16;
   overflow: hidden;
-  border: 6px solid var(--color-surface);
-  outline: 1px solid color-mix(in srgb, var(--color-neutral-900) 16%, transparent);
+  border: 6px solid var(--color-bg);
+  outline: 1px solid var(--color-card-line);
   border-radius: var(--radius-card);
-  background: repeating-linear-gradient(
-    135deg,
-    var(--color-surface) 0 10px,
-    var(--color-neutral-200) 10px 20px
-  );
+  background: var(--color-bg);
 }
 
 .cardPoster {
@@ -35,7 +31,7 @@
   left: 0.75rem;
   font-size: 0.6875rem;
   font-variant-numeric: tabular-nums;
-  color: var(--color-neutral-700);
+  color: var(--color-text);
 }
 
 .cardPlay {
@@ -47,9 +43,9 @@
   justify-content: center;
   width: 56px;
   height: 56px;
-  border: 1px solid var(--color-neutral-900);
+  border: 1px solid var(--color-text);
   border-radius: 50%;
-  color: var(--color-neutral-900);
+  color: var(--color-text);
   transform: translate(-50%, -50%);
 }
 
@@ -60,6 +56,7 @@
   gap: 0.125rem;
   padding-top: 0.625rem;
   border-top: 1px solid var(--color-card-line);
+  backface-visibility: hidden; /* no anel 3D, o texto não aparece espelhado por trás */
 }
 
 .cardClient {

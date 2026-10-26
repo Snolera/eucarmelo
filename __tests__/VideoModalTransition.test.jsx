@@ -67,34 +67,15 @@ describe("Transição de abertura do player", () => {
     expect(animate).toHaveBeenCalledTimes(1);
   });
 
-  test("com spin, vira 360° no eixo vertical (Y), em 3D, durante o trajeto", () => {
-    const animate = mockMotion();
-    render(<VideoModal open spin title="Reel" originRect={ORIGIN} onClose={() => {}} />);
-
-    const [keyframes, options] = animate.mock.calls[0];
-    expect(keyframes[0].transform).toMatch(/^perspective\(.+\).*rotateY\(0deg\)$/);
-    expect(keyframes.at(-1).transform).toMatch(/^perspective\(.+\).*rotateY\(360deg\)$/);
-    expect(options.duration).toBe(600);
-  });
-
-  test("o fundo escurece no mesmo tempo da transição (600ms com giro)", () => {
+  test("o fundo escurece no mesmo tempo da transição (240ms)", () => {
     mockMotion();
-    render(<VideoModal open spin title="Reel" originRect={ORIGIN} onClose={() => {}} />);
-    expect(screen.getByRole("dialog").style.getPropertyValue("--modal-duration")).toBe("600ms");
+    render(<VideoModal open title="Reel" originRect={ORIGIN} onClose={() => {}} />);
+    expect(screen.getByRole("dialog").style.getPropertyValue("--modal-duration")).toBe("240ms");
   });
 
-  test("cards de Trabalhos giram; o hero não", async () => {
+  test("a transição não gira (sem rotate em nenhum quadro)", () => {
     const animate = mockMotion();
-    const user = userEvent.setup();
-    const { unmount } = render(<Work />);
-
-    await user.click(screen.getByRole("button", { name: /assistir reel atelier nó/i }));
-    expect(animate.mock.calls[0][0].at(-1).transform).toMatch(/rotateY\(360deg\)/);
-    unmount();
-
-    animate.mockClear();
-    render(<Hero />);
-    await user.click(screen.getByRole("heading", { level: 1 }));
-    expect(animate.mock.calls[0][0].at(-1).transform).not.toMatch(/rotate/);
+    render(<VideoModal open title="Reel" originRect={ORIGIN} onClose={() => {}} />);
+    animate.mock.calls[0][0].forEach((frame) => expect(frame.transform).not.toMatch(/rotate/));
   });
 });

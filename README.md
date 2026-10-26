@@ -55,8 +55,8 @@ Sem ela, `lib/siteUrl.js` usa `VERCEL_PROJECT_PRODUCTION_URL`, preenchida automa
 ```
 app/            Rotas (App Router): layout, página, robots.js, sitemap.js, estilos globais
 sections/       Blocos da página, na ordem em que aparecem (Header, Hero, Stats, Work, About, Footer)
-components/     Peças reutilizáveis (Button, Panel, Kicker, ReelCard, VideoPlayer, VideoModal, SocialIcon)
-hooks/          Lógica reutilizável (useVideoPlayer, useCarousel)
+components/     Peças reutilizáveis (Button, Panel, Kicker, Gallery, ReelCard, Reveal, VideoPlayer, VideoModal, SocialIcon)
+hooks/          Lógica reutilizável (useVideoPlayer, useRingRotation, useReveal)
 content/        site.js: toda a copy, links e dados (vídeos, stats, reels, redes)
 lib/            Utilitários (siteUrl.js)
 __tests__/      Testes de cada seção e componente
@@ -96,20 +96,23 @@ As seções são **Server Components** sempre que possível. O HTML chega pronto
 | `Hero`, `Stats`, `Work`, `About`, `Footer` | Server | Conteúdo estático |
 | `Header` | Client | Abre e fecha o menu mobile |
 | `HeroCard` | Client | Card do hero inteiro clicável, abre o showreel |
-| `WorkGrid` | Client | Carrossel mobile + reel ativo no modal |
+| `Gallery` | Client | Anel 3D de reels (motion) + reel ativo no modal |
 | `VideoModal`, `VideoPlayer` | Client | `<dialog>` e controles do vídeo |
 
 ### Player de vídeo
 
 - **`VideoPlayer`:** player próprio, sempre em **9:16** (o conteúdo é gravado no celular), com play/pause, barra de progresso, tempo e som. Sem `src`, mostra "Vídeo em breve" e desativa os controles.
 - **`VideoModal`:** usa o `<dialog>` nativo com `showModal()`, que já traz foco preso, Esc para fechar e fundo inerte. Também fecha clicando fora. Todo fechamento passa pelo `dialog.close()`, que devolve o foco a quem abriu o modal.
-- **Um único modal por seção:** o Hero e a `WorkGrid` têm um modal cada um, alimentado com o reel ativo.
+- **Um único modal por seção:** o Hero e a `Gallery` têm um modal cada um, alimentado com o reel ativo.
 - **Hospedagem dos vídeos:** ainda está em estudo, e o código só precisa da URL. Opções que encaixam: Vercel Blob, Cloudflare Stream, Mux.
 
 ### Hooks
 
 - **`useVideoPlayer`:** o estado do `<video>` vem dos eventos nativos (o elemento é a fonte da verdade) e expõe `togglePlay`, `toggleMute` e `seek`. Também tem a função `formatTime` (`75` vira `"1:15"`).
-- **`useCarousel({ total, visible, step })`:** guarda o índice do trilho, cuida das setas, do arrasto (com limite de 40px e bloqueio do clique depois de arrastar) e do `reveal(i)`, que leva o trilho até um card focado pelo teclado.
+- **`useRingRotation({ total, speed, dragFactor, paused })`:** controla a rotação do anel 3D com um `MotionValue`.
+  - **Autoplay:** 8°/s, em loop contínuo (o mouse por cima não pausa). Para só com foco dentro do anel (teclado) e com o player aberto (`paused`). Fica desligado com `prefers-reduced-motion`.
+  - **Arrasto:** gira o anel e, ao soltar, encaixa no card mais próximo, com inércia. Um clique logo depois de um arrasto não abre o player.
+  - **Teclado:** `focusIndex(i)` traz para a frente o card focado, pelo caminho mais curto.
 
 ### Componentes compartilhados
 
@@ -118,7 +121,8 @@ As seções são **Server Components** sempre que possível. O HTML chega pronto
   - `as`: a tag externa (`section` por padrão, `footer` no rodapé).
 - **`Button`:** botão outline. Vira `<a>` quando recebe `href`, e links externos ganham `target="_blank"` e `rel="noopener noreferrer"`. Variantes `light`, `accent` e `white`; tamanhos `md` e `lg`.
 - **`Kicker`:** rótulo pequeno em caixa alta acima dos títulos.
-- **`ReelCard`:** card 9:16 com moldura. O botão invisível cobre o card inteiro e abre o player.
+- **`ReelCard`:** card 9:16 com moldura. O botão invisível cobre o card inteiro e abre o player. No anel 3D, a legenda some quando o card está de costas (`backface-visibility`), para não aparecer espelhada.
+- **`Gallery`:** anel 3D com os reels de `work.items`. Cada card é girado em Y (`--angle`) e empurrado para fora em Z (`--radius`). Sem botões de controle: gira sozinho e com o arrasto. CSS mobile-first, com cards de ~144px em 360px até 240px no desktop.
 - **`SocialIcon`:** ícones de X, Instagram e E-mail só em contorno, que herdam a cor do texto.
 
 ---
@@ -179,22 +183,22 @@ Os estilos base são os do mobile, e os breakpoints usam `min-width`: **480px**,
 | Header | Logo + ícone de menu (☰/✕), menu abre abaixo | Links em linha | Links em linha |
 | Hero | Conteúdo empilhado, botões em largura total | Botões lado a lado | Título à esquerda, botões à direita |
 | Números | Faixa animada | Faixa animada | Faixa com **50% da largura**, centralizada |
-| Trabalhos | **Carrossel**: 2 cards, setas abaixo, avança de 2 em 2 | Grade 2×2 | 4 cards em linha (até 250px cada) |
+| Trabalhos | **Anel 3D** de 6 reels (~144px), swipe horizontal gira | Anel (208px) | Anel (240px) |
 | Sobre | Texto, retrato **abaixo** | Retrato 240px à esquerda | Retrato 300px à esquerda, texto em 2 colunas justificado |
 | Rodapé | Copyright + 3 ícones numa linha | Igual | Igual |
 
 ### Interações e animações
 
-- **Abertura do player (cards e hero):** o player "sai" do elemento clicado e vai até o centro da tela em **240ms** (`OPEN_DURATION` em `VideoModal.jsx`). A técnica é FLIP: o player já abre na posição final, e uma animação de `transform` (Web Animations API) o leva da posição de origem até o centro. Junto, o fundo aparece com fade. Com vídeo, ele já começa tocando (`autoPlay`). **Só nos cards de Trabalhos**, o player também vira 360° no eixo vertical (`rotateY`, como uma carta, com `perspective` para dar profundidade) durante o trajeto, pela prop `spin` do `VideoModal`. Com giro, a transição dura **600ms** (`SPIN_DURATION`), e o fade do fundo acompanha a mesma duração.
+- **Abertura do player (cards e hero):** o player "sai" do elemento clicado e vai até o centro da tela em **240ms** (`OPEN_DURATION` em `VideoModal.jsx`). A técnica é FLIP: o player já abre na posição final, e uma animação de `transform` (Web Animations API) o leva da posição de origem até o centro. Junto, o fundo aparece com fade. Com vídeo, ele já começa tocando (`autoPlay`).
 - **Hero:** clicar em **qualquer parte do card** abre o showreel. O CTA do Instagram segue o link normalmente, e o clique não abre o player se a pessoa estiver selecionando texto.
 - **Números:** faixa contínua da direita para a esquerda (`@keyframes`, 25s, `linear`), **sem repetir valores**: entra pela direita e sai toda pela esquerda antes de recomeçar. Pausa com o mouse por cima. A velocidade é o `25s` de `.statsList`.
-- **Trabalhos (mobile):** trilho com `transform: translateX` ligado à variável `--index`, transição de 450ms. Também aceita arrastar com o dedo.
+- **Trabalhos:** anel 3D (`components/Gallery`) que gira sozinho e aceita arrastar. No toque, o swipe horizontal gira o anel e o vertical continua rolando a página (`touch-action: pan-y`).
 - **Entrada no scroll (Hero, Números, Trabalhos, Sobre):** cada seção desliza da esquerda e aparece com fade quando **60% dela fica visível**, ou quando ela ocupa 60% da altura da tela (seções mais altas que a tela, comuns no mobile). A entrada acontece uma vez só.
   - **Proporção:** distância `clamp(1.5rem, 6vw, 4rem)` (24px em 360px, até 64px no desktop) e duração de 550ms no mobile e 700ms a partir de 1024px.
   - **Implementação:** `components/Reveal` + `hooks/useReveal` (IntersectionObserver). No `Panel`, é a prop `reveal`.
   - **Hero:** usa `<Reveal immediate>`, uma animação CSS desde a primeira pintura, para não esperar o JavaScript nem atrasar o LCP.
   - **Sem JavaScript:** o conteúdo só começa escondido com `@media (scripting: enabled)`, então sem JS tudo aparece normalmente.
-- **Menos movimento:** com `prefers-reduced-motion`, as seções aparecem sem deslizar, a faixa para, o carrossel troca de posição sem deslizar e o scroll suave é desligado.
+- **Menos movimento:** com `prefers-reduced-motion`, as seções aparecem sem deslizar, a faixa para, o anel começa sem autoplay e encaixa sem animação, e o scroll suave é desligado.
 
 ---
 
@@ -204,7 +208,7 @@ Os estilos base são os do mobile, e os breakpoints usam `min-width`: **480px**,
 - Link "Pular para o conteúdo" no header, visível só com foco por teclado.
 - Foco visível dourado em todo elemento interativo. Áreas de toque de no mínimo 44×44px.
 - Botões só com ícone têm `aria-label` (menu, setas, fechar, controles do player).
-- Carrossel: `aria-roledescription="carrossel"`, anúncio de posição ("Reels 3 e 4 de 4") e foco pelo teclado movendo o trilho.
+- Anel de reels: foco pelo teclado para a rotação e gira o anel até o card. Sem botão de pausa, por decisão de layout (ver pendências).
 - Redes sem endereço aparecem como imagem "(em breve)", sem link quebrado.
 
 ## SEO
@@ -220,14 +224,14 @@ Para rodar: `npm test`. Os testes cobrem cada seção e componente:
 
 - **Navegação:** menu mobile, âncoras e link de pular conteúdo.
 - **Player:** abrir e fechar o player (Hero, cards, foco), controles do player e estado sem vídeo.
-- **Carrossel:** setas, arrasto, passo de 2 e foco pelo teclado.
+- **Anel 3D:** 6 cards a 60°, sem botões de controle, abrir o player e foco pelo teclado. Os testes com `prefers-reduced-motion` ficam em `GalleryReducedMotion.test.jsx`, porque o motion lê essa preferência uma vez por módulo.
 - **Faixa de números:** sem cópias.
 - **Ordem do conteúdo:** retrato depois do texto e ordem das seções na página.
 - **Rodapé:** redes, link do Instagram e ícones só em contorno.
 
 O `vitest.setup.js` tem um polyfill de `<dialog>.showModal/close`, porque o jsdom não implementa esses métodos.
 
-**Limitação:** o jsdom não aplica media queries nem animações. O que depende de breakpoint (por exemplo, o carrossel só no mobile) é conferido no navegador.
+**Limitação:** o jsdom não aplica media queries nem animações. O que depende de breakpoint (por exemplo, o tamanho dos cards do anel e o swipe) é conferido no navegador.
 
 ---
 
@@ -241,6 +245,7 @@ O `vitest.setup.js` tem um polyfill de `<dialog>.showModal/close`, porque o jsdo
 - [ ] Imagem de compartilhamento (Open Graph, 1200×630), favicon próprio e JSON-LD.
 - [ ] Domínio definitivo e `NEXT_PUBLIC_SITE_URL`.
 - [ ] Botão de pausar a faixa de números no toque (WCAG 2.2.2), se desejado.
+- [ ] Forma de pausar o anel de reels com mouse/toque (WCAG 2.2.2): hoje só o foco pelo teclado para a rotação.
 - [ ] Lighthouse depois do primeiro deploy.
 
 ## Arquivos locais (fora do git)

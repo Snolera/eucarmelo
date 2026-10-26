@@ -1,7 +1,7 @@
+import Gallery from "@/components/Gallery/Gallery";
 import Kicker from "@/components/Kicker/Kicker";
 import Panel from "@/components/Panel/Panel";
 import { work } from "@/content/site";
-import WorkGrid from "./WorkGrid";
 import styles from "./Work.module.css";
 
 export default function Work() {
@@ -13,7 +13,8 @@ export default function Work() {
           {work.title}
         </h2>
       </div>
-      <WorkGrid items={work.items} />
+      {/* Anel 3D com os reels; clicar num card abre o player */}
+      <Gallery items={work.items} />
     </Panel>
   );
 }

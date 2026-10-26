@@ -51,7 +51,7 @@ export const about = {
   portrait: { src: null, alt: "Retrato de Welinton Carmelo" },
 };
 
-// Reels: src/poster null até os vídeos serem hospedados
+// Reels do anel 3D (6 cards, 9:16): src/poster null até os vídeos serem hospedados
 export const work = {
   kicker: "Reels para marcas",
   title: "Trabalhos selecionados",
@@ -60,5 +60,7 @@ export const work = {
     { id: "atelier-no", client: "Atelier Nó", category: "Moda", src: null, poster: null },
     { id: "studio-vila", client: "Studio Vila", category: "Bem-estar", src: null, poster: null },
     { id: "festival-aurora", client: "Festival Aurora", category: "Eventos", src: null, poster: null },
+    { id: "loja-verso", client: "Loja Verso", category: "Varejo", src: null, poster: null },
+    { id: "lume-beauty", client: "Lume Beauty", category: "Beleza", src: null, poster: null },
   ],
 };

@@ -1,0 +1,73 @@
+/* Mobile first: base para telas pequenas, min-width amplia o layout */
+.gallery {
+  --card-w: clamp(8.5rem, 40vw, 11rem);
+  --card-h: calc(var(--card-w) * 16 / 9); /* reels 9:16 */
+  /* Legenda do ReelCard + folga: em perspectiva, a legenda dos cards da frente desce um pouco */
+  --caption-h: 6rem;
+  /* Raio para 6 cards: (w / 2) / tan(30deg) ≈ w * 0.87; acima disso é o espaço entre eles */
+  --radius: calc(var(--card-w) * 1.5);
+  /* Recua o anel: o card da frente mantém o tamanho e os de trás ficam mais fundos */
+  --depth: calc(var(--radius) * -0.8);
+
+  overflow: clip; /* evita scroll horizontal com os cards laterais */
+}
+
+.galleryStage {
+  perspective: calc(var(--card-w) * 4.5); /* menor = profundidade mais acentuada */
+  padding-block: calc(var(--card-h) * 0.08);
+  touch-action: pan-y; /* swipe horizontal gira; vertical continua rolando a página */
+  cursor: grab;
+  user-select: none;
+}
+
+.galleryStage:active {
+  cursor: grabbing;
+}
+
+.galleryDepth {
+  transform: translateZ(var(--depth));
+  transform-style: preserve-3d;
+}
+
+.galleryRing {
+  position: relative;
+  height: calc(var(--card-h) + var(--caption-h));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  transform-style: preserve-3d;
+}
+
+.galleryCard {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: var(--card-w);
+  margin-left: calc(var(--card-w) / -2);
+  transform: rotateY(var(--angle)) translateZ(var(--radius));
+}
+
+/* Mantém o 3D até a legenda do ReelCard, para ela sumir quando o card está de costas */
+.galleryCard,
+.galleryCard > article {
+  transform-style: preserve-3d;
+}
+
+@media (min-width: 480px) {
+  .gallery {
+    --card-w: clamp(10rem, 30vw, 12rem);
+  }
+}
+
+@media (min-width: 768px) {
+  .gallery {
+    --card-w: 13rem;
+    --radius: calc(var(--card-w) * 1.65);
+  }
+}
+
+@media (min-width: 1024px) {
+  .gallery {
+    --card-w: 15rem;
+  }
+}
