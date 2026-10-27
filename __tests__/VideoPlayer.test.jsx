@@ -28,53 +28,96 @@ describe("VideoPlayer", () => {
     expect(video.muted).toBe(false);
   });
 
-  test("controle de volume: começa em 50% e muda o volume do vídeo", () => {
-    const { container } = render(<VideoPlayer src="/reel.mp4" title="Showreel" />);
-    const video = container.querySelector("video");
+  // Vídeo carregado num navegador que deixa o site mudar o volume (desktop e Android)
+  const renderLoaded = () => {
+    const utils = render(<VideoPlayer src="/reel.mp4" title="Showreel" />);
+    const video = utils.container.querySelector("video");
     fireEvent.loadedMetadata(video);
+    return { ...utils, video };
+  };
+  const volumeButton = () => screen.getByRole("button", { name: /ajustar volume/i });
+  const volumeSlider = () => screen.queryByRole("slider", { name: /^volume$/i });
 
-    const slider = screen.getByRole("slider", { name: /volume/i });
-    expect(slider).toHaveValue("0.5");
-    expect(slider).toHaveAttribute("aria-valuetext", "50%");
+  test("clicar no ícone de som abre a barra de volume acima dele, em 50%", async () => {
+    const user = userEvent.setup();
+    renderLoaded();
+    expect(volumeSlider()).not.toBeInTheDocument();
+    expect(volumeButton()).toHaveAttribute("aria-expanded", "false");
 
-    fireEvent.change(slider, { target: { value: "0.8" } });
-    expect(video.volume).toBe(0.8);
-    expect(screen.getByRole("slider", { name: /volume/i })).toHaveAttribute("aria-valuetext", "80%");
+    await user.click(volumeButton());
+    expect(volumeButton()).toHaveAttribute("aria-expanded", "true");
+    expect(volumeSlider()).toHaveValue("0.5");
+    expect(volumeSlider()).toHaveAttribute("aria-valuetext", "50%");
+    expect(volumeSlider()).toHaveFocus(); // teclado: setas já mudam o volume
   });
 
-  test("volume em 0 silencia; subir o volume tira do mudo", () => {
-    const { container } = render(<VideoPlayer src="/reel.mp4" title="Showreel" />);
-    const video = container.querySelector("video");
-    fireEvent.loadedMetadata(video);
-    const slider = () => screen.getByRole("slider", { name: /volume/i });
+  test("a barra muda o volume do vídeo", async () => {
+    const user = userEvent.setup();
+    const { video } = renderLoaded();
+    await user.click(volumeButton());
 
-    fireEvent.change(slider(), { target: { value: "0" } });
+    fireEvent.change(volumeSlider(), { target: { value: "0.8" } });
+    expect(video.volume).toBe(0.8);
+    expect(volumeSlider()).toHaveAttribute("aria-valuetext", "80%");
+  });
+
+  test("volume em 0 silencia (ícone de mudo); subir o volume tira do mudo", async () => {
+    const user = userEvent.setup();
+    const { video } = renderLoaded();
+    await user.click(volumeButton());
+
+    fireEvent.change(volumeSlider(), { target: { value: "0" } });
     expect(video.muted).toBe(true);
-    expect(screen.getByRole("button", { name: /ativar som/i })).toBeInTheDocument();
+    expect(volumeButton()).toHaveAttribute("data-muted", "true");
 
-    fireEvent.change(slider(), { target: { value: "0.3" } });
+    fireEvent.change(volumeSlider(), { target: { value: "0.3" } });
     expect(video.muted).toBe(false);
     expect(video.volume).toBe(0.3);
   });
 
-  test("no mudo, o controle de volume mostra 0", async () => {
+  test("a barra fecha com novo clique no ícone, com Esc ou clicando fora", async () => {
     const user = userEvent.setup();
-    const { container } = render(<VideoPlayer src="/reel.mp4" title="Showreel" />);
-    fireEvent.loadedMetadata(container.querySelector("video"));
+    renderLoaded();
 
-    await user.click(screen.getByRole("button", { name: /desativar som/i }));
-    expect(screen.getByRole("slider", { name: /volume/i })).toHaveValue("0");
+    await user.click(volumeButton());
+    await user.click(volumeButton());
+    expect(volumeSlider()).not.toBeInTheDocument();
+
+    await user.click(volumeButton());
+    await user.keyboard("{Escape}");
+    expect(volumeSlider()).not.toBeInTheDocument();
+    expect(volumeButton()).toHaveFocus();
+
+    await user.click(volumeButton());
+    await user.click(screen.getByText("0:00 / 0:00"));
+    expect(volumeSlider()).not.toBeInTheDocument();
   });
 
-  test("onde o site não controla o volume (iPhone), o controle não aparece", () => {
+  test("Esc com a barra aberta não fecha o player junto", async () => {
+    const user = userEvent.setup();
+    const onKeyDown = vi.fn();
+    render(
+      <div onKeyDown={onKeyDown}>
+        <VideoPlayer src="/reel.mp4" title="Showreel" />
+      </div>
+    );
+    fireEvent.loadedMetadata(document.querySelector("video"));
+    await user.click(volumeButton());
+    await user.keyboard("{Escape}");
+    expect(onKeyDown).not.toHaveBeenCalled();
+  });
+
+  test("onde o site não controla o volume (iPhone), o ícone só liga e desliga o som", async () => {
     // iOS: o volume é sempre o do aparelho; atribuir não tem efeito
     vi.spyOn(HTMLMediaElement.prototype, "volume", "set").mockImplementation(() => {});
     vi.spyOn(HTMLMediaElement.prototype, "volume", "get").mockReturnValue(1);
-    const { container } = render(<VideoPlayer src="/reel.mp4" title="Showreel" />);
-    fireEvent.loadedMetadata(container.querySelector("video"));
+    const user = userEvent.setup();
+    renderLoaded();
 
-    expect(screen.queryByRole("slider", { name: /volume/i })).not.toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /desativar som/i })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /ajustar volume/i })).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: /desativar som/i }));
+    expect(screen.getByRole("button", { name: /ativar som/i })).toBeInTheDocument();
+    expect(volumeSlider()).not.toBeInTheDocument();
   });
 
   test("sem vídeo mostra o estado vazio e desativa os controles", () => {
@@ -93,14 +136,6 @@ describe("VideoPlayer", () => {
 
     await user.click(screen.getByRole("button", { name: /pausar/i }));
     expect(screen.getByRole("button", { name: /reproduzir/i })).toBeInTheDocument();
-  });
-
-  test("botão de som alterna entre ativar e desativar", async () => {
-    const user = userEvent.setup();
-    render(<VideoPlayer src="/reel.mp4" title="Showreel" />);
-
-    await user.click(screen.getByRole("button", { name: /desativar som/i }));
-    expect(screen.getByRole("button", { name: /ativar som/i })).toBeInTheDocument();
   });
 
   test("mostra o tempo atual e a duração", () => {

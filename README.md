@@ -108,7 +108,7 @@ As seções são **Server Components** sempre que possível. O HTML chega pronto
 
 ### Hooks
 
-- **`useVideoPlayer`:** o estado do `<video>` vem dos eventos nativos (o elemento é a fonte da verdade) e expõe `togglePlay`, `toggleMute`, `setVolume` e `seek`. O som começa em 50% (`initialVolume`). O controle de volume aparece a partir de 480px e só onde o navegador deixa o site mudar o volume (`canSetVolume`; no iPhone vale o volume do aparelho). Volume em 0 silencia, e subir o volume tira do mudo. Também tem a função `formatTime` (`75` vira `"1:15"`).
+- **`useVideoPlayer`:** o estado do `<video>` vem dos eventos nativos (o elemento é a fonte da verdade) e expõe `togglePlay`, `toggleMute`, `setVolume` e `seek`. O som começa em 50% (`initialVolume`). No player, o ícone de som abre uma barra vertical de volume logo acima dele (mobile e desktop); ela fecha com novo clique no ícone, com Esc (sem fechar o player) ou clicando fora. Volume em 0 silencia, e subir o volume tira do mudo. Onde o navegador não deixa o site mudar o volume (`canSetVolume`; no iPhone vale o do aparelho), o ícone só liga e desliga o som. Também tem a função `formatTime` (`75` vira `"1:15"`).
 - **`useCoverflow({ total })`:** controla o coverflow da galeria. Devolve `index` (o card ativo), `select(i)`, `trackRef`, `panHandlers` e `onKeyDown`.
   - **Início:** abre no card do meio (`getMiddleIndex`: 6 cards → 3º). Sem autoplay.
   - **Arrasto:** ao soltar, anda 1 ou 2 cards conforme a distância e a velocidade do gesto (`getSwipeSteps`). Um clique logo depois de um arrasto não seleciona nem abre o player.
