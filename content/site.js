@@ -28,9 +28,13 @@ export const hero = {
   titleEm: "no feed.",
   watch: "Assistir showreel",
   cta: "Mandar direct",
-  // Vídeos ainda não hospedados: null mostra o placeholder
-  backgroundSrc: null,
-  showreel: { title: "Showreel 2026", src: null, poster: null },
+  // Showreel no Vercel Blob: toca sem som no fundo do card e, ao clicar, do início e com som no player
+  // poster null: o card mostra o 1º quadro do vídeo
+  showreel: {
+    title: "Showreel 2026",
+    src: "https://rm7tmby09itxgh0l.public.blob.vercel-storage.com/Boma%20-%20S%C3%A3o%20Paulo.mp4",
+    poster: null,
+  },
 };
 
 // Placeholder: no futuro vira a vitrine de marcas atendidas
@@ -51,10 +55,10 @@ export const about = {
   portrait: { src: null, alt: "Retrato de Welinton Carmelo" },
 };
 
-// Reels do anel 3D (6 cards, 9:16): src/poster null até os vídeos serem hospedados
+// Reels do coverflow (6 cards, 9:16): src/poster null até os vídeos serem hospedados
 export const work = {
   kicker: "Reels para marcas",
-  title: "Trabalhos selecionados",
+  title: "",
   items: [
     { id: "cafe-bruma", client: "Café Bruma", category: "Gastronomia", src: null, poster: null },
     { id: "atelier-no", client: "Atelier Nó", category: "Moda", src: null, poster: null },

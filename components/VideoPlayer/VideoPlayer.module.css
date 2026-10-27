@@ -120,3 +120,16 @@
   border-radius: 50%;
   background: var(--color-text);
 }
+
+/* Volume: mesmo visual do progresso, com largura fixa; no mobile pequeno fica só o botão de som
+   (o volume vem dos botões do aparelho) e a barra de progresso mantém espaço */
+.playerVolume {
+  display: none;
+  flex: 0 0 4.5rem;
+}
+
+@media (min-width: 480px) {
+  .playerVolume {
+    display: block;
+  }
+}

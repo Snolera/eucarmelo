@@ -1,24 +1,107 @@
+/* Mobile first: base para telas pequenas, min-width amplia o layout */
 .card {
+  --cf-line: #cfcfcf; /* cor da borda */
+  --cf-border: 1px; /* espessura da borda */
+  --cf-radius: 14px;
+  --cf-beam: #fff; /* cor da luz na borda */
+  --cf-beam-speed: 4s; /* tempo de uma volta da luz */
+
   position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 0.875rem;
-  transition: opacity 0.2s ease;
+  width: 100%;
+  height: 100%;
 }
 
-.card:hover {
-  opacity: 0.85;
+/* Botão = o card inteiro (área clicável + luz da borda) */
+.cardButton {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: var(--cf-radius);
+  background: none;
+  color: var(--color-text);
+  cursor: inherit;
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* Mídia 9:16 com "mat" de 6px e outline de 1px; fundo preto até o vídeo/pôster entrar por cima */
+.cardButton:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 6px;
+}
+
+/* Ângulo animável da luz (necessário para animar o conic-gradient) */
+@property --cf-beam-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* Faixa de luz: gradiente cônico que gira em volta do card */
+.cardButton::before,
+.cardButton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--cf-beam-angle),
+    transparent 0.78turn,
+    var(--cf-beam) 0.92turn,
+    transparent 1turn
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 400ms ease;
+}
+
+/* Halo: desfocado e atrás do card, aparece só do lado de fora */
+.cardButton::before {
+  z-index: -1;
+  inset: -2px;
+  filter: blur(8px);
+}
+
+/* Linha nítida: a máscara recorta o miolo e sobra só a borda */
+.cardButton::after {
+  z-index: 1;
+  padding: calc(var(--cf-border) + 0.5px);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+/* Só o card central (aria-current) acende e gira a luz */
+.cardButton[aria-current="true"]::before,
+.cardButton[aria-current="true"]::after {
+  opacity: 1;
+  animation: cf-beam-spin var(--cf-beam-speed) linear infinite;
+}
+
+.cardButton[aria-current="true"]::before {
+  opacity: 0.55;
+}
+
+@keyframes cf-beam-spin {
+  to {
+    --cf-beam-angle: 1turn;
+  }
+}
+
+/* Mídia 9:16; fundo preto até o vídeo/pôster entrar por cima */
 .cardMedia {
   position: relative;
-  aspect-ratio: 9 / 16;
+  display: block;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
-  border: 6px solid var(--color-bg);
-  outline: 1px solid var(--color-card-line);
-  border-radius: var(--radius-card);
+  border: var(--cf-border) solid var(--cf-line);
+  border-radius: var(--cf-radius);
   background: var(--color-bg);
+  /* Reflexo no "chão" (Chrome, Edge e Safari) */
+  -webkit-box-reflect: below 10px linear-gradient(transparent 72%, rgba(255, 255, 255, 0.14));
 }
 
 .cardPoster {
@@ -27,36 +110,65 @@
 
 .cardIndex {
   position: absolute;
-  top: 0.75rem;
-  left: 0.75rem;
-  font-size: 0.6875rem;
+  top: clamp(10px, 1.6vw, 18px);
+  left: clamp(12px, 1.8vw, 20px);
+  font-family: var(--font-display);
+  font-size: clamp(14px, 1.6vw, 20px);
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
-  color: var(--color-text);
+  letter-spacing: 0.04em;
 }
 
-.cardPlay {
+/* Barra de player (decorativa) */
+.cardControls {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  right: clamp(12px, 1.8vw, 20px);
+  bottom: clamp(10px, 1.6vw, 18px);
+  left: clamp(12px, 1.8vw, 20px);
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 56px;
-  height: 56px;
-  border: 1px solid var(--color-text);
-  border-radius: 50%;
-  color: var(--color-text);
-  transform: translate(-50%, -50%);
+  gap: clamp(8px, 1.2vw, 14px);
 }
 
-/* Nome acima da categoria; lado a lado só na largura do design (1280px) */
+.cardIcon {
+  flex: none;
+  width: clamp(14px, 1.6vw, 20px);
+  height: clamp(14px, 1.6vw, 20px);
+}
+
+.cardProgress {
+  flex: 1;
+  height: 3px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Some no mobile pequeno, onde a barra fica apertada */
+.cardTime {
+  display: none;
+  flex: none;
+  font-family: var(--font-display);
+  font-size: clamp(11px, 1.1vw, 13px);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Legenda abaixo do card: visível só no card ativo */
 .cardCaption {
+  position: absolute;
+  top: calc(100% + 1rem);
+  right: 0;
+  left: 0;
   display: flex;
   flex-direction: column;
   gap: 0.125rem;
-  padding-top: 0.625rem;
-  border-top: 1px solid var(--color-card-line);
-  backface-visibility: hidden; /* no anel 3D, o texto não aparece espelhado por trás */
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 300ms ease;
+}
+
+.card[data-active] .cardCaption {
+  opacity: 1;
 }
 
 .cardClient {
@@ -69,22 +181,30 @@
   font-size: 0.75rem;
 }
 
-/* Botão invisível esticado sobre o card inteiro */
-.cardButton {
-  position: absolute;
-  inset: 0;
-  padding: 0;
-  border: 0;
-  border-radius: var(--radius-card);
-  background: transparent;
-  cursor: pointer;
+@media (min-width: 480px) {
+  .card {
+    --cf-radius: 16px;
+  }
+
+  .cardTime {
+    display: block;
+  }
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 768px) {
+  .card {
+    --cf-radius: 20px;
+  }
+}
+
+/* Sem movimento: a luz fica parada e a legenda troca sem fade */
+@media (prefers-reduced-motion: reduce) {
+  .cardButton[aria-current="true"]::before,
+  .cardButton[aria-current="true"]::after {
+    animation: none;
+  }
+
   .cardCaption {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 0.75rem;
+    transition: none;
   }
 }

@@ -1,6 +1,21 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Hero from "@/sections/Hero/Hero";
+import { hero } from "@/content/site";
+
+// jsdom não implementa play/pause de <video>: espiões que só registram as chamadas
+let play;
+let pause;
+beforeEach(() => {
+  play = vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue();
+  pause = vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(() => {});
+});
+afterEach(() => {
+  vi.restoreAllMocks();
+  delete window.matchMedia;
+});
+
+const backgroundVideo = (container) => container.querySelector("video[aria-hidden='true']");
 
 describe("Hero", () => {
   test("mostra kicker e o h1 com a copy do design", () => {
@@ -53,5 +68,41 @@ describe("Hero", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: /assistir showreel/i }));
     expect(screen.getByRole("dialog", { name: /showreel/i })).toBeInTheDocument();
+  });
+
+  test("o card mostra o showreel de fundo: sem som, em loop, tocando sozinho", () => {
+    const { container } = render(<Hero />);
+    const video = backgroundVideo(container);
+    expect(video).toHaveAttribute("src", hero.showreel.src);
+    expect(video.muted).toBe(true);
+    expect(video).toHaveAttribute("loop");
+    expect(video).toHaveAttribute("playsinline");
+    // O autoplay é pelo JS (respeita "reduzir movimento"); sem ele, o preload volta a valer
+    expect(video).not.toHaveAttribute("autoplay");
+    expect(video).toHaveAttribute("preload", "metadata");
+    expect(play).toHaveBeenCalled();
+  });
+
+  test("com 'reduzir movimento', o vídeo de fundo fica parado", () => {
+    window.matchMedia = (query) => ({ matches: query.includes("reduce"), media: query });
+    render(<Hero />);
+    expect(play).not.toHaveBeenCalled();
+  });
+
+  test("o player abre o mesmo vídeo do início, com som; o fundo pausa e volta ao fechar", async () => {
+    const user = userEvent.setup();
+    const { container } = render(<Hero />);
+    play.mockClear();
+
+    await user.click(screen.getByRole("heading", { level: 1 }));
+    const dialog = screen.getByRole("dialog", { name: /showreel/i });
+    const playerVideo = dialog.querySelector("video");
+    expect(playerVideo).toHaveAttribute("src", hero.showreel.src);
+    expect(playerVideo.muted).toBe(false);
+    expect(playerVideo.currentTime).toBe(0);
+    expect(pause.mock.contexts).toContain(backgroundVideo(container));
+
+    await user.click(screen.getByRole("button", { name: /fechar/i }));
+    expect(play.mock.contexts).toContain(backgroundVideo(container));
   });
 });

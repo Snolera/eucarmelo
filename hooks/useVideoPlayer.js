@@ -1,14 +1,23 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 // Estado do <video> controlado por eventos nativos (fonte da verdade é o elemento)
-export function useVideoPlayer() {
+// initialVolume: volume ao abrir (0 a 1); no iPhone o volume é sempre o do aparelho
+export function useVideoPlayer({ initialVolume = 0.5 } = {}) {
   const videoRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [volume, setVolumeState] = useState(initialVolume);
+  // false até confirmar que o navegador aceita mudar o volume (no iPhone não aceita)
+  const [canSetVolume, setCanSetVolume] = useState(false);
+
+  // Aplica antes do vídeo carregar o suficiente para o autoplay começar
+  useEffect(() => {
+    if (videoRef.current) videoRef.current.volume = initialVolume;
+  }, [initialVolume]);
 
   const togglePlay = useCallback(() => {
     const video = videoRef.current;
@@ -21,6 +30,16 @@ export function useVideoPlayer() {
     const video = videoRef.current;
     if (!video) return;
     video.muted = !video.muted;
+    setIsMuted(video.muted);
+  }, []);
+
+  // Volume de 0 a 1: em 0 fica no mudo; subir o volume tira do mudo
+  const setVolume = useCallback((value) => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (value > 0) video.volume = value;
+    video.muted = value === 0;
+    setVolumeState(video.volume);
     setIsMuted(video.muted);
   }, []);
 
@@ -38,11 +57,30 @@ export function useVideoPlayer() {
     onPause: () => setIsPlaying(false),
     onEnded: () => setIsPlaying(false),
     onTimeUpdate: (e) => setCurrentTime(e.currentTarget.currentTime),
-    onLoadedMetadata: (e) => setDuration(e.currentTarget.duration || 0),
-    onVolumeChange: (e) => setIsMuted(e.currentTarget.muted),
+    onLoadedMetadata: (e) => {
+      setDuration(e.currentTarget.duration || 0);
+      // O efeito já aplicou initialVolume: se não "pegou", o volume é do aparelho
+      setCanSetVolume(e.currentTarget.volume === initialVolume);
+    },
+    onVolumeChange: (e) => {
+      setIsMuted(e.currentTarget.muted);
+      setVolumeState(e.currentTarget.volume);
+    },
   };
 
-  return { videoProps, isPlaying, isMuted, currentTime, duration, togglePlay, toggleMute, seek };
+  return {
+    videoProps,
+    isPlaying,
+    isMuted,
+    volume,
+    canSetVolume,
+    currentTime,
+    duration,
+    togglePlay,
+    toggleMute,
+    setVolume,
+    seek,
+  };
 }
 
 // 75 -> "1:15"

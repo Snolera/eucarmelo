@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Gallery from "@/components/Gallery/Gallery";
 import Work from "@/sections/Work/Work";
@@ -16,15 +16,14 @@ function mockMatchMedia(reduced = false) {
   }));
 }
 
-// Testes com prefers-reduced-motion ficam em GalleryReducedMotion.test.jsx:
-// o motion lê essa preferência uma vez por módulo, então precisam de arquivo próprio
+const activeButton = () => screen.getAllByRole("button").find((b) => b.getAttribute("aria-current") === "true");
 
 afterEach(() => {
   delete window.matchMedia;
   delete Element.prototype.animate;
 });
 
-describe("Gallery (anel 3D de reels)", () => {
+describe("Gallery (coverflow de reels)", () => {
   beforeEach(() => mockMatchMedia());
 
   test("renderiza os 6 reels com cliente (h3) e categoria", () => {
@@ -38,15 +37,43 @@ describe("Gallery (anel 3D de reels)", () => {
 
   test("sem botões de controle: os únicos botões são os 6 cards", () => {
     render(<Gallery items={work.items} />);
-    const buttons = screen.getAllByRole("button");
-    expect(buttons).toHaveLength(6);
-    buttons.forEach((button) => expect(button).toHaveAccessibleName(/assistir reel/i));
+    expect(screen.getAllByRole("button")).toHaveLength(6);
   });
 
-  test("anel com 6 cards: cada um a 60° do outro", () => {
+  test("abre no card do meio (03): só ele é o card ativo e recebe Tab", () => {
     render(<Gallery items={work.items} />);
-    const angles = screen.getAllByRole("listitem").map((li) => li.style.getPropertyValue("--angle"));
-    expect(angles).toEqual(["0deg", "60deg", "120deg", "180deg", "240deg", "300deg"]);
+    const active = activeButton();
+    expect(active).toHaveAccessibleName(/assistir reel studio vila/i);
+    const tabbable = screen.getAllByRole("button").filter((b) => b.tabIndex === 0);
+    expect(tabbable).toEqual([active]);
+  });
+
+  test("clicar num card lateral o traz para o centro, sem abrir o player", async () => {
+    const user = userEvent.setup();
+    render(<Gallery items={work.items} />);
+
+    await user.click(screen.getByRole("button", { name: /mostrar reel café bruma/i }));
+    expect(activeButton()).toHaveAccessibleName(/assistir reel café bruma/i);
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
+
+  test("setas, Home e End trocam o card ativo e levam o foco junto", async () => {
+    const user = userEvent.setup();
+    render(<Gallery items={work.items} />);
+
+    await user.tab();
+    await user.keyboard("{ArrowRight}");
+    expect(activeButton()).toHaveAccessibleName(/festival aurora/i);
+    expect(activeButton()).toHaveFocus();
+    await user.keyboard("{ArrowLeft}{ArrowLeft}");
+    expect(activeButton()).toHaveAccessibleName(/atelier nó/i);
+    await user.keyboard("{End}");
+    expect(activeButton()).toHaveAccessibleName(/lume beauty/i);
+    await user.keyboard("{ArrowRight}"); // não passa do último
+    expect(activeButton()).toHaveAccessibleName(/lume beauty/i);
+    await user.keyboard("{Home}");
+    expect(activeButton()).toHaveAccessibleName(/café bruma/i);
+    expect(activeButton()).toHaveFocus();
   });
 });
 
@@ -60,14 +87,14 @@ describe("Gallery na seção Trabalhos", () => {
     expect(screen.getByRole("heading", { level: 2, name: "Trabalhos selecionados" })).toBeInTheDocument();
   });
 
-  test("clicar num card abre o player daquele reel (sem giro)", async () => {
+  test("clicar no card central abre o player daquele reel (sem giro)", async () => {
     const animate = vi.fn(() => ({ cancel: vi.fn() }));
     Element.prototype.animate = animate;
     const user = userEvent.setup();
     render(<Work />);
 
-    await user.click(screen.getByRole("button", { name: /assistir reel lume beauty/i }));
-    const dialog = screen.getByRole("dialog", { name: "Lume Beauty" });
+    await user.click(screen.getByRole("button", { name: /assistir reel studio vila/i }));
+    const dialog = screen.getByRole("dialog", { name: "Studio Vila" });
     expect(within(dialog).getByText(/vídeo em breve/i)).toBeInTheDocument();
     // Transição de 240ms do card até o centro, sem rotateY
     const [keyframes, options] = animate.mock.calls[0];
@@ -75,22 +102,13 @@ describe("Gallery na seção Trabalhos", () => {
     expect(keyframes[0].transform).not.toMatch(/rotate/);
   });
 
-  test("depois de fechar o player, o anel volta a girar sozinho", async () => {
-    const user = userEvent.setup();
-    const { container } = render(<Work />);
-    const ring = container.querySelector("ul");
-
-    await user.click(screen.getByRole("button", { name: /assistir reel café bruma/i }));
-    await user.click(screen.getByRole("button", { name: /fechar/i }));
-    const closedAt = ring.style.transform;
-    await waitFor(() => expect(ring.style.transform).not.toBe(closedAt), { timeout: 1000 });
-  });
-
-  test("fechar o player remove o diálogo", async () => {
+  test("Enter no card ativo abre o player; fechar remove o diálogo", async () => {
     const user = userEvent.setup();
     render(<Work />);
 
-    await user.click(screen.getByRole("button", { name: /assistir reel café bruma/i }));
+    await user.tab();
+    await user.keyboard("{ArrowLeft}{Enter}");
+    expect(screen.getByRole("dialog", { name: "Atelier Nó" })).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: /fechar/i }));
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });

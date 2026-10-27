@@ -11,22 +11,8 @@ export default function Hero() {
     <section className={styles.hero} aria-labelledby="hero-title">
       {/* Entra da esquerda ao carregar: por CSS, sem esperar o JS (o H1 é o LCP) */}
       <Reveal immediate>
+        {/* O HeroCard também desenha o showreel de fundo (sem som) */}
         <HeroCard className={styles.heroCard} video={hero.showreel}>
-          {hero.backgroundSrc ? (
-            <video
-              className={styles.heroMedia}
-              src={hero.backgroundSrc}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              aria-hidden="true"
-            />
-          ) : (
-            <div className={`${styles.heroMedia} ${styles["heroMedia--placeholder"]}`} aria-hidden="true" />
-          )}
-
           <div className={styles.heroContent}>
             <div className={styles.heroText}>
               <p className={styles.heroKicker}>{hero.kicker}</p>

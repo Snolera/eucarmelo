@@ -52,8 +52,9 @@ describe("Transição de abertura do player", () => {
     const user = userEvent.setup();
     render(<Work />);
 
-    await user.click(screen.getByRole("button", { name: /assistir reel café bruma/i }));
-    expect(screen.getByRole("dialog", { name: "Café Bruma" })).toBeInTheDocument();
+    // Studio Vila é o card do meio, ativo ao abrir a galeria
+    await user.click(screen.getByRole("button", { name: /assistir reel studio vila/i }));
+    expect(screen.getByRole("dialog", { name: "Studio Vila" })).toBeInTheDocument();
     expect(animate).toHaveBeenCalledTimes(1);
   });
 

@@ -6,8 +6,20 @@ import styles from "./VideoPlayer.module.css";
 
 // Player vertical (9:16) com controles próprios; sem src mostra estado vazio
 export default function VideoPlayer({ src, poster, title, autoPlay = false }) {
-  const { videoProps, isPlaying, isMuted, currentTime, duration, togglePlay, toggleMute, seek } =
-    useVideoPlayer();
+  const {
+    videoProps,
+    isPlaying,
+    isMuted,
+    volume,
+    canSetVolume,
+    currentTime,
+    duration,
+    togglePlay,
+    toggleMute,
+    setVolume,
+    seek,
+  } = useVideoPlayer();
+  const shownVolume = isMuted ? 0 : volume; // no mudo, o controle mostra 0
   const hasVideo = Boolean(src);
 
   return (
@@ -71,6 +83,22 @@ export default function VideoPlayer({ src, poster, title, autoPlay = false }) {
         >
           {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
         </button>
+
+        {/* Só onde o site consegue mudar o volume (no iPhone, vale o do aparelho) */}
+        {canSetVolume && (
+          <input
+            type="range"
+            className={`${styles.playerProgress} ${styles.playerVolume}`}
+            min={0}
+            max={1}
+            step={0.05}
+            value={shownVolume}
+            onChange={(e) => setVolume(Number(e.target.value))}
+            aria-label="Volume"
+            aria-valuetext={`${Math.round(shownVolume * 100)}%`}
+            style={{ "--progress": `${shownVolume * 100}%` }}
+          />
+        )}
       </div>
     </div>
   );

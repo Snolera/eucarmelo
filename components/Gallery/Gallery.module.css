@@ -1,37 +1,34 @@
 /* Mobile first: base para telas pequenas, min-width amplia o layout */
 .gallery {
-  --card-w: clamp(8.5rem, 40vw, 11rem);
-  --card-h: calc(var(--card-w) * 16 / 9); /* reels 9:16 */
-  /* Legenda do ReelCard + folga: em perspectiva, a legenda dos cards da frente desce um pouco */
-  --caption-h: 6rem;
-  /* Raio para 6 cards: (w / 2) / tan(30deg) ≈ w * 0.87; acima disso é o espaço entre eles */
-  --radius: calc(var(--card-w) * 1.5);
-  /* Recua o anel: o card da frente mantém o tamanho e os de trás ficam mais fundos */
-  --depth: calc(var(--radius) * -0.8);
+  /* Largura do card limitada pela altura da tela para caber em 9:16 */
+  /* Mais estreito que a Galeria Arco: o padding do painel come parte da largura */
+  --card-w: min(52vw, 38svh);
+  /* Espaço abaixo do card para a legenda do card ativo */
+  --caption-h: 4.5rem;
 
   overflow: clip; /* evita scroll horizontal com os cards laterais */
 }
 
+/* Palco 3D */
 .galleryStage {
-  perspective: calc(var(--card-w) * 4.5); /* menor = profundidade mais acentuada */
-  padding-block: calc(var(--card-h) * 0.08);
-  touch-action: pan-y; /* swipe horizontal gira; vertical continua rolando a página */
-  cursor: grab;
+  display: flex;
+  justify-content: center;
+  padding-block: 1rem var(--caption-h);
+  perspective: 900px;
+  touch-action: pan-y; /* swipe horizontal troca o card; vertical continua rolando a página */
   user-select: none;
+  cursor: grab;
 }
 
 .galleryStage:active {
   cursor: grabbing;
 }
 
-.galleryDepth {
-  transform: translateZ(var(--depth));
-  transform-style: preserve-3d;
-}
-
-.galleryRing {
+/* Trilho com o tamanho de um card; os itens se empilham sobre ele */
+.galleryTrack {
   position: relative;
-  height: calc(var(--card-h) + var(--caption-h));
+  width: var(--card-w);
+  aspect-ratio: 9 / 16;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -40,34 +37,28 @@
 
 .galleryCard {
   position: absolute;
-  top: 0;
-  left: 50%;
-  width: var(--card-w);
-  margin-left: calc(var(--card-w) / -2);
-  transform: rotateY(var(--angle)) translateZ(var(--radius));
-}
-
-/* Mantém o 3D até a legenda do ReelCard, para ela sumir quando o card está de costas */
-.galleryCard,
-.galleryCard > article {
-  transform-style: preserve-3d;
+  inset: 0;
+  will-change: transform;
 }
 
 @media (min-width: 480px) {
   .gallery {
-    --card-w: clamp(10rem, 30vw, 12rem);
+    --card-w: min(48vw, 36svh);
   }
 }
 
 @media (min-width: 768px) {
   .gallery {
-    --card-w: 13rem;
-    --radius: calc(var(--card-w) * 1.65);
+    --card-w: clamp(180px, min(34vw, 34svh), 340px);
+  }
+
+  .galleryStage {
+    perspective: 1400px;
   }
 }
 
 @media (min-width: 1024px) {
   .gallery {
-    --card-w: 15rem;
+    --card-w: clamp(180px, min(26vw, 34svh), 380px);
   }
 }

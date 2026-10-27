@@ -56,9 +56,9 @@ Sem ela, `lib/siteUrl.js` usa `VERCEL_PROJECT_PRODUCTION_URL`, preenchida automa
 app/            Rotas (App Router): layout, página, robots.js, sitemap.js, estilos globais
 sections/       Blocos da página, na ordem em que aparecem (Header, Hero, Stats, Work, About, Footer)
 components/     Peças reutilizáveis (Button, Panel, Kicker, Gallery, ReelCard, Reveal, VideoPlayer, VideoModal, SocialIcon)
-hooks/          Lógica reutilizável (useVideoPlayer, useRingRotation, useReveal)
+hooks/          Lógica reutilizável (useVideoPlayer, useCoverflow, useReveal)
 content/        site.js: toda a copy, links e dados (vídeos, stats, reels, redes)
-lib/            Utilitários (siteUrl.js)
+lib/            Utilitários (siteUrl.js, coverflow.js)
 __tests__/      Testes de cada seção e componente
 ```
 
@@ -104,15 +104,16 @@ As seções são **Server Components** sempre que possível. O HTML chega pronto
 - **`VideoPlayer`:** player próprio, sempre em **9:16** (o conteúdo é gravado no celular), com play/pause, barra de progresso, tempo e som. Sem `src`, mostra "Vídeo em breve" e desativa os controles.
 - **`VideoModal`:** usa o `<dialog>` nativo com `showModal()`, que já traz foco preso, Esc para fechar e fundo inerte. Também fecha clicando fora. Todo fechamento passa pelo `dialog.close()`, que devolve o foco a quem abriu o modal.
 - **Um único modal por seção:** o Hero e a `Gallery` têm um modal cada um, alimentado com o reel ativo.
-- **Hospedagem dos vídeos:** ainda está em estudo, e o código só precisa da URL. Opções que encaixam: Vercel Blob, Cloudflare Stream, Mux.
+- **Hospedagem dos vídeos:** Vercel Blob (store público). O código só precisa da URL; ver "Vídeos e pôsteres (Vercel Blob)".
 
 ### Hooks
 
-- **`useVideoPlayer`:** o estado do `<video>` vem dos eventos nativos (o elemento é a fonte da verdade) e expõe `togglePlay`, `toggleMute` e `seek`. Também tem a função `formatTime` (`75` vira `"1:15"`).
-- **`useRingRotation({ total, speed, dragFactor, paused })`:** controla a rotação do anel 3D com um `MotionValue`.
-  - **Autoplay:** 8°/s, em loop contínuo (o mouse por cima não pausa). Para só com foco dentro do anel (teclado) e com o player aberto (`paused`). Fica desligado com `prefers-reduced-motion`.
-  - **Arrasto:** gira o anel e, ao soltar, encaixa no card mais próximo, com inércia. Um clique logo depois de um arrasto não abre o player.
-  - **Teclado:** `focusIndex(i)` traz para a frente o card focado, pelo caminho mais curto.
+- **`useVideoPlayer`:** o estado do `<video>` vem dos eventos nativos (o elemento é a fonte da verdade) e expõe `togglePlay`, `toggleMute`, `setVolume` e `seek`. O som começa em 50% (`initialVolume`). O controle de volume aparece a partir de 480px e só onde o navegador deixa o site mudar o volume (`canSetVolume`; no iPhone vale o volume do aparelho). Volume em 0 silencia, e subir o volume tira do mudo. Também tem a função `formatTime` (`75` vira `"1:15"`).
+- **`useCoverflow({ total })`:** controla o coverflow da galeria. Devolve `index` (o card ativo), `select(i)`, `trackRef`, `panHandlers` e `onKeyDown`.
+  - **Início:** abre no card do meio (`getMiddleIndex`: 6 cards → 3º). Sem autoplay.
+  - **Arrasto:** ao soltar, anda 1 ou 2 cards conforme a distância e a velocidade do gesto (`getSwipeSteps`). Um clique logo depois de um arrasto não seleciona nem abre o player.
+  - **Teclado:** setas, Home e End trocam o card ativo, e o foco vai junto (só o card ativo entra no Tab).
+  - **Regras puras** em `lib/coverflow.js` (pose 3D de cada card, swipe, mola), testadas sem React.
 
 ### Componentes compartilhados
 
@@ -120,9 +121,9 @@ As seções são **Server Components** sempre que possível. O HTML chega pronto
   - `variant`: `"solid"` (cinza do layout base) ou `"glass"` (vidro).
   - `as`: a tag externa (`section` por padrão, `footer` no rodapé).
 - **`Button`:** botão outline. Vira `<a>` quando recebe `href`, e links externos ganham `target="_blank"` e `rel="noopener noreferrer"`. Variantes `light`, `accent` e `white`; tamanhos `md` e `lg`.
-- **`Kicker`:** rótulo pequeno em caixa alta acima dos títulos.
-- **`ReelCard`:** card 9:16 com moldura. O botão invisível cobre o card inteiro e abre o player. No anel 3D, a legenda some quando o card está de costas (`backface-visibility`), para não aparecer espelhada.
-- **`Gallery`:** anel 3D com os reels de `work.items`. Cada card é girado em Y (`--angle`) e empurrado para fora em Z (`--radius`). Sem botões de controle: gira sozinho e com o arrasto. CSS mobile-first, com cards de ~144px em 360px até 240px no desktop.
+- **`Kicker`:** rótulo pequeno em caixa alta acima dos títulos. Cada letra vira um `<span>` com índice (`--i`) e `aria-hidden`, e o total de letras vai em `--n`; o texto inteiro fica num span visualmente escondido, para o leitor de tela não ler letra por letra.
+- **`ReelCard`:** card 9:16 preto com borda clara, número, barra de player decorativa e reflexo no "chão". O card ativo acende uma luz que gira na borda (`conic-gradient` + `@property`) e mostra a legenda (cliente e categoria). O botão é o próprio card: no ativo abre o player, num lateral traz o card para o centro.
+- **`Gallery`:** coverflow com os reels de `work.items` (modelo "Galeria Arco"). O card ativo fica reto no centro; os laterais giram 45° para dentro, diminuem e ficam mais transparentes com a distância (animados por mola do motion). Sem botões de controle. CSS mobile-first, com cards de ~187px em 360px até 380px no desktop (limitados também pela altura da tela).
 - **`SocialIcon`:** ícones de X, Instagram e E-mail só em contorno, que herdam a cor do texto.
 
 ---
@@ -192,13 +193,14 @@ Os estilos base são os do mobile, e os breakpoints usam `min-width`: **480px**,
 - **Abertura do player (cards e hero):** o player "sai" do elemento clicado e vai até o centro da tela em **240ms** (`OPEN_DURATION` em `VideoModal.jsx`). A técnica é FLIP: o player já abre na posição final, e uma animação de `transform` (Web Animations API) o leva da posição de origem até o centro. Junto, o fundo aparece com fade. Com vídeo, ele já começa tocando (`autoPlay`).
 - **Hero:** clicar em **qualquer parte do card** abre o showreel. O CTA do Instagram segue o link normalmente, e o clique não abre o player se a pessoa estiver selecionando texto.
 - **Números:** faixa contínua da direita para a esquerda (`@keyframes`, 25s, `linear`), **sem repetir valores**: entra pela direita e sai toda pela esquerda antes de recomeçar. Pausa com o mouse por cima. A velocidade é o `25s` de `.statsList`.
-- **Trabalhos:** anel 3D (`components/Gallery`) que gira sozinho e aceita arrastar. No toque, o swipe horizontal gira o anel e o vertical continua rolando a página (`touch-action: pan-y`).
+- **Trabalhos:** coverflow (`components/Gallery`). Troca de card com arrasto, clique num card lateral ou setas do teclado; clicar no card central abre o player. No toque, o swipe horizontal troca o card e o vertical continua rolando a página (`touch-action: pan-y`).
 - **Entrada no scroll (Hero, Números, Trabalhos, Sobre):** cada seção desliza da esquerda e aparece com fade quando **60% dela fica visível**, ou quando ela ocupa 60% da altura da tela (seções mais altas que a tela, comuns no mobile). A entrada acontece uma vez só.
   - **Proporção:** distância `clamp(1.5rem, 6vw, 4rem)` (24px em 360px, até 64px no desktop) e duração de 550ms no mobile e 700ms a partir de 1024px.
   - **Implementação:** `components/Reveal` + `hooks/useReveal` (IntersectionObserver). No `Panel`, é a prop `reveal`.
   - **Hero:** usa `<Reveal immediate>`, uma animação CSS desde a primeira pintura, para não esperar o JavaScript nem atrasar o LCP.
   - **Sem JavaScript:** o conteúdo só começa escondido com `@media (scripting: enabled)`, então sem JS tudo aparece normalmente.
-- **Menos movimento:** com `prefers-reduced-motion`, as seções aparecem sem deslizar, a faixa para, o anel começa sem autoplay e encaixa sem animação, e o scroll suave é desligado.
+- **Kickers (Trabalhos e Sobre):** quando a seção é revelada (o mesmo IntersectionObserver do `Reveal`, via `data-revealed`), uma onda laranja (`--color-accent`, `#b68235`) passa pelas letras: cada uma acende e volta ao branco. Junto, uma linha cresce branca embaixo do texto, da 1ª letra até 40% da largura, e fica laranja quando a onda termina. Começa no meio da entrada da seção; 45ms entre letras e 700ms por letra (`--kicker-stagger` e `--kicker-glow` em `Kicker.module.css`). Sem JavaScript, a linha já aparece laranja.
+- **Menos movimento:** com `prefers-reduced-motion`, as seções aparecem sem deslizar, os kickers aparecem sem a onda (só a linha laranja), a faixa para, o coverflow troca de card sem animação e a luz da borda fica parada, e o scroll suave é desligado.
 
 ---
 
@@ -208,7 +210,7 @@ Os estilos base são os do mobile, e os breakpoints usam `min-width`: **480px**,
 - Link "Pular para o conteúdo" no header, visível só com foco por teclado.
 - Foco visível dourado em todo elemento interativo. Áreas de toque de no mínimo 44×44px.
 - Botões só com ícone têm `aria-label` (menu, setas, fechar, controles do player).
-- Anel de reels: foco pelo teclado para a rotação e gira o anel até o card. Sem botão de pausa, por decisão de layout (ver pendências).
+- Coverflow de reels: só o card ativo entra no Tab; setas, Home e End trocam o card e levam o foco junto. Sem movimento automático, então não precisa de botão de pausa.
 - Redes sem endereço aparecem como imagem "(em breve)", sem link quebrado.
 
 ## SEO
@@ -231,7 +233,32 @@ Para rodar: `npm test`. Os testes cobrem cada seção e componente:
 
 O `vitest.setup.js` tem um polyfill de `<dialog>.showModal/close`, porque o jsdom não implementa esses métodos.
 
-**Limitação:** o jsdom não aplica media queries nem animações. O que depende de breakpoint (por exemplo, o tamanho dos cards do anel e o swipe) é conferido no navegador.
+**Limitação:** o jsdom não aplica media queries nem animações. O que depende de breakpoint (por exemplo, o tamanho dos cards do coverflow e o swipe) é conferido no navegador.
+
+---
+
+## Vídeos e pôsteres (Vercel Blob)
+
+Os vídeos e pôsteres ficam num **Blob Store público** da Vercel (`store_Rm7Tmby09iTxGh0l`). O site só guarda as URLs, em `content/site.js`; não há SDK nem token no código.
+
+**Enviar um arquivo:**
+
+1. Na Vercel: **Storage** → o store público → aba **Browser** → **Upload**.
+2. Use pastas e nomes sem espaço nem acento, por exemplo `reels/cafe-bruma.mp4` e `posters/cafe-bruma.jpg`.
+3. Clique no arquivo enviado e copie a URL. Ela tem o formato `https://rm7tmby09itxgh0l.public.blob.vercel-storage.com/reels/cafe-bruma.mp4`.
+4. Cole a URL no campo certo do `content/site.js`:
+   - reels: `src` e `poster` de cada item em `work.items`;
+   - showreel: `hero.showreel.src` e `hero.showreel.poster`; o mesmo vídeo toca sem som no fundo do card do hero.
+5. Rode `npm test`, faça o commit e o push. A Vercel publica sozinha.
+
+**Configuração:**
+
+- `next.config.mjs` libera no `next/image` só o domínio do nosso store (`BLOB_HOST`), para os pôsteres.
+- O teste `__tests__/blobUrls.test.js` falha se alguma URL do `site.js` for de outro domínio. Se ele falhar com a URL certa do painel, corrija o `BLOB_HOST`.
+
+**Formato dos arquivos:** MP4 (H.264 + AAC), 9:16, 1080×1920 no máximo, de preferência abaixo de 15 MB por reel. Pôster em JPG ou WebP, 1080×1920.
+
+**Cache:** o CDN guarda cada arquivo por até 1 mês. Para trocar um vídeo, envie com **outro nome** (ex.: `cafe-bruma-v2.mp4`) e atualize a URL, em vez de sobrescrever.
 
 ---
 
@@ -239,13 +266,12 @@ O `vitest.setup.js` tem um polyfill de `<dialog>.showModal/close`, porque o jsdo
 
 - [ ] Seção **Contato** (`#contato`). O link do menu já aponta para ela.
 - [ ] Links do **X** e do **E-mail** no rodapé: preencher `href` em `social`, no `content/site.js`.
-- [ ] Vídeos reais (showreel, fundo do hero, reels) e onde hospedá-los.
+- [ ] Vídeos reais (showreel, fundo do hero, reels): enviar ao Vercel Blob (ver "Vídeos e pôsteres").
 - [ ] Retrato do Welinton e pôsteres dos reels.
 - [ ] Números reais e, futuramente, a vitrine de logos de marcas na faixa.
 - [ ] Imagem de compartilhamento (Open Graph, 1200×630), favicon próprio e JSON-LD.
 - [ ] Domínio definitivo e `NEXT_PUBLIC_SITE_URL`.
 - [ ] Botão de pausar a faixa de números no toque (WCAG 2.2.2), se desejado.
-- [ ] Forma de pausar o anel de reels com mouse/toque (WCAG 2.2.2): hoje só o foco pelo teclado para a rotação.
 - [ ] Lighthouse depois do primeiro deploy.
 
 ## Arquivos locais (fora do git)

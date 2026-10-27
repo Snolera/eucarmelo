@@ -1,5 +1,87 @@
 .kicker {
+  --kicker-stagger: 45ms; /* atraso entre uma letra e a próxima */
+  --kicker-glow: 700ms; /* tempo de cada letra ir ao laranja e voltar ao branco */
+  /* Início: no meio da entrada da seção (Reveal) */
+  --kicker-start: calc(var(--reveal-duration, 0ms) * 0.5);
+  /* A linha cresce enquanto a onda percorre o texto (até o pico da última letra) */
+  --kicker-wave: calc(var(--n, 1) * var(--kicker-stagger) + var(--kicker-glow) * 0.5);
+  /* Fim da onda: a última letra já voltou ao branco; aí a linha fica laranja */
+  --kicker-end: calc((var(--n, 1) - 1) * var(--kicker-stagger) + var(--kicker-glow));
+
+  position: relative;
+  width: fit-content; /* a linha mede 40% do texto, não do bloco */
   font-size: 0.75rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+}
+
+/* Texto inteiro só para leitores de tela (visualmente escondido) */
+.kickerText {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.kickerLetter {
+  white-space: pre; /* mantém os espaços entre as palavras */
+}
+
+/* Linha abaixo do texto: começa na 1ª letra; escondida até a seção ser revelada */
+.kicker::after {
+  content: "";
+  position: absolute;
+  bottom: -0.5em;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--color-accent);
+}
+
+/* Seção revelada (IntersectionObserver do Reveal): onda laranja letra a letra */
+[data-revealed="true"] .kickerLetter {
+  animation: kickerGlow var(--kicker-glow) ease-in-out calc(var(--kicker-start) + var(--i) * var(--kicker-stagger));
+}
+
+/* A linha cresce branca junto com a onda e fica laranja quando ela termina */
+[data-revealed="true"] .kicker::after {
+  width: 40%;
+  animation:
+    kickerLineGrow var(--kicker-wave) cubic-bezier(0.4, 0, 0.2, 1) var(--kicker-start) backwards,
+    kickerLineColor 300ms ease-out calc(var(--kicker-start) + var(--kicker-end)) backwards;
+}
+
+@keyframes kickerGlow {
+  40% {
+    color: var(--color-accent);
+  }
+}
+
+@keyframes kickerLineGrow {
+  from {
+    width: 0;
+  }
+}
+
+@keyframes kickerLineColor {
+  from {
+    background: var(--color-text);
+  }
+}
+
+/* Sem JavaScript não há reveal: a linha já aparece laranja */
+@media (scripting: none) {
+  .kicker::after {
+    width: 40%;
+  }
+}
+
+/* Menos movimento: sem onda; a linha aparece pronta (laranja) */
+@media (prefers-reduced-motion: reduce) {
+  [data-revealed="true"] .kickerLetter,
+  [data-revealed="true"] .kicker::after {
+    animation: none;
+  }
 }
