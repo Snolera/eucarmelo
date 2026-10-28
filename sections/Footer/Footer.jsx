@@ -1,12 +1,11 @@
-import Panel from "@/components/Panel/Panel";
 import SocialIcon from "@/components/SocialIcon/SocialIcon";
 import { footer, social } from "@/content/site";
 import styles from "./Footer.module.css";
 
-// Rodapé em vidro (como Trabalhos/Sobre): copyright à esquerda, redes à direita
+// Rodapé na coluna central: copyright à esquerda, redes à direita
 export default function Footer() {
   return (
-    <Panel as="footer" variant="glass" className={styles.footer}>
+    <footer className={`container ${styles.footer}`}>
       <p className={styles.footerCopy}>{footer.copyright}</p>
 
       <nav aria-label="Redes sociais">
@@ -39,6 +38,6 @@ export default function Footer() {
           })}
         </ul>
       </nav>
-    </Panel>
+    </footer>
   );
 }

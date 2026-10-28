@@ -1,0 +1,515 @@
+/* Galeria 9:16 (Galeria Fotos). Mobile first: a base é a fileira com scroll e snap;
+   a partir de 768px os 6 cards ficam fixos, em linha e sobrepostos */
+
+/* ============ Tokens (escopo da galeria) ============ */
+/* O fundo é o da página do projeto (--color-page), herdado do :root */
+.gallery {
+  --color-bg: #f2f2f3;
+  --color-surface: #e9e9ea;
+  --color-text: #1d1f20;
+  --color-on-page: #1d1f20;
+  --color-on-page-divider: color-mix(in srgb, #1d1f20 16%, transparent);
+  --color-accent: #5980a6;
+  --color-divider: color-mix(in srgb, #1d1f20 16%, transparent);
+
+  --color-neutral-300: #d4d4d7;
+  --color-neutral-700: #5d5d60;
+  --color-neutral-800: #424244;
+
+  --color-accent-200: #d6ebff;
+  --color-accent-300: #b5d9fd;
+  --color-accent-600: #597ea3;
+  --color-accent-700: #416180;
+  --color-accent-800: #2c455d;
+  --color-accent-900: #1d2d3d;
+
+  --color-warm: oklch(0.8 0.13 62);
+
+  --font-heading: var(--font-barlow-condensed, "Barlow Condensed"), system-ui, sans-serif;
+  --font-body: var(--font-barlow, "Barlow"), system-ui, sans-serif;
+
+  --space-4: 13.6px;
+  --space-6: 20.4px;
+
+  --card-w: clamp(140px, 19vw, 200px);
+  --gutter: clamp(16px, 4vw, 48px);
+
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: clamp(48px, 8vw, 104px) var(--gutter);
+  background: var(--color-page);
+  color: var(--color-on-page);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: normal; /* não herda a entrelinha do body do site */
+}
+
+/* ============ Blueprint (moldura com marcas "+") ============ */
+.blueprint {
+  position: relative;
+  border: 1px solid var(--color-divider);
+}
+
+.corner {
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  pointer-events: none;
+}
+
+.corner::before,
+.corner::after {
+  content: "";
+  position: absolute;
+  background: currentColor;
+}
+
+.corner::before {
+  left: 5px;
+  top: 0;
+  width: 1px;
+  height: 100%;
+}
+
+.corner::after {
+  top: 5px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+}
+
+.tl {
+  top: -6px;
+  left: -6px;
+}
+
+.tr {
+  top: -6px;
+  right: -6px;
+}
+
+.bl {
+  bottom: -6px;
+  left: -6px;
+}
+
+.br {
+  bottom: -6px;
+  right: -6px;
+}
+
+/* ============ Header ============ */
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  max-width: 560px;
+  text-align: center;
+}
+
+.kicker {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: clamp(32px, 5vw, 52px);
+  line-height: 1.02;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.lead {
+  margin: 0;
+  font-size: 15px;
+  color: var(--color-neutral-700);
+  text-wrap: pretty;
+}
+
+/* ============ Palco: fileira com scroll horizontal e snap (mobile) ============ */
+.stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  width: calc(100% + 2 * var(--gutter));
+  margin-inline: calc(-1 * var(--gutter));
+  padding-block: 40px;
+  padding-inline: calc(50% - min(31vw, 160px));
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+
+.stage::-webkit-scrollbar {
+  display: none;
+}
+
+/* Durante a entrada a fileira não pode rolar: nem pelo toque, nem pelo snap.
+   O Firefox recalcula o snap com os cards transformados (empilhados) e rolaria a fileira. */
+.stageLocked {
+  overflow-x: hidden;
+  scroll-snap-type: none;
+}
+
+.card {
+  position: relative;
+  display: block;
+  flex: 0 0 62vw;
+  max-width: 320px;
+  aspect-ratio: 9 / 16;
+  padding: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  scroll-snap-align: center;
+  will-change: transform;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+}
+
+.inner {
+  position: absolute;
+  inset: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ============ Mídia duotone ============ */
+.media {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-divider);
+}
+
+.image {
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.05);
+}
+
+.tintCool,
+.tintWarm {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: color;
+}
+
+.tintCool {
+  background: var(--color-accent);
+}
+
+.tintWarm {
+  background: var(--color-warm);
+}
+
+/* ============ Tags ============ */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  background: var(--color-bg);
+}
+
+.tagNum {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 2;
+  font-family: var(--font-heading);
+  letter-spacing: 0.08em;
+  color: var(--color-accent-800);
+}
+
+.tagDur {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  color: var(--color-neutral-800);
+}
+
+/* ============ Rodapé do card ============ */
+.footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 4px 4px;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.kickerSm {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.cardTitle {
+  overflow: hidden;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 1.2;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.play {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  background: transparent;
+  color: var(--color-accent-700);
+  transition:
+    background 0.3s,
+    color 0.3s;
+}
+
+.cardActive .play {
+  background: var(--color-warm);
+  color: var(--color-text);
+}
+
+/* ============ Controles ============ */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btnIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid var(--color-on-page-divider);
+  border-radius: 0;
+  color: var(--color-on-page);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btnIcon:hover {
+  background: color-mix(in srgb, currentColor 10%, transparent);
+}
+
+.btnIcon:active {
+  background: color-mix(in srgb, currentColor 18%, transparent);
+}
+
+.dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 2px visíveis, área de toque de 20px via padding + background-clip */
+.dot {
+  height: 20px;
+  padding: 9px 0;
+  border: 0;
+  background: var(--color-neutral-300);
+  background-clip: content-box;
+  cursor: pointer;
+}
+
+.dotActive {
+  background-color: var(--color-accent);
+}
+
+.counter {
+  min-width: 54px;
+  font-family: var(--font-heading);
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+
+/* ============ Modal de vídeo ============ */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: color-mix(in srgb, var(--color-accent-900) 82%, transparent);
+}
+
+.frame {
+  position: relative;
+  margin-top: 64px; /* reserva o espaço do header, que fica acima do frame */
+  aspect-ratio: 9 / 16;
+  height: min(calc(100vh - 136px), calc((100vw - 48px) * 16 / 9));
+  height: min(calc(100dvh - 136px), calc((100vw - 48px) * 16 / 9));
+  background: #000;
+  border-color: var(--color-accent-300);
+}
+
+.frame .corner {
+  color: var(--color-accent-200);
+}
+
+/* Player do site dentro da moldura: devolve os tokens que a galeria sobrescreve
+   (texto branco sobre o vídeo) e tira o arredondado (nada é arredondado na galeria) */
+.framePlayer {
+  --color-text: #ffffff;
+  --radius-card: 0;
+
+  position: absolute;
+  inset: 0;
+  font-family: var(--font-body);
+}
+
+.framePlayer > [data-video-player] {
+  width: 100%;
+  height: 100%;
+}
+
+.frameHeader {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(100% + 12px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--color-bg);
+}
+
+.frameKicker {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-accent-200);
+}
+
+.frameTitle {
+  display: block;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 22px;
+  text-transform: uppercase;
+}
+
+.btnOnDark {
+  color: var(--color-bg);
+  border-color: var(--color-accent-300);
+}
+
+.btnOnDark:hover {
+  background: color-mix(in srgb, var(--color-bg) 10%, transparent);
+}
+
+@media (min-width: 481px) {
+  .lead {
+    font-size: 16px;
+  }
+}
+
+/* ============ Tablet e desktop (≥ 768px): cards fixos, em linha e sobrepostos ============ */
+@media (min-width: 768px) {
+  .gallery {
+    gap: 40px;
+  }
+
+  .stage {
+    justify-content: center;
+    gap: 0;
+    width: 100%;
+    max-width: 1200px;
+    height: calc(var(--card-w) * 16 / 9 * 1.2 + 72px); /* folga p/ o ativo escalado + lift */
+    margin-inline: 0;
+    padding: 0;
+    overflow: visible;
+    scroll-snap-type: none;
+  }
+
+  .stageLocked {
+    overflow-x: visible;
+  }
+
+  .card {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    flex: none;
+    width: var(--card-w);
+    max-width: none;
+    /* Posição fixa: centros a 62% da largura do card (sobreposição ~38%); o Motion anima só y/scale */
+    translate: calc(-50% + var(--d) * var(--card-w) * 0.62) -50%;
+    scroll-snap-align: none;
+  }
+
+  .cardTitle {
+    font-size: clamp(16px, 1.6vw, 20px);
+  }
+
+  .controls {
+    gap: 20px;
+  }
+
+  .dots {
+    gap: 8px;
+  }
+}
+
+/* ============ Desktop (> 1024px) ============ */
+@media (min-width: 1025px) {
+  .gallery {
+    --card-w: clamp(150px, 17vw, 260px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .play,
+  .btnIcon {
+    transition: none;
+  }
+
+  .stage {
+    scroll-behavior: auto;
+  }
+}

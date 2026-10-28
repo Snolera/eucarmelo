@@ -2,6 +2,9 @@
 :root {
   /* Cores */
   --color-bg: #000000;
+  --color-page: #d9d4c3; /* fundo da página (atrás das seções) */
+  --color-ink: #000000; /* texto direto sobre o fundo da página */
+  --color-surface-dark: #151717; /* cinza escuro: header, card do hero e faixa de números */
   --color-container: #666666;
   --color-text: #ffffff;
   --color-text-footer: #b3b3b3;
@@ -11,7 +14,6 @@
   --color-accent-light: #e1ad66;
   --color-accent-hover: #a06f24;
   --color-hero-text: #f8f4f4;
-  --color-logo-dot: #ff0000; /* ponto do logo "welinton.carmelo" */
 
   --color-neutral-100: #f8f4f4;
   --color-neutral-200: #eae7e7;
@@ -23,9 +25,9 @@
   --color-surface: #eae9e9;
 
   /* Fontes (carregadas pelo next/font no layout) */
-  --font-heading: var(--font-cormorant), Georgia, serif;
+  --font-heading: var(--font-space-grotesk), system-ui, sans-serif;
   --font-display: var(--font-space-grotesk), system-ui, sans-serif; /* H1 e H2 */
-  --font-body: var(--font-lora), Georgia, serif;
+  --font-body: var(--font-space-grotesk), system-ui, sans-serif;
 
   /* Espaçamentos (mobile-first; crescem nos breakpoints abaixo) */
   --space-page: 1rem;
@@ -68,11 +70,11 @@ html:has(dialog[open]) {
 
 body {
   margin: 0;
-  background: var(--color-bg);
+  background: var(--color-page);
   color: var(--color-text);
   font-family: var(--font-body);
   font-size: 15px;
-  line-height: 1.55;
+  line-height: 0.5;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -82,6 +84,7 @@ h3 {
   font-family: var(--font-heading);
   font-weight: 400;
   margin: 0;
+
 }
 
 /* Space Grotesk nos títulos principais (pesos 300, 400, 500 e 700 disponíveis) */
@@ -90,8 +93,12 @@ h2 {
   font-family: var(--font-display);
 }
 
+/* Parágrafos: letras um pouco mais próximas e linhas bem juntas (Space Grotesk em texto corrido)
+   Classes com letter-spacing próprio (kickers) continuam com o seu */
 p {
   margin: 0;
+  line-height: 1;
+  letter-spacing: -0.5px;
 }
 
 a {
@@ -111,6 +118,13 @@ video {
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
+}
+
+/* Coluna central do layout: até 1240px, centralizada; abaixo de 1280px sobram 20px de cada lado
+   Usada no header, hero, seções e rodapé */
+.container {
+  width: min(1240px, 100% - 40px);
+  margin-inline: auto;
 }
 
 @media (prefers-reduced-motion: reduce) {

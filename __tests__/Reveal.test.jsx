@@ -90,11 +90,12 @@ describe("Reveal (animação de entrada no scroll)", () => {
     expect(observers).toHaveLength(0);
   });
 
-  test("Hero, Números, Trabalhos e Sobre têm a animação; o rodapé não", () => {
+  // Trabalhos não desliza: a galeria tem a própria entrada (queda + leque)
+  test("Hero, Números e Sobre têm a animação; Trabalhos e o rodapé não", () => {
     const count = (ui) => render(ui).container.querySelectorAll("[data-revealed]").length;
     expect(count(<Hero />)).toBe(1);
     expect(count(<Stats />)).toBe(1);
-    expect(count(<Work />)).toBe(1);
+    expect(count(<Work />)).toBe(0);
     expect(count(<About />)).toBe(1);
     expect(count(<Footer />)).toBe(0);
   });

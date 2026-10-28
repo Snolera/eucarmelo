@@ -3,8 +3,8 @@
   --stats-gap: 3rem;
 
   overflow: hidden; /* a faixa respeita o raio da caixa */
-  /* Fundo preto, igual ao do site: só a faixa de números aparece */
-  background: var(--color-bg);
+  /* Mesmo cinza escuro do header e do card do hero */
+  background: var(--color-surface-dark);
   border: 0;
 }
 
@@ -66,14 +66,6 @@
 
   .statsItem {
     padding: 2.5rem 0;
-  }
-}
-
-/* Desktop: caixa com metade da largura, centralizada */
-@media (min-width: 1024px) {
-  .stats {
-    width: 50%;
-    margin-inline: auto;
   }
 }
 

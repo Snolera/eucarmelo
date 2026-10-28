@@ -1,7 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import VideoModal from "@/components/VideoModal/VideoModal";
-import Work from "@/sections/Work/Work";
 import Hero from "@/sections/Hero/Hero";
 
 const ORIGIN = { left: 100, top: 400, width: 160, height: 284 };
@@ -45,17 +44,6 @@ describe("Transição de abertura do player", () => {
     const animate = mockMotion({ reduced: true });
     render(<VideoModal open title="Reel" originRect={ORIGIN} onClose={() => {}} />);
     expect(animate).not.toHaveBeenCalled();
-  });
-
-  test("clicar num card de Trabalhos dispara a transição a partir do card", async () => {
-    const animate = mockMotion();
-    const user = userEvent.setup();
-    render(<Work />);
-
-    // Studio Vila é o card do meio, ativo ao abrir a galeria
-    await user.click(screen.getByRole("button", { name: /assistir reel studio vila/i }));
-    expect(screen.getByRole("dialog", { name: "Studio Vila" })).toBeInTheDocument();
-    expect(animate).toHaveBeenCalledTimes(1);
   });
 
   test("clicar no hero dispara a transição a partir do card do hero", async () => {

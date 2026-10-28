@@ -6,7 +6,11 @@ describe("Header", () => {
   test("mostra o logo e os links de navegação com âncoras", () => {
     render(<Header />);
     expect(screen.getByRole("banner")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /welinton\.carmelo/i })).toHaveAttribute("href", "/");
+    // Logo "welinton" + "carmelo" (negrito) colados; leitor de tela ouve "Welinton Carmelo"
+    const logo = screen.getByRole("link", { name: "Welinton Carmelo" });
+    expect(logo).toHaveAttribute("href", "/");
+    expect(logo).toHaveTextContent("welintoncarmelo");
+    expect(logo.querySelector("[data-logo-bold]")).toHaveTextContent("carmelo");
 
     const nav = screen.getByRole("navigation", { name: /principal/i });
     expect(nav).toBeInTheDocument();

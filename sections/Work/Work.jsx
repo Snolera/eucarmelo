@@ -1,20 +1,13 @@
-import Gallery from "@/components/Gallery/Gallery";
-import Kicker from "@/components/Kicker/Kicker";
+import Gallery916 from "@/components/Gallery916/Gallery916";
 import Panel from "@/components/Panel/Panel";
 import { work } from "@/content/site";
 import styles from "./Work.module.css";
 
+// Sem o deslize de entrada do Panel: a galeria tem a própria (queda + leque)
 export default function Work() {
   return (
-    <Panel id="trabalhos" aria-labelledby="work-title" variant="glass" reveal className={styles.work}>
-      <div className={styles.workHeader}>
-        <Kicker>{work.kicker}</Kicker>
-        <h2 id="work-title" className={styles.workTitle}>
-          {work.title}
-        </h2>
-      </div>
-      {/* Anel 3D com os reels; clicar num card abre o player */}
-      <Gallery items={work.items} />
+    <Panel id="trabalhos" aria-labelledby="work-title" variant="glass" className={styles.work}>
+      <Gallery916 items={work.items} kicker={work.kicker} title={work.title} lead={work.lead} titleId="work-title" />
     </Panel>
   );
 }

@@ -1,4 +1,4 @@
-import { Play } from "lucide-react";
+// import { Play } from "lucide-react"; // usado pelo botão "Assistir showreel" (comentado)
 import Button from "@/components/Button/Button";
 import Reveal from "@/components/Reveal/Reveal";
 import { hero, instagram } from "@/content/site";
@@ -8,11 +8,17 @@ import styles from "./Hero.module.css";
 // Server Component: o conteúdo vem pronto no HTML; só o HeroCard e o Reveal rodam no cliente
 export default function Hero() {
   return (
-    <section className={styles.hero} aria-labelledby="hero-title">
+    <section className={`container ${styles.hero}`} aria-labelledby="hero-title">
       {/* Entra da esquerda ao carregar: por CSS, sem esperar o JS (o H1 é o LCP) */}
       <Reveal immediate>
         {/* O HeroCard também desenha o showreel de fundo (sem som) */}
         <HeroCard className={styles.heroCard} video={hero.showreel}>
+          {/* Só no mobile: nome e @ acima do vídeo (o CSS a coloca antes do vídeo) */}
+          <div className={styles.heroTopbar} data-hero-topbar>
+            <span>{hero.cardName}</span>
+            <span>{instagram.handle}</span>
+          </div>
+
           <div className={styles.heroContent}>
             <div className={styles.heroText}>
               <p className={styles.heroKicker}>{hero.kicker}</p>
@@ -22,11 +28,14 @@ export default function Hero() {
             </div>
 
             <div className={styles.heroActions}>
-              {/* Acesso por teclado/leitor de tela; o clique sobe até o HeroCard */}
-              <Button variant="light" aria-haspopup="dialog">
+              {/* Botão "Assistir showreel" comentado: some no mobile e no desktop.
+                  Atenção: era o acesso por teclado/leitor de tela ao player (o clique no card continua)
+                  Para reativar, descomente o bloco e o import do Play no topo do arquivo.
+              <Button variant="light" className={styles.heroWatch} aria-haspopup="dialog">
                 <Play size={16} strokeWidth={1.6} aria-hidden="true" />
                 {hero.watch}
               </Button>
+              */}
               <Button href={instagram.dmUrl} variant="accent">
                 {hero.cta} · {instagram.handle}
               </Button>

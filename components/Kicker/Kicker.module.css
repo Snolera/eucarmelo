@@ -67,7 +67,7 @@
 
 @keyframes kickerLineColor {
   from {
-    background: var(--color-text);
+    background: currentColor; /* cresce na cor do texto e fica laranja no fim */
   }
 }
 

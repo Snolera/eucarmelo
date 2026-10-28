@@ -23,37 +23,43 @@ export default function Header() {
         Pular para o conteúdo
       </a>
 
-      <Link href="/" className={styles.headerLogo}>
-        welinton<span className={styles.headerLogoDot}>.</span>
-        <em>carmelo</em>
-      </Link>
+      {/* Header na largura toda (fundo e borda); conteúdo na coluna central */}
+      <div className={`container ${styles.headerInner}`}>
+        {/* "welintoncarmelo" colado; o aria-label separa as palavras para o leitor de tela */}
+        <Link href="/" className={styles.headerLogo} aria-label="Welinton Carmelo">
+          welinton
+          <span className={styles.headerLogoBold} data-logo-bold>
+            carmelo
+          </span>
+        </Link>
 
-      <button
-        type="button"
-        className={styles.headerToggle}
-        aria-expanded={isOpen}
-        aria-controls="menu-principal"
-        aria-label={isOpen ? "Fechar menu" : "Abrir menu"}
-        onClick={() => setIsOpen((v) => !v)}
-      >
-        {isOpen ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
-      </button>
+        <button
+          type="button"
+          className={styles.headerToggle}
+          aria-expanded={isOpen}
+          aria-controls="menu-principal"
+          aria-label={isOpen ? "Fechar menu" : "Abrir menu"}
+          onClick={() => setIsOpen((v) => !v)}
+        >
+          {isOpen ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
+        </button>
 
-      <nav
-        id="menu-principal"
-        aria-label="Navegação principal"
-        className={`${styles.headerNav} ${isOpen ? styles["headerNav--open"] : ""}`}
-      >
-        <ul className={styles.headerList}>
-          {nav.map((item) => (
-            <li key={item.href}>
-              <a href={item.href} className={styles.headerLink} onClick={() => setIsOpen(false)}>
-                {item.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
+        <nav
+          id="menu-principal"
+          aria-label="Navegação principal"
+          className={`${styles.headerNav} ${isOpen ? styles["headerNav--open"] : ""}`}
+        >
+          <ul className={styles.headerList}>
+            {nav.map((item) => (
+              <li key={item.href}>
+                <a href={item.href} className={styles.headerLink} onClick={() => setIsOpen(false)}>
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
     </header>
   );
 }

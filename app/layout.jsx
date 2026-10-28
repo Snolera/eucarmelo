@@ -1,4 +1,4 @@
-import { Cormorant_Garamond, Lora, Space_Grotesk } from "next/font/google";
+import { Barlow, Barlow_Condensed, Cormorant_Garamond, Inter, Lora, Space_Grotesk } from "next/font/google";
 import { getSiteUrl } from "@/lib/siteUrl";
 import "./globals.css";
 
@@ -25,6 +25,29 @@ const lora = Lora({
   display: "swap",
 });
 
+// Galeria 9:16 (Trabalhos): Barlow no texto, Barlow Condensed nos títulos e números
+const barlow = Barlow({
+  variable: "--font-barlow",
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  display: "swap",
+});
+
+const barlowCondensed = Barlow_Condensed({
+  variable: "--font-barlow-condensed",
+  subsets: ["latin"],
+  weight: ["500", "600"],
+  display: "swap",
+});
+
+// Logo do header: "welinton" light (300) + "carmelo" negrito (700)
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  weight: ["300", "700"],
+  display: "swap",
+});
+
 const title = "Welinton Carmelo · Videomaker para Instagram";
 const description =
   "Reels e stories gravados no celular para marcas que vivem no feed. Fale com @eucarmelo pelo direct do Instagram.";
@@ -47,7 +70,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="pt-BR" className={`${cormorant.variable} ${lora.variable} ${spaceGrotesk.variable}`}>
+    <html lang="pt-BR" className={`${cormorant.variable} ${lora.variable} ${spaceGrotesk.variable} ${barlow.variable} ${barlowCondensed.variable} ${inter.variable}`}>
       <body>{children}</body>
     </html>
   );

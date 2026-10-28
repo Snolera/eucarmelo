@@ -7,7 +7,7 @@ import styles from "./Panel.module.css";
 export default function Panel({ as: Tag = "section", variant = "solid", reveal = false, className = "", children, ...rest }) {
   const Box = reveal ? Reveal : "div";
   return (
-    <Tag className={styles.panel} {...rest}>
+    <Tag className={`container ${styles.panel}`} {...rest}>
       <Box className={`${styles.panelBox} ${styles[`panelBox--${variant}`]} ${className}`}>{children}</Box>
     </Tag>
   );

@@ -34,14 +34,13 @@
 .aboutTitle {
   max-width: 40rem;
   font-size: clamp(2rem, 1.5rem + 1.6vw, 2.75rem); /* 44px no desktop */
-  line-height: 1.1;
+  line-height: 0.8;
   letter-spacing: -0.02em;
 }
 
 /* Texto alinhado à esquerda no mobile: justificado em coluna estreita abre buracos */
 .aboutText {
-  font-size: 1rem;
-  line-height: 1.65;
+  font-size: 1rem; /* entrelinha vem da regra global de <p> */
 }
 
 .aboutText p + p {
@@ -70,21 +69,11 @@
   }
 }
 
-/* Desktop: medidas do design (retrato 300px, gap 80px, texto em 2 colunas) */
+/* Desktop: medidas do design (retrato 300px, gap 80px); parágrafos um abaixo do outro */
 @media (min-width: 1024px) {
   .about {
     grid-template-columns: 18.75rem minmax(0, 1fr);
     gap: 5rem;
     padding: 4rem var(--space-container);
-  }
-
-  .aboutText {
-    column-count: 2;
-    column-gap: 2.25rem;
-  }
-
-  /* Cada parágrafo fica inteiro na sua coluna, como no design */
-  .aboutText p {
-    break-inside: avoid;
   }
 }

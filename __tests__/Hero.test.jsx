@@ -20,10 +20,17 @@ const backgroundVideo = (container) => container.querySelector("video[aria-hidde
 describe("Hero", () => {
   test("mostra kicker e o h1 com a copy do design", () => {
     render(<Hero />);
-    expect(screen.getByText("Videomaker · Conteúdo para Instagram")).toBeInTheDocument();
+    expect(screen.getByText("Direção / Roteiro / Montagem / Produção / Criação")).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { level: 1, name: "Filmes curtos para marcas que vivem no feed." })
     ).toBeInTheDocument();
+  });
+
+  test("barra do topo do card (formato mobile): nome à esquerda e @ do Instagram à direita", () => {
+    const { container } = render(<Hero />);
+    const topbar = container.querySelector("[data-hero-topbar]");
+    expect(topbar).toHaveTextContent(hero.cardName);
+    expect(topbar).toHaveTextContent("@eucarmelo");
   });
 
   test("CTA leva ao direct do Instagram", () => {
@@ -61,14 +68,22 @@ describe("Hero", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
-  test("'Assistir showreel' abre o player", async () => {
-    const user = userEvent.setup();
+  // Botão "Assistir showreel" comentado no Hero.jsx (some no mobile e no desktop)
+  test("o botão 'Assistir showreel' não aparece; o direct continua", () => {
     render(<Hero />);
-
-    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: /assistir showreel/i }));
-    expect(screen.getByRole("dialog", { name: /showreel/i })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /assistir showreel/i })).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /mandar direct/i })).toBeInTheDocument();
   });
+
+  // Para reativar junto com o botão:
+  // test("'Assistir showreel' abre o player", async () => {
+  //   const user = userEvent.setup();
+  //   render(<Hero />);
+  //
+  //   expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  //   await user.click(screen.getByRole("button", { name: /assistir showreel/i }));
+  //   expect(screen.getByRole("dialog", { name: /showreel/i })).toBeInTheDocument();
+  // });
 
   test("o card mostra o showreel de fundo: sem som, em loop, tocando sozinho", () => {
     const { container } = render(<Hero />);

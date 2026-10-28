@@ -23,7 +23,8 @@ export const nav = [
 ];
 
 export const hero = {
-  kicker: "Videomaker · Conteúdo para Instagram",
+  cardName: "welinton.carmelo", // topo do card no mobile, ao lado do @ do Instagram
+  kicker: "Direção / Roteiro / Montagem / Produção / Criação", // linha de funções abaixo do título
   title: "Filmes curtos para marcas que vivem",
   titleEm: "no feed.",
   watch: "Assistir showreel",
@@ -55,16 +56,20 @@ export const about = {
   portrait: { src: null, alt: "Retrato de Welinton Carmelo" },
 };
 
-// Reels do coverflow (6 cards, 9:16): src/poster null até os vídeos serem hospedados
+// Galeria 9:16 (Trabalhos): textos, imagens e vídeos são placeholders da Galeria Fotos
+// Trocar pelo conteúdo real (banners 9:16, mín. 540×960; vídeos no Vercel Blob)
+const SAMPLE_VIDEO = "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4";
+
 export const work = {
-  kicker: "Reels para marcas",
-  title: "",
+  kicker: "Galeria", // vira "Galeria · 06 vídeos"
+  title: "Por trás de cada projeto",
+  lead: "",
   items: [
-    { id: "cafe-bruma", client: "Café Bruma", category: "Gastronomia", src: null, poster: null },
-    { id: "atelier-no", client: "Atelier Nó", category: "Moda", src: null, poster: null },
-    { id: "studio-vila", client: "Studio Vila", category: "Bem-estar", src: null, poster: null },
-    { id: "festival-aurora", client: "Festival Aurora", category: "Eventos", src: null, poster: null },
-    { id: "loja-verso", client: "Loja Verso", category: "Varejo", src: null, poster: null },
-    { id: "lume-beauty", client: "Lume Beauty", category: "Beleza", src: null, poster: null },
+    { id: 1, kicker: "Bastidores", title: "Montagem", duration: "0:42", image: "https://picsum.photos/seed/obra-01/540/960", alt: "Montagem da estrutura no canteiro de obras", video: SAMPLE_VIDEO },
+    { id: 2, kicker: "Processo", title: "Estrutura", duration: "1:05", image: "https://picsum.photos/seed/obra-02/540/960", alt: "Etapa estrutural do projeto", video: SAMPLE_VIDEO },
+    { id: 3, kicker: "Detalhe", title: "Acabamento", duration: "0:38", image: "https://picsum.photos/seed/obra-03/540/960", alt: "Detalhes de acabamento", video: SAMPLE_VIDEO },
+    { id: 4, kicker: "Equipe", title: "Na obra", duration: "1:12", image: "https://picsum.photos/seed/obra-04/540/960", alt: "Equipe trabalhando na obra", video: SAMPLE_VIDEO },
+    { id: 5, kicker: "Entrega", title: "Resultado", duration: "0:55", image: "https://picsum.photos/seed/obra-05/540/960", alt: "Resultado final entregue", video: SAMPLE_VIDEO },
+    { id: 6, kicker: "Depoimento", title: "Cliente", duration: "1:30", image: "https://picsum.photos/seed/obra-06/540/960", alt: "Depoimento do cliente", video: SAMPLE_VIDEO },
   ],
 };

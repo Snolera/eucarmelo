@@ -9,7 +9,12 @@ const nextConfig = {
   partialPrefetching: true,
   images: {
     // Só o nosso store: o next/image não otimiza imagens de outros domínios
-    remotePatterns: [{ protocol: "https", hostname: BLOB_HOST, pathname: "/**" }],
+    remotePatterns: [
+      { protocol: "https", hostname: BLOB_HOST, pathname: "/**" },
+      // Placeholders da galeria (Galeria Fotos) até as imagens reais irem para o Blob
+      { protocol: "https", hostname: "picsum.photos", pathname: "/**" },
+      { protocol: "https", hostname: "fastly.picsum.photos", pathname: "/**" },
+    ],
   },
 };
 

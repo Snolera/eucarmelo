@@ -1,13 +1,17 @@
-/* Mobile-first: logo + botão Menu; links aparecem em linha a partir de 768px */
+/* Mobile-first: logo + botão Menu; links aparecem em linha a partir de 768px
+   Fundo e borda na largura toda; o conteúdo fica na coluna central (.container) */
 .header {
   position: relative;
+  background: var(--color-surface-dark);
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.headerInner {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-between; /* logo à esquerda, links à direita da coluna */
   gap: 1rem;
-  padding: 1.25rem var(--space-page);
-  background: var(--color-bg);
-  border-bottom: 1px solid var(--color-divider);
+  padding: 1.25rem 0;
 }
 
 /* Visível só quando recebe foco pelo teclado */
@@ -27,8 +31,11 @@
   transform: none;
 }
 
+/* Logo em Inter: "welinton" light + "carmelo" negrito, colados e em minúsculas */
 .headerLogo {
-  font-family: var(--font-heading);
+  font-family: var(--font-inter), "Helvetica Neue", Arial, sans-serif;
+  font-weight: 300;
+  letter-spacing: -0.02em;
   font-size: 1.375rem;
   line-height: 1;
   color: var(--color-text);
@@ -39,9 +46,8 @@
   color: var(--color-text);
 }
 
-/* Ponto do logo em vermelho */
-.headerLogoDot {
-  color: var(--color-logo-dot);
+.headerLogoBold {
+  font-weight: 700;
 }
 
 /* Só o ícone, sem caixa; 44×44 mantém a área de toque */
@@ -66,7 +72,7 @@
   left: 0;
   right: 0;
   z-index: 20;
-  background: var(--color-bg);
+  background: var(--color-surface-dark);
   border-bottom: 1px solid var(--color-divider);
 }
 
@@ -78,7 +84,8 @@
   display: flex;
   flex-direction: column;
   margin: 0;
-  padding: 0.5rem var(--space-page) 1rem;
+  /* Alinhado com a coluna central (mesma margem do .container) */
+  padding: 0.5rem max(20px, (100% - 1240px) / 2) 1rem;
   list-style: none;
 }
 
@@ -95,8 +102,9 @@
 }
 
 @media (min-width: 768px) {
-  .header {
-    padding: 1.75rem var(--space-container);
+  .headerInner {
+    gap: 2.25rem; /* 36px */
+    padding: 1.75rem 0; /* 28px */
   }
 
   .headerLogo {
