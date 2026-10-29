@@ -96,7 +96,7 @@ As seções são **Server Components** sempre que possível. O HTML chega pronto
 | `Hero`, `Stats`, `Work`, `About`, `Footer` | Server | Conteúdo estático |
 | `Header` | Client | Abre e fecha o menu mobile |
 | `HeroCard` | Client | Card do hero inteiro clicável, abre o showreel |
-| `Gallery916` | Client | Galeria 9:16 (6 cards fixos e sobrepostos) + moldura do player com o card ativo |
+| `Gallery916` | Client | Galeria de cards horizontais (6 fixos e sobrepostos) + moldura 9:16 do player com o card ativo |
 | `VideoModal`, `VideoPlayer` | Client | `<dialog>` e controles do vídeo |
 
 ### Player de vídeo
@@ -119,7 +119,7 @@ As seções são **Server Components** sempre que possível. O HTML chega pronto
   - `as`: a tag externa (`section` por padrão, `footer` no rodapé).
 - **`Button`:** botão outline. Vira `<a>` quando recebe `href`, e links externos ganham `target="_blank"` e `rel="noopener noreferrer"`. Variantes `light`, `accent` e `white`; tamanhos `md` e `lg`.
 - **`Kicker`:** rótulo pequeno em caixa alta acima dos títulos. Cada letra vira um `<span>` com índice (`--i`) e `aria-hidden`, e o total de letras vai em `--n`; o texto inteiro fica num span visualmente escondido, para o leitor de tela não ler letra por letra.
-- **`Gallery916`:** galeria da seção Trabalhos (modelo "Galeria Fotos", estilo desenho técnico: nada arredondado, marcas "+" nos cantos, fontes Barlow e Barlow Condensed). 6 cards 9:16 fixos, em linha e sobrepostos ~38%. O ativo cresce no lugar (1,16×, sobe 14px; no hover 1,2× e 26px) e fica com duotone laranja claro; os inativos ficam em duotone azul-aço. Clique num inativo destaca; clique no ativo abre a moldura do player, com o `VideoPlayer` do site por dentro (volume em 50%, barra de volume). Controles: setas, dots, contador e ← → do teclado (fora de campos). Fundo = `--color-page` do projeto. Mobile (< 768px): fileira com scroll e snap, e o card centralizado é o ativo. Textos, imagens (picsum) e vídeo (MDN) são placeholders em `work`, no `content/site.js`.
+- **`Gallery916`:** galeria da seção Trabalhos (modelo "Galeria Fotos"; cabeçalho em Barlow Condensed). 6 cards horizontais no formato do card do showreel: cinza um pouco mais claro que o fundo da galeria (`--color-card`, `#232626`), cantos arredondados (12px), altura fixa de 350px no mobile e no desktop (`--card-h`), imagem no topo ocupando o espaço acima do texto (em cover) e, embaixo, o título (Inter 700) e o `kicker` do item como descrição (Inter 400, cinza). Desktop (≥ 768px): fixos, em linha e pouco sobrepostos (`--card-step: 0.85`, passo entre os centros em larguras de card); a largura sai do espaço da coluna (`--card-w`, até 340px) para o leque caber em 1240px. O ativo cresce no lugar (1,07×, sobe 10px; no hover 1,1× e 18px) e os inativos ficam escurecidos. Todos têm uma sombra branca esfumaçada (`SHADOW_SM/MD/LG` em `motion-config.js`), maior no ativo e no hover. Clique num inativo destaca; clique no ativo abre a moldura 9:16 do player (com as marcas "+" nos cantos), com o `VideoPlayer` do site por dentro (volume em 50%, barra de volume). Controles: duas setas redondas (`.btnArrow`: 44px no mobile, 35px a partir de 768px) e ← → do teclado (fora de campos); sem contador nem dots. Fundo: retângulo `--color-surface-dark` com cantos `--radius-container` (como o card do hero), com textos e controles em branco. Mobile (< 768px): fileira com scroll e snap, e o card centralizado é o ativo. Textos, imagens (picsum) e vídeo (MDN) são placeholders em `work`, no `content/site.js`.
 - **`SocialIcon`:** ícones de X, Instagram e E-mail só em contorno, que herdam a cor do texto.
 
 ---
@@ -134,7 +134,7 @@ O ponto de partida foi o **layout 2a** do protótipo de handoff (local, fora do 
 |---|---|---|
 | `--color-bg` | `#000000` | Preto base (texto do link "Pular para o conteúdo") |
 | `--color-surface-dark` | `#151717` | Cinza escuro do header, do card do hero e da faixa de números |
-| `--color-page` | `#D9D4C3` | Fundo da página (bege) |
+| `--color-page` | `#EAEAEA` | Fundo da página (cinza bem claro) |
 | `--color-ink` | `#000000` | Texto direto sobre o fundo da página |
 | `--color-container` | `#666666` | Caixa `Panel` sólida |
 | `--color-text` | `#ffffff` | Texto principal |
@@ -173,7 +173,7 @@ O ponto de partida foi o **layout 2a** do protótipo de handoff (local, fora do 
 
 **Coluna central:** header, hero, seções e rodapé usam a classe global `.container` (`app/globals.css`): `width: min(1240px, 100% - 40px)` centralizada, então abaixo de 1280px sobram 20px de cada lado. O fundo e a borda do header ocupam a tela toda; só o conteúdo fica na coluna. Seções (`Panel`): 40px até a próxima; caixas internas com 100% da coluna. Hero: 24px em cima e 40px embaixo, card com 780px de altura a partir de 1024px (no mobile, até 80% da tela). Rodapé: 24px em cima e embaixo, sem borda.
 
-**Temporário:** a página tem fundo bege (`--color-page`, `#D9D4C3`) e o `Panel variant="glass"` está sem caixa: o conteúdo de Trabalhos, Sobre e rodapé fica direto sobre o fundo, com texto preto (`--color-ink`). Detalhes que eram brancos ficaram laranja (`--color-accent`): os ícones do rodapé. Novos painéis virão depois; o vidro antigo está no histórico do Git.
+**Temporário:** a página tem fundo cinza bem claro (`--color-page`, `#EAEAEA`) e o `Panel variant="glass"` está sem caixa: o conteúdo de Trabalhos, Sobre e rodapé fica direto sobre o fundo, com texto preto (`--color-ink`). Detalhes que eram brancos ficaram laranja (`--color-accent`): os ícones do rodapé. Novos painéis virão depois; o vidro antigo está no histórico do Git.
 
 ### Responsivo (mobile-first)
 
@@ -191,10 +191,10 @@ Os estilos base são os do mobile, e os breakpoints usam `min-width`: **480px**,
 ### Interações e animações
 
 - **Abertura do player (cards e hero):** o player "sai" do elemento clicado e vai até o centro da tela em **240ms** (`OPEN_DURATION` em `VideoModal.jsx`). A técnica é FLIP: o player já abre na posição final, e uma animação de `transform` (Web Animations API) o leva da posição de origem até o centro. Junto, o fundo aparece com fade. Com vídeo, ele já começa tocando (`autoPlay`).
-- **Card do hero (todas as telas):** card escuro (`#151717`) com o nome (`hero.cardName`) e o @ do Instagram no topo, o showreel sem som, o título, a linha de funções (o kicker, em texto corrido) e os botões; "Assistir showreel" é uma pílula branca. Até 1023px tudo empilhado, com o vídeo em 16:9. No desktop (780px), o vídeo cobre o card inteiro: nome e @ por cima no topo, título e funções embaixo à esquerda, botões embaixo à direita, com degradê no topo e na base para o contraste.
+- **Card do hero (todas as telas):** o showreel sem som cobre o card inteiro (`#151717` por trás) e tudo fica por cima, na base do card: o título, a linha de funções (o kicker, em texto corrido) e o botão, com degradê na base para o contraste. O topo do card fica só com o vídeo. Altura: 560px no mobile, 640px no tablet (mínimas: crescem se o texto crescer) e 780px no desktop. O botão "Mandar direct" fica centralizado na largura do card, abaixo do texto, com os cantos arredondados do card (`--radius-container`); no desktop, título e funções ficam embaixo à esquerda.
 - **Hero:** clicar em **qualquer parte do card** abre o showreel. O CTA do Instagram segue o link normalmente, e o clique não abre o player se a pessoa estiver selecionando texto.
 - **Números:** faixa contínua da direita para a esquerda (`@keyframes`, 25s, `linear`), **sem repetir valores**: entra pela direita e sai toda pela esquerda antes de recomeçar. Pausa com o mouse por cima. A velocidade é o `25s` de `.statsList`.
-- **Trabalhos:** `Gallery916`. Entrada própria (queda empilhada → leque) quando o palco fica inteiro na tela, por isso a seção não usa o deslize do `Reveal`. Troca de card por clique, setas, dots ou teclado; no mobile, pelo swipe na fileira.
+- **Trabalhos:** `Gallery916`. Entrada própria (queda empilhada → leque) quando o palco fica inteiro na tela, por isso a seção não usa o deslize do `Reveal`. Troca de card por clique, setas ou teclado; no mobile, pelo swipe na fileira.
 - **Entrada no scroll (Hero, Números, Sobre):** cada seção desliza da esquerda e aparece com fade quando **60% dela fica visível**, ou quando ela ocupa 60% da altura da tela (seções mais altas que a tela, comuns no mobile). A entrada acontece uma vez só.
   - **Proporção:** distância `clamp(1.5rem, 6vw, 4rem)` (24px em 360px, até 64px no desktop) e duração de 550ms no mobile e 700ms a partir de 1024px.
   - **Implementação:** `components/Reveal` + `hooks/useReveal` (IntersectionObserver). No `Panel`, é a prop `reveal`.
@@ -211,7 +211,7 @@ Os estilos base são os do mobile, e os breakpoints usam `min-width`: **480px**,
 - Link "Pular para o conteúdo" no header, visível só com foco por teclado.
 - Foco visível dourado em todo elemento interativo. Áreas de toque de no mínimo 44×44px.
 - Botões só com ícone têm `aria-label` (menu, setas, fechar, controles do player).
-- Galeria: cada card é um botão ("Destacar: …" ou "Assistir: …", `aria-pressed` no ativo); setas e dots com nome; o contador é anunciado (`aria-live`). A moldura do player é um `role="dialog"` com foco inicial no Fechar, Esc fecha, e o foco volta ao card.
+- Galeria: cada card é um botão ("Destacar: …" ou "Assistir: …", `aria-pressed` no ativo); setas com nome ("Anterior", "Próximo"). A moldura do player é um `role="dialog"` com foco inicial no Fechar, Esc fecha, e o foco volta ao card.
 - Redes sem endereço aparecem como imagem "(em breve)", sem link quebrado.
 
 ## SEO
@@ -227,7 +227,7 @@ Para rodar: `npm test`. Os testes cobrem cada seção e componente:
 
 - **Navegação:** menu mobile, âncoras e link de pular conteúdo.
 - **Player:** abrir e fechar o player (Hero, cards, foco), controles do player e estado sem vídeo.
-- **Galeria 9:16 (`Gallery916.test.jsx`):** cabeçalho, card inicial, destacar, setas/dots/teclado, abrir a moldura com o player do site e fechar por X, Esc e fundo. Os testes rodam com "reduzir movimento", que pula a entrada; a queda e o leque são conferidos no navegador.
+- **Galeria (`Gallery916.test.jsx`):** cabeçalho, conteúdo do card (imagem, título, kicker), card inicial, destacar, setas/teclado, controles só com as duas setas, abrir a moldura com o player do site e fechar por X, Esc e fundo. Os testes rodam com "reduzir movimento", que pula a entrada; a queda e o leque são conferidos no navegador.
 - **Faixa de números:** sem cópias.
 - **Ordem do conteúdo:** retrato depois do texto e ordem das seções na página.
 - **Rodapé:** redes, link do Instagram e ícones só em contorno.

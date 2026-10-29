@@ -2,7 +2,7 @@
 :root {
   /* Cores */
   --color-bg: #000000;
-  --color-page: #d9d4c3; /* fundo da página (atrás das seções) */
+  --color-page: #eaeaea; /* fundo da página (atrás das seções) */
   --color-ink: #000000; /* texto direto sobre o fundo da página */
   --color-surface-dark: #151717; /* cinza escuro: header, card do hero e faixa de números */
   --color-container: #666666;

@@ -11,11 +11,12 @@ export const SPRING = { type: "spring", stiffness: 260, damping: 28, mass: 0.9 }
 export const DROP_SPRING = { type: "spring", stiffness: 210, damping: 24, mass: 1 };
 export const FAN_SPRING = { type: "spring", stiffness: 170, damping: 22, mass: 0.9 };
 
-// Motion não interpola var(--…) em boxShadow/borderColor: valores literais dos tokens.
-export const SHADOW_SM = "0 1px 2px rgba(43, 43, 45, 0.14)";
-export const SHADOW_MD = "0 3px 10px rgba(43, 43, 45, 0.16)";
-export const SHADOW_LG = "0 12px 32px rgba(43, 43, 45, 0.22)";
-export const BORDER_ACCENT = "rgba(89, 128, 166, 1)";
-export const BORDER_DIVIDER = "rgba(29, 31, 32, 0.16)";
+// Sombra branca esfumaçada (brilho suave em volta do card, sem deslocamento) para realçar
+// os cards sobre o retângulo escuro. Inativo: pequena (o brightness 0.7 do card também a atenua);
+// ativo um pouco maior; hover maior ainda
+// Motion não interpola var(--…) em boxShadow: valores literais.
+export const SHADOW_SM = "0 0 14px rgba(255, 255, 255, 0.12)";
+export const SHADOW_MD = "0 0 20px rgba(255, 255, 255, 0.16)";
+export const SHADOW_LG = "0 0 28px rgba(255, 255, 255, 0.2)";
 
 export const MOBILE_QUERY = "(max-width: 767px)";

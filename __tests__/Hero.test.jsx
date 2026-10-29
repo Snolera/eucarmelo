@@ -26,16 +26,16 @@ describe("Hero", () => {
     ).toBeInTheDocument();
   });
 
-  test("barra do topo do card (formato mobile): nome à esquerda e @ do Instagram à direita", () => {
-    const { container } = render(<Hero />);
-    const topbar = container.querySelector("[data-hero-topbar]");
-    expect(topbar).toHaveTextContent(hero.cardName);
-    expect(topbar).toHaveTextContent("@eucarmelo");
+  test("o topo do card não tem nome nem @ (o @ fica só no botão do direct)", () => {
+    render(<Hero />);
+    expect(screen.queryByText("welinton.carmelo")).not.toBeInTheDocument();
+    expect(screen.queryByText("@eucarmelo")).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /@eucarmelo/ })).toBeInTheDocument();
   });
 
   test("CTA leva ao direct do Instagram", () => {
     render(<Hero />);
-    const cta = screen.getByRole("link", { name: /mandar direct/i });
+    const cta = screen.getByRole("link", { name: new RegExp(hero.cta, "i") });
     expect(cta).toHaveAttribute("href", "https://ig.me/m/eucarmelo");
     expect(cta).toHaveAttribute("rel", expect.stringContaining("noopener"));
   });
@@ -51,7 +51,7 @@ describe("Hero", () => {
   test("clicar no CTA do Instagram não abre o player", async () => {
     const user = userEvent.setup();
     render(<Hero />);
-    const cta = screen.getByRole("link", { name: /mandar direct/i });
+    const cta = screen.getByRole("link", { name: new RegExp(hero.cta, "i") });
     // Evita navegação real no jsdom
     cta.addEventListener("click", (e) => e.preventDefault());
 
@@ -72,7 +72,7 @@ describe("Hero", () => {
   test("o botão 'Assistir showreel' não aparece; o direct continua", () => {
     render(<Hero />);
     expect(screen.queryByRole("button", { name: /assistir showreel/i })).not.toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /mandar direct/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: new RegExp(hero.cta, "i") })).toBeInTheDocument();
   });
 
   // Para reativar junto com o botão:

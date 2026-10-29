@@ -1,14 +1,16 @@
-/* Galeria 9:16 (Galeria Fotos). Mobile first: a base é a fileira com scroll e snap;
+/* Galeria (Galeria Fotos) com cards horizontais. Mobile first: a base é a fileira com scroll e snap;
    a partir de 768px os 6 cards ficam fixos, em linha e sobrepostos */
 
 /* ============ Tokens (escopo da galeria) ============ */
-/* O fundo é o da página do projeto (--color-page), herdado do :root */
+/* A galeria fica num retângulo cinza-escuro (--color-surface-dark), com os cantos
+   arredondados do card do hero; textos e controles em branco sobre ele */
 .gallery {
   --color-bg: #f2f2f3;
   --color-surface: #e9e9ea;
   --color-text: #1d1f20;
-  --color-on-page: #1d1f20;
-  --color-on-page-divider: color-mix(in srgb, #1d1f20 16%, transparent);
+  --color-on-page: #ffffff;
+  --color-on-page-divider: color-mix(in srgb, #ffffff 24%, transparent);
+  --color-card: #232626; /* um pouco mais claro que o retângulo, para o card se destacar */
   --color-accent: #5980a6;
   --color-divider: color-mix(in srgb, #1d1f20 16%, transparent);
 
@@ -31,7 +33,10 @@
   --space-4: 13.6px;
   --space-6: 20.4px;
 
-  --card-w: clamp(140px, 19vw, 200px);
+  --card-w: clamp(240px, 30vw, 300px);
+  /* Altura fixa do card, no mobile e no desktop (inativo; o ativo escala: 1,03× no mobile,
+     1,07× no desktop e 1,1× no hover) */
+  --card-h: 350px;
   --gutter: clamp(16px, 4vw, 48px);
 
   position: relative;
@@ -41,14 +46,15 @@
   align-items: center;
   gap: 24px;
   padding: clamp(48px, 8vw, 104px) var(--gutter);
-  background: var(--color-page);
+  background: var(--color-surface-dark);
+  border-radius: var(--radius-container);
   color: var(--color-on-page);
   font-family: var(--font-body);
   font-size: 16px;
   line-height: normal; /* não herda a entrelinha do body do site */
 }
 
-/* ============ Blueprint (moldura com marcas "+") ============ */
+/* ============ Blueprint (moldura com marcas "+", só na moldura do player) ============ */
 .blueprint {
   position: relative;
   border: 1px solid var(--color-divider);
@@ -133,7 +139,7 @@
 .lead {
   margin: 0;
   font-size: 15px;
-  color: var(--color-neutral-700);
+  color: #a3a6a8;
   text-wrap: pretty;
 }
 
@@ -147,7 +153,7 @@
   width: calc(100% + 2 * var(--gutter));
   margin-inline: calc(-1 * var(--gutter));
   padding-block: 40px;
-  padding-inline: calc(50% - min(31vw, 160px));
+  padding-inline: calc(50% - min(39vw, 170px));
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
@@ -165,15 +171,21 @@
   scroll-snap-type: none;
 }
 
+/* Card no formato da print: cinza-escuro do site, cantos arredondados,
+   imagem 16:9 no topo (como o card do showreel) e texto embaixo */
 .card {
   position: relative;
-  display: block;
-  flex: 0 0 62vw;
-  max-width: 320px;
-  aspect-ratio: 9 / 16;
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 78vw;
+  max-width: 340px;
+  height: var(--card-h);
   padding: 0;
-  background: var(--color-bg);
-  color: var(--color-text);
+  overflow: hidden;
+  background: var(--color-card);
+  border: 0;
+  border-radius: 12px;
+  color: #ffffff;
   font: inherit;
   text-align: left;
   cursor: pointer;
@@ -187,123 +199,46 @@
   outline-offset: 4px;
 }
 
-.inner {
-  position: absolute;
-  inset: 6px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-/* ============ Mídia duotone ============ */
+/* Com a altura fixa, a imagem ocupa o que sobra acima do texto (recorte em cover) */
 .media {
   position: relative;
   flex: 1;
   min-height: 0;
   overflow: hidden;
-  border: 1px solid var(--color-divider);
+  background: #000;
 }
 
 .image {
   object-fit: cover;
-  filter: grayscale(1) contrast(1.05);
-}
-
-.tintCool,
-.tintWarm {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  mix-blend-mode: color;
-}
-
-.tintCool {
-  background: var(--color-accent);
-}
-
-.tintWarm {
-  background: var(--color-warm);
-}
-
-/* ============ Tags ============ */
-.tag {
-  display: inline-flex;
-  align-items: center;
-  padding: 3px 10px;
-  font-size: 11px;
-  letter-spacing: 0.02em;
-  background: var(--color-bg);
-}
-
-.tagNum {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  z-index: 2;
-  font-family: var(--font-heading);
-  letter-spacing: 0.08em;
-  color: var(--color-accent-800);
-}
-
-.tagDur {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  z-index: 2;
-  color: var(--color-neutral-800);
-}
-
-/* ============ Rodapé do card ============ */
-.footer {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 6px 4px 4px;
 }
 
 .meta {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 8px;
   min-width: 0;
-}
-
-.kickerSm {
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-accent);
+  padding: 20px 18px 24px;
+  font-family: var(--font-inter), system-ui, sans-serif;
 }
 
 .cardTitle {
   overflow: hidden;
-  font-family: var(--font-heading);
-  font-weight: 600;
-  font-size: 18px;
+  font-weight: 700;
+  font-size: clamp(17px, 1.6vw, 20px);
   line-height: 1.2;
-  text-transform: uppercase;
+  letter-spacing: -0.01em;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
-.play {
-  flex: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  background: transparent;
-  color: var(--color-accent-700);
-  transition:
-    background 0.3s,
-    color 0.3s;
-}
-
-.cardActive .play {
-  background: var(--color-warm);
-  color: var(--color-text);
+.cardDesc {
+  overflow: hidden;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.3;
+  color: #a3a6a8;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 /* ============ Controles ============ */
@@ -336,32 +271,12 @@
   background: color-mix(in srgb, currentColor 18%, transparent);
 }
 
-.dots {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-/* 2px visíveis, área de toque de 20px via padding + background-clip */
-.dot {
-  height: 20px;
-  padding: 9px 0;
-  border: 0;
-  background: var(--color-neutral-300);
-  background-clip: content-box;
-  cursor: pointer;
-}
-
-.dotActive {
-  background-color: var(--color-accent);
-}
-
-.counter {
-  min-width: 54px;
-  font-family: var(--font-heading);
-  font-size: 15px;
-  letter-spacing: 0.08em;
-  text-align: center;
+/* Setas da galeria: redondas; 44px no mobile (área de toque recomendada) e 35px a partir
+   de 768px (20% menores que o .btnIcon). Ícone de 14px. O X do player continua no .btnIcon quadrado */
+.btnArrow {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
 }
 
 /* ============ Modal de vídeo ============ */
@@ -452,6 +367,15 @@
 /* ============ Tablet e desktop (≥ 768px): cards fixos, em linha e sobrepostos ============ */
 @media (min-width: 768px) {
   .gallery {
+    /* Passo entre os centros dos cards após o leque, em larguras de card:
+       0,85 = sobreposição de 1/4 (era 0,5 = metade). Mais perto de 1, menos sobreposição */
+    --card-step: 0.85;
+    /* O leque ocupa (5 passos + o ativo escalado 1,1×) larguras de card:
+       a largura sai do espaço útil da coluna (1240px − gutters), até 340px */
+    --card-w: min(
+      340px,
+      (min(1240px, 100vw - 40px) - 2 * var(--gutter)) / (5 * var(--card-step) + 1.1)
+    );
     gap: 40px;
   }
 
@@ -460,7 +384,8 @@
     gap: 0;
     width: 100%;
     max-width: 1200px;
-    height: calc(var(--card-w) * 16 / 9 * 1.2 + 72px); /* folga p/ o ativo escalado + lift */
+    /* altura do card com folga p/ o ativo escalado + lift */
+    height: calc(var(--card-h) * 1.1 + 72px);
     margin-inline: 0;
     padding: 0;
     overflow: visible;
@@ -478,33 +403,22 @@
     flex: none;
     width: var(--card-w);
     max-width: none;
-    /* Posição fixa: centros a 62% da largura do card (sobreposição ~38%); o Motion anima só y/scale */
-    translate: calc(-50% + var(--d) * var(--card-w) * 0.62) -50%;
+    /* Posição fixa: centros a --card-step larguras de card um do outro; o Motion anima só y/scale */
+    translate: calc(-50% + var(--d) * var(--card-w) * var(--card-step)) -50%;
     scroll-snap-align: none;
-  }
-
-  .cardTitle {
-    font-size: clamp(16px, 1.6vw, 20px);
   }
 
   .controls {
     gap: 20px;
   }
 
-  .dots {
-    gap: 8px;
-  }
-}
-
-/* ============ Desktop (> 1024px) ============ */
-@media (min-width: 1025px) {
-  .gallery {
-    --card-w: clamp(150px, 17vw, 260px);
+  .btnArrow {
+    width: 35px;
+    height: 35px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .play,
   .btnIcon {
     transition: none;
   }

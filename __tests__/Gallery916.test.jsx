@@ -26,7 +26,7 @@ function mockBrowser({ reduced = true } = {}) {
 
 const cards = () => screen.getAllByRole("button", { name: /^(assistir|destacar):/i });
 const activeCard = () => cards().find((c) => c.getAttribute("aria-pressed") === "true");
-const counter = () => screen.getByText(/^\d{2} \/ \d{2}$/);
+const activeIs = (i) => expect(activeCard()).toHaveAccessibleName(`Assistir: ${work.items[i].title}`);
 // O modal tem animação de saída (AnimatePresence): espera ele sair da página
 const expectModalClosed = () => waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
 
@@ -38,12 +38,13 @@ afterEach(() => {
 });
 
 describe("Galeria 9:16 na seção Trabalhos", () => {
-  test("cabeçalho da galeria: kicker com a contagem, h2 e instrução; âncora #trabalhos", () => {
+  test("cabeçalho da galeria: kicker (sem a contagem de vídeos), h2 e instrução; âncora #trabalhos", () => {
     const { container } = render(<Work />);
     const section = container.querySelector("section#trabalhos");
     expect(section).toHaveAttribute("aria-labelledby", "work-title");
     expect(screen.getByRole("heading", { level: 2, name: work.title })).toHaveAttribute("id", "work-title");
-    expect(screen.getByText("Galeria · 06 vídeos")).toBeInTheDocument();
+    expect(screen.getByText(work.kicker)).toBeInTheDocument();
+    expect(screen.queryByText(/vídeos/i)).not.toBeInTheDocument();
     // Instrução opcional: vazia em site.js, o parágrafo nem é criado
     if (work.lead) expect(screen.getByText(work.lead)).toBeInTheDocument();
   });
@@ -58,7 +59,17 @@ describe("Galeria 9:16 na seção Trabalhos", () => {
     expect(cards()).toHaveLength(6);
     expect(activeCard()).toHaveAccessibleName(`Assistir: ${work.items[2].title}`);
     expect(screen.getByRole("button", { name: `Destacar: ${work.items[0].title}` })).toBeInTheDocument();
-    expect(counter()).toHaveTextContent("03 / 06");
+  });
+
+  test("card no formato da print: imagem, título e o kicker como descrição (sem tags nem play)", () => {
+    render(<Work />);
+    const item = work.items[0];
+    const card = screen.getByRole("button", { name: `Destacar: ${item.title}` });
+    expect(within(card).getByRole("img", { name: item.alt })).toBeInTheDocument();
+    expect(within(card).getByText(item.title)).toBeInTheDocument();
+    expect(within(card).getByText(item.kicker)).toBeInTheDocument();
+    expect(within(card).queryByText(item.duration)).not.toBeInTheDocument();
+    expect(within(card).queryByText("01")).not.toBeInTheDocument();
   });
 
   test("clicar num card inativo o destaca, sem abrir o player", async () => {
@@ -67,21 +78,31 @@ describe("Galeria 9:16 na seção Trabalhos", () => {
 
     await user.click(screen.getByRole("button", { name: `Destacar: ${work.items[0].title}` }));
     expect(activeCard()).toHaveAccessibleName(`Assistir: ${work.items[0].title}`);
-    expect(counter()).toHaveTextContent("01 / 06");
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
-  test("setas (com volta circular), dots e teclado mudam o card ativo", async () => {
+  test("setas (com volta circular) e teclado mudam o card ativo", async () => {
     const user = userEvent.setup();
     render(<Work />);
 
     await user.click(screen.getByRole("button", { name: "Próximo" }));
-    expect(counter()).toHaveTextContent("04 / 06");
-    await user.click(screen.getByRole("button", { name: `Ir para ${work.items[0].title}` }));
+    activeIs(3);
+    await user.click(screen.getByRole("button", { name: `Destacar: ${work.items[0].title}` }));
     await user.click(screen.getByRole("button", { name: "Anterior" }));
-    expect(counter()).toHaveTextContent("06 / 06");
+    activeIs(5);
     fireEvent.keyDown(window, { key: "ArrowRight" });
-    expect(counter()).toHaveTextContent("01 / 06");
+    activeIs(0);
+  });
+
+  test("controles: só as duas setas, sem contador nem traços", () => {
+    render(<Work />);
+    const nav = screen.getByRole("navigation", { name: "Navegação da galeria" });
+    expect(within(nav).getAllByRole("button").map((b) => b.getAttribute("aria-label"))).toEqual([
+      "Anterior",
+      "Próximo",
+    ]);
+    expect(screen.queryByText(/^\d{2} \/ \d{2}$/)).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /^Ir para/ })).not.toBeInTheDocument();
   });
 
   test("setas do teclado dentro de um campo (ex.: barra do player) não mexem na galeria", () => {
@@ -92,7 +113,7 @@ describe("Galeria 9:16 na seção Trabalhos", () => {
       </>
     );
     fireEvent.keyDown(screen.getByLabelText("Campo"), { key: "ArrowRight" });
-    expect(counter()).toHaveTextContent("03 / 06");
+    activeIs(2);
   });
 
   test("clicar no card ativo abre a moldura com o player do site (volume em 50%)", async () => {

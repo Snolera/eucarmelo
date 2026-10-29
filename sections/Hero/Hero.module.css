@@ -1,6 +1,6 @@
-/* Mobile-first. Card escuro do print em todas as telas: topo com nome e @, vídeo,
-   título, linha de funções e botões. Até 1023px tudo empilhado (vídeo 16:9); no desktop
-   (780px) o vídeo cobre o card e o texto fica por cima, como no print */
+/* Mobile-first. Em todas as telas o vídeo cobre o card inteiro e os textos e o botão
+   ficam por cima, na base do card: título, funções e botão.
+   Altura: 560px no mobile, 640px no tablet e 780px no desktop */
 /* Coluna central (.container no JSX): 24px em cima, 40px até a próxima seção */
 .hero {
   padding: 24px 0 40px;
@@ -12,27 +12,28 @@
   position: relative;
   display: flex;
   flex-direction: column;
+  min-height: 560px; /* mínimo: se o texto crescer, o card cresce junto */
   overflow: hidden;
   border-radius: var(--radius-container);
   background: var(--hero-card-bg);
   color: var(--color-hero-text);
 }
 
-/* Nome e @ acima do vídeo: o vídeo vem antes no HTML, a ordem do flex sobe esta barra */
-.heroTopbar {
-  order: -1;
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1.25rem 1.5rem;
-  font-size: 0.875rem;
-  line-height: 1.2;
+/* Escurece a base do vídeo para o texto branco ter contraste */
+.heroCard::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75), transparent 65%);
+  pointer-events: none;
 }
 
+/* Vídeo cobrindo o card inteiro */
 .heroMedia {
-  position: relative;
+  position: absolute;
+  inset: 0;
   width: 100%;
-  aspect-ratio: 16 / 9;
+  height: 100%;
   object-fit: cover;
 }
 
@@ -51,6 +52,7 @@
   flex-direction: column;
   gap: 2rem;
   width: 100%;
+  margin-top: auto; /* empurra o texto e o botão para a base do card */
   padding: 1.75rem 1.5rem 1.5rem;
 }
 
@@ -64,7 +66,7 @@
 /* Mobile: linha de funções abaixo do título, em texto corrido */
 .heroKicker {
   order: 1;
-  font-size: 0.9375rem;
+  font-size: 0.625rem; /* 10px (10 ÷ 16, a fonte da raiz) */
   line-height: 1.5;
   letter-spacing: normal;
 }
@@ -76,11 +78,17 @@
   text-wrap: balance;
 }
 
+/* Botões centralizados na largura do card, abaixo do texto (mobile e desktop) */
 .heroActions {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.75rem;
+}
+
+/* "Mandar direct": cantos arredondados iguais aos do card; a cor continua a do variant accent */
+.heroActions .heroDirect {
+  border-radius: var(--radius-container);
 }
 
 /* Mobile: "Assistir showreel" em pílula branca com o play preenchido, como no print */
@@ -104,12 +112,13 @@
   .heroActions {
     flex-direction: row;
     flex-wrap: wrap;
+    justify-content: center;
   }
 }
 
 @media (min-width: 768px) {
-  .heroTopbar {
-    padding: 1.5rem 2.5rem;
+  .heroCard {
+    min-height: 640px;
   }
 
   .heroContent {
@@ -117,44 +126,19 @@
   }
 }
 
-/* Desktop (print): o vídeo cobre o card inteiro; nome e @ por cima no topo,
-   título e funções embaixo à esquerda, botões embaixo à direita */
+/* Desktop: título e funções embaixo à esquerda; botões embaixo, centralizados */
 @media (min-width: 1024px) {
   .heroCard {
     height: 780px;
   }
 
-  .heroMedia {
-    position: absolute;
-    inset: 0;
-    height: 100%;
-    aspect-ratio: auto;
-  }
-
-  /* Escurece o topo e a base do vídeo para o texto branco ter contraste */
+  /* No desktop o texto ocupa menos da altura: degradê da base mais curto e leve */
   .heroCard::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background:
-      linear-gradient(to bottom, rgba(0, 0, 0, 0.35), transparent 22%),
-      linear-gradient(to top, rgba(0, 0, 0, 0.65), transparent 60%);
-    pointer-events: none;
-  }
-
-  .heroTopbar {
-    position: relative;
-    z-index: 1;
-    padding: 2.5rem var(--space-container);
-    font-size: 0.9375rem;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.65), transparent 60%);
   }
 
   .heroContent {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 3rem;
-    margin-top: auto; /* empurra o texto para a base do card */
+    gap: 2.5rem;
     padding: var(--space-container);
   }
 
@@ -163,10 +147,6 @@
   }
 
   .heroActions {
-    flex-direction: column;
-    align-items: flex-end;
-    flex-wrap: nowrap;
-    flex-shrink: 0;
     gap: 1rem;
   }
 }

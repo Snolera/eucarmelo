@@ -2,8 +2,6 @@
 
 import { motion } from "motion/react";
 import Image from "next/image";
-import { Play } from "lucide-react";
-import Corners from "./Corners";
 import {
   SPRING,
   DROP_SPRING,
@@ -14,15 +12,12 @@ import {
   SHADOW_SM,
   SHADOW_MD,
   SHADOW_LG,
-  BORDER_ACCENT,
-  BORDER_DIVIDER,
 } from "./motion-config";
 import styles from "./Gallery916.module.css";
 
 const INACTIVE_LOOK = {
   boxShadow: SHADOW_SM,
-  borderColor: BORDER_DIVIDER,
-  filter: "saturate(0.6) brightness(0.97)",
+  filter: "brightness(0.7)",
 };
 
 // Estado final (leque). x: 0 = posição do CSS; z-index troca sem interpolação.
@@ -31,16 +26,16 @@ function getFannedState({ isActive, hover, isMobile, reduceMotion, zIndex }) {
   if (!isActive) return { ...base, scale: 1, y: 0, ...INACTIVE_LOOK };
 
   const lifted = hover && !isMobile && !reduceMotion;
-  let scale = lifted ? 1.2 : 1.16;
-  if (isMobile) scale = 1.06;
-  if (reduceMotion) scale = isMobile ? 1.04 : 1.08;
+  // Card horizontal é largo: escala menor que a do 9:16 para caber na coluna de 1240px
+  let scale = lifted ? 1.1 : 1.07;
+  if (isMobile) scale = 1.03;
+  if (reduceMotion) scale = isMobile ? 1.02 : 1.05;
   return {
     ...base,
     scale,
-    y: isMobile || reduceMotion ? 0 : lifted ? -26 : -14,
+    y: isMobile || reduceMotion ? 0 : lifted ? -18 : -10,
     boxShadow: lifted ? SHADOW_LG : SHADOW_MD,
-    borderColor: BORDER_ACCENT,
-    filter: "saturate(1) brightness(1)",
+    filter: "brightness(1)",
   };
 }
 
@@ -76,7 +71,7 @@ const introVariants = {
   }),
 };
 
-// Card 9:16 em "desenho técnico": duotone azul-aço (inativo) ou laranja claro (ativo)
+// Card horizontal (formato da print): imagem 16:9 no topo, título e o kicker como descrição
 // 1º clique destaca; clique no ativo abre o player
 export default function GalleryCard({
   ref,
@@ -105,14 +100,12 @@ export default function GalleryCard({
     ...(reduceMotion ? { duration: 0.15 } : SPRING),
     zIndex: { duration: 0 },
   };
-  const tintTransition = { duration: reduceMotion ? 0.15 : 0.4 };
-  const number = String(index + 1).padStart(2, "0");
 
   return (
     <motion.button
       ref={ref}
       type="button"
-      className={`${styles.card} ${styles.blueprint} ${isActive ? styles.cardActive : ""}`}
+      className={styles.card}
       style={{ "--d": offset }}
       custom={custom}
       variants={introVariants}
@@ -126,42 +119,19 @@ export default function GalleryCard({
       aria-haspopup={isActive ? "dialog" : undefined}
       aria-label={isActive ? `Assistir: ${item.title}` : `Destacar: ${item.title}`}
     >
-      <Corners />
-      <span className={styles.inner}>
-        <span className={styles.media}>
-          <Image
-            src={item.image}
-            alt={item.alt}
-            fill
-            sizes="(max-width: 768px) 62vw, 260px"
-            loading="eager"
-            className={styles.image}
-          />
-          <motion.span
-            className={styles.tintCool}
-            initial={false}
-            animate={{ opacity: isActive ? 0 : 1 }}
-            transition={tintTransition}
-          />
-          <motion.span
-            className={styles.tintWarm}
-            initial={false}
-            animate={{ opacity: isActive ? 1 : 0 }}
-            transition={tintTransition}
-          />
-          <span className={`${styles.tag} ${styles.tagNum}`}>{number}</span>
-          <span className={`${styles.tag} ${styles.tagDur}`}>{item.duration}</span>
-        </span>
-        <span className={styles.footer}>
-          <span className={styles.meta}>
-            <span className={styles.kickerSm}>{item.kicker}</span>
-            <span className={styles.cardTitle}>{item.title}</span>
-          </span>
-          <span className={`${styles.play} ${styles.blueprint}`} aria-hidden="true">
-            <Corners />
-            <Play size={16} strokeWidth={1.5} />
-          </span>
-        </span>
+      <span className={styles.media}>
+        <Image
+          src={item.image}
+          alt={item.alt}
+          fill
+          sizes="(max-width: 768px) 78vw, 340px"
+          loading="eager"
+          className={styles.image}
+        />
+      </span>
+      <span className={styles.meta}>
+        <span className={styles.cardTitle}>{item.title}</span>
+        <span className={styles.cardDesc}>{item.kicker}</span>
       </span>
     </motion.button>
   );

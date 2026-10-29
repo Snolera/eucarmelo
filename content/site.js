@@ -23,12 +23,11 @@ export const nav = [
 ];
 
 export const hero = {
-  cardName: "welinton.carmelo", // topo do card no mobile, ao lado do @ do Instagram
   kicker: "Direção / Roteiro / Montagem / Produção / Criação", // linha de funções abaixo do título
   title: "Filmes curtos para marcas que vivem",
   titleEm: "no feed.",
   watch: "Assistir showreel",
-  cta: "Mandar direct",
+  cta: "Fale Comigo",
   // Showreel no Vercel Blob: toca sem som no fundo do card e, ao clicar, do início e com som no player
   // poster null: o card mostra o 1º quadro do vídeo
   showreel: {
@@ -61,7 +60,7 @@ export const about = {
 const SAMPLE_VIDEO = "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4";
 
 export const work = {
-  kicker: "Galeria", // vira "Galeria · 06 vídeos"
+  kicker: "Portfólio",
   title: "Por trás de cada projeto",
   lead: "",
   items: [

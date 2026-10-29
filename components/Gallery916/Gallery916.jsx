@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, useReducedMotion } from "motion/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import GalleryCard from "./GalleryCard";
 import GalleryModal from "./GalleryModal";
@@ -9,8 +9,6 @@ import { MOBILE_QUERY } from "./motion-config";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useGalleryIntro } from "@/hooks/useGalleryIntro";
 import styles from "./Gallery916.module.css";
-
-const pad = (n) => String(n).padStart(2, "0");
 
 // Setas do teclado num campo (ex.: barras do player) são do campo, não da galeria
 const isFormField = (el) => el?.closest?.("input, textarea, select, [contenteditable='true']");
@@ -141,9 +139,7 @@ export default function Gallery916({ items = [], kicker, title, lead, titleId, i
     <div className={styles.gallery}>
       {/* div (não <header>): o banner da página é só o header do site */}
       <div className={styles.header}>
-        <span className={styles.kicker}>
-          {kicker} · {pad(count)} vídeos
-        </span>
+        <span className={styles.kicker}>{kicker}</span>
         <h2 id={titleId} className={styles.title}>
           {title}
         </h2>
@@ -179,29 +175,11 @@ export default function Gallery916({ items = [], kicker, title, lead, titleId, i
       </div>
 
       <nav className={styles.controls} aria-label="Navegação da galeria">
-        <button type="button" className={styles.btnIcon} onClick={() => step(-1)} aria-label="Anterior">
-          <ChevronLeft size={18} strokeWidth={1.5} />
+        <button type="button" className={`${styles.btnIcon} ${styles.btnArrow}`} onClick={() => step(-1)} aria-label="Anterior">
+          <ChevronLeft size={14} strokeWidth={1.5} />
         </button>
-        <div className={styles.dots}>
-          {items.map((item, i) => (
-            <motion.button
-              key={item.id}
-              type="button"
-              className={`${styles.dot} ${i === active ? styles.dotActive : ""}`}
-              initial={false}
-              animate={{ width: i === active ? 28 : 12 }}
-              transition={{ duration: reduceMotion ? 0.15 : 0.4 }}
-              onClick={() => goTo(i)}
-              aria-label={`Ir para ${item.title}`}
-              aria-current={i === active ? "true" : undefined}
-            />
-          ))}
-        </div>
-        <span className={styles.counter} aria-live="polite">
-          {pad(active + 1)} / {pad(count)}
-        </span>
-        <button type="button" className={styles.btnIcon} onClick={() => step(1)} aria-label="Próximo">
-          <ChevronRight size={18} strokeWidth={1.5} />
+        <button type="button" className={`${styles.btnIcon} ${styles.btnArrow}`} onClick={() => step(1)} aria-label="Próximo">
+          <ChevronRight size={14} strokeWidth={1.5} />
         </button>
       </nav>
 
