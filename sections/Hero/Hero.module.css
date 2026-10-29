@@ -66,7 +66,7 @@
 /* Mobile: linha de funções abaixo do título, em texto corrido */
 .heroKicker {
   order: 1;
-  font-size: 0.625rem; /* 10px (10 ÷ 16, a fonte da raiz) */
+  font-size: 0.9375rem; /* 15px (15 ÷ 16, a fonte da raiz), em todas as telas */
   line-height: 1.5;
   letter-spacing: normal;
 }
@@ -78,7 +78,7 @@
   text-wrap: balance;
 }
 
-/* Botões centralizados na largura do card, abaixo do texto (mobile e desktop) */
+/* Mobile e tablet: botões centralizados na largura do card, abaixo do texto */
 .heroActions {
   display: flex;
   flex-direction: column;
@@ -126,7 +126,7 @@
   }
 }
 
-/* Desktop: título e funções embaixo à esquerda; botões embaixo, centralizados */
+/* Desktop: título e funções embaixo à esquerda, botões embaixo à direita */
 @media (min-width: 1024px) {
   .heroCard {
     height: 780px;
@@ -138,7 +138,10 @@
   }
 
   .heroContent {
-    gap: 2.5rem;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 3rem;
     padding: var(--space-container);
   }
 
@@ -147,6 +150,10 @@
   }
 
   .heroActions {
+    flex-direction: column;
+    align-items: flex-end;
+    flex-wrap: nowrap;
+    flex-shrink: 0;
     gap: 1rem;
   }
 }
