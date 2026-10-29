@@ -277,6 +277,18 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
+  -webkit-tap-highlight-color: transparent; /* tira o realce azul do toque (Chrome/Safari mobile) */
+}
+
+/* Clique/toque não mostra o anel azul de foco do navegador; quem navega pelo teclado
+   continua vendo um anel (branco, no formato redondo do botão) */
+.btnArrow:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.btnArrow:focus-visible {
+  outline: 2px solid var(--color-on-page);
+  outline-offset: 2px;
 }
 
 /* ============ Modal de vídeo ============ */
