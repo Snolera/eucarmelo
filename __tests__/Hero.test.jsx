@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Hero from "@/sections/Hero/Hero";
 import { hero, roles } from "@/content/site";
@@ -78,6 +78,28 @@ describe("Hero", () => {
     expect(video).not.toHaveAttribute("autoplay");
     expect(video).toHaveAttribute("preload", "metadata");
     expect(play).toHaveBeenCalled();
+  });
+
+  test("o vídeo de fundo pausa quando o hero sai da tela e volta quando ele reaparece", () => {
+    let observerCallback;
+    window.IntersectionObserver = class {
+      constructor(cb) {
+        observerCallback = cb;
+      }
+      observe() {}
+      disconnect() {}
+    };
+    const { container } = render(<Hero />);
+    const video = backgroundVideo(container);
+
+    pause.mockClear();
+    act(() => observerCallback([{ isIntersecting: false }]));
+    expect(pause.mock.contexts).toContain(video);
+
+    play.mockClear();
+    act(() => observerCallback([{ isIntersecting: true }]));
+    expect(play.mock.contexts).toContain(video);
+    delete window.IntersectionObserver;
   });
 
   test("com 'reduzir movimento', o vídeo de fundo fica parado", () => {

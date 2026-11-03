@@ -30,14 +30,17 @@ export function circularDistance(index, active, count) {
   return d;
 }
 
-// Posição final de um card no leque (valores numéricos: o Motion anima entre eles)
+// `transform` inteiro (e não x/y/scale soltos): o Motion só roda na GPU (WAAPI) transform e opacity;
+// x/y/scale seriam calculados em JS a cada quadro e engasgam no celular
+// Mesma ordem de funções em todos os estados, para o navegador interpolar número a número
+export const toTransform = ({ x = 0, y = 0, scale = 1 }) => `translateX(${x}px) translateY(${y}px) scale(${scale})`;
+
+// Posição final de um card no leque
 export function getFanState(distance, fan) {
   const abs = Math.abs(distance);
   const step = Math.min(abs, fan.x.length - 1);
   return {
-    x: fan.x[step] * Math.sign(distance),
-    y: 0,
-    scale: fan.scale[step],
+    transform: toTransform({ x: fan.x[step] * Math.sign(distance) || 0, scale: fan.scale[step] }),
     opacity: abs > VISIBLE_RANGE ? 0 : 1,
     zIndex: 20 - abs,
   };

@@ -47,8 +47,9 @@ export function useGalleryIntro(stageRef, reduceMotion) {
     let holdTimer;
     const hold = () => new Promise((resolve) => (holdTimer = setTimeout(resolve, STACK_HOLD_MS)));
 
+    // Sem introControls.set("hidden"): o initial="hidden" já desenha os cards escondidos, e o set()
+    // criaria os valores sem dono no Motion, o que tira a animação da GPU (WAAPI) para sempre
     (async () => {
-      introControls.set("hidden");
       await introControls.start("stacked");
       if (cancelled) return;
       await hold();

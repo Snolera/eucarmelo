@@ -180,7 +180,11 @@ Os estilos base são os do mobile e os breakpoints usam `min-width`: **768px** (
 - **Abertura do player (Hero e Portfólio):** o player sai do elemento clicado e vai ao centro em **240ms** (FLIP com Web Animations API, `OPEN_DURATION` em `VideoModal.jsx`), com fade no fundo.
 - **Hero:** o showreel sem som cobre o card; clicar em **qualquer parte do card** abre o player (menos no CTA ou selecionando texto).
 - **Números:** faixa contínua da direita para a esquerda (25s, `linear`), sem repetir valores; pausa com o mouse por cima.
-- **Portfólio:** entrada própria (queda empilhada → leque) quando o palco fica inteiro na tela, por isso a seção não usa o `Reveal`. Na troca de card, o Motion anima `x`, `scale` e `opacity`.
+- **Portfólio:** entrada própria (queda empilhada → leque) quando o palco fica inteiro na tela, por isso a seção não usa o `Reveal`. Queda e troca de card animam só `transform` e `opacity`, que o Motion roda na GPU (Web Animations API), fora da thread principal:
+  - as posições são uma string `transform` inteira (`toTransform` em `motion-config.js`), não `x`/`y`/`scale` soltos;
+  - **não usar `introControls.set(...)`**: ele cria os valores do Motion sem dono e as animações caem para JavaScript quadro a quadro, o que engasga no celular;
+  - os cards têm `will-change: transform` (camada própria, sem redesenhar a cada quadro).
+- **Vídeo do hero:** pausa quando o hero sai da tela (IntersectionObserver), para não disputar a GPU com as animações abaixo.
 - **Entrada no scroll (Hero, Números, Serviços, Sobre, Fotos):** desliza da esquerda com fade quando 60% da seção fica visível (ou ocupa 60% da tela). Uma vez só. O Hero usa `<Reveal immediate>` (CSS na primeira pintura, não atrasa o LCP). Sem JavaScript, tudo aparece normalmente.
 - **Fotos:** miniatura cresce 2% no hover; a foto ampliada entra com fade + escala.
 - **Menos movimento:** com `prefers-reduced-motion`, nada desliza, a faixa para, o Portfólio pula a entrada e troca de card com transições curtas, e o scroll suave é desligado.

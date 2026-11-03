@@ -3,23 +3,26 @@
 import { useId } from "react";
 import { motion } from "motion/react";
 import Image from "next/image";
-import { DROP_DISTANCE, DROP_SPRING, DROP_STAGGER, FAN_SPRING, FAN_STAGGER, SPRING } from "./motion-config";
+import { DROP_DISTANCE, DROP_SPRING, DROP_STAGGER, FAN_SPRING, FAN_STAGGER, SPRING, toTransform } from "./motion-config";
 import styles from "./Gallery916.module.css";
 
 // Variants da entrada; `custom` = { index, fanned (posição final), stackZ }
 // Todos os cards nascem no centro do palco: a pilha é só x = 0, sem medir nada
+// z-index troca na hora (duration 0): animado, ele seria recalculado em JS a cada quadro
+const DROPPED = toTransform({ y: -DROP_DISTANCE });
+const STACKED = toTransform({});
+
 const introVariants = {
-  hidden: (c) => ({ x: 0, y: -DROP_DISTANCE, scale: 1, opacity: 0, zIndex: c.stackZ }),
+  hidden: (c) => ({ transform: DROPPED, opacity: 0, zIndex: c.stackZ }),
   stacked: (c) => ({
-    x: 0,
-    y: 0,
-    scale: 1,
+    transform: STACKED,
     opacity: 1,
     zIndex: c.stackZ,
     transition: {
       ...DROP_SPRING,
       delay: c.index * DROP_STAGGER,
       opacity: { duration: 0.3, delay: c.index * DROP_STAGGER },
+      zIndex: { duration: 0 },
     },
   }),
   fanned: (c) => ({

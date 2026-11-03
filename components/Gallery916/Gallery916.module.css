@@ -27,7 +27,7 @@
   left: 50%;
   width: var(--card-w);
   height: var(--card-h);
-  /* Centraliza pela margem: o transform fica livre para o Motion (x, y, scale) */
+  /* Centraliza pela margem: o transform fica livre para o Motion */
   margin: calc(var(--card-h) / -2) 0 0 calc(var(--card-w) / -2);
   overflow: hidden;
   border-radius: 22px;
@@ -35,6 +35,8 @@
   color: var(--color-text);
   font-family: var(--font-ui);
   cursor: pointer;
+  /* Camada própria na GPU: desenhado uma vez e só movido/escalado, sem redesenhar a cada quadro */
+  will-change: transform;
 }
 
 .card[aria-current="true"] {

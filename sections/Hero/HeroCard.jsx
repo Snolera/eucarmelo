@@ -11,18 +11,28 @@ const prefersReducedMotion = () =>
 // O mesmo vídeo toca sem som no fundo do card; no player, recomeça do início e com som
 export default function HeroCard({ className, video, children }) {
   const [originRect, setOriginRect] = useState(null); // null = fechado
+  const [onScreen, setOnScreen] = useState(true);
+  const cardRef = useRef(null);
   const backgroundRef = useRef(null);
   const open = Boolean(originRect);
 
-  // Autoplay pelo JS (não pelo atributo): fica parado com "reduzir movimento"
-  // e pausa enquanto o player com som está aberto
+  // Fora da tela o vídeo pausa: decodificar vídeo pesa na GPU do celular e trava as animações abaixo
+  useEffect(() => {
+    if (!cardRef.current || !("IntersectionObserver" in window)) return;
+    const observer = new window.IntersectionObserver(([entry]) => setOnScreen(entry.isIntersecting));
+    observer.observe(cardRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  // Autoplay pelo JS (não pelo atributo): fica parado com "reduzir movimento",
+  // fora da tela e enquanto o player com som está aberto
   useEffect(() => {
     const background = backgroundRef.current;
     if (!background) return;
-    if (open || prefersReducedMotion()) background.pause();
+    if (open || !onScreen || prefersReducedMotion()) background.pause();
     // Navegador bloqueou: fica no 1º quadro (play() sem Promise em navegadores antigos/jsdom)
     else background.play()?.catch(() => {});
-  }, [open]);
+  }, [open, onScreen]);
 
   const handleClick = (e) => {
     // Links (CTA do Instagram) seguem seu destino normal
@@ -35,7 +45,7 @@ export default function HeroCard({ className, video, children }) {
 
   return (
     <>
-      <div className={className} onClick={handleClick}>
+      <div ref={cardRef} className={className} onClick={handleClick}>
         {video.src ? (
           <video
             ref={backgroundRef}
