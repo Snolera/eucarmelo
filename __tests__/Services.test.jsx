@@ -27,6 +27,18 @@ describe("Serviços", () => {
     });
   });
 
+  test("linha do tempo: lista ordenada, cada passo com marcador decorativo e o card", () => {
+    render(<Services />);
+    const steps = within(screen.getByRole("list")).getAllByRole("listitem");
+    expect(steps).toHaveLength(services.items.length);
+
+    steps.forEach((step) => {
+      const marker = step.querySelector("[data-timeline-marker]");
+      expect(marker).toHaveAttribute("aria-hidden", "true"); // ponto e linha não vão para o leitor de tela
+      expect(within(step).getByRole("article")).toBeInTheDocument();
+    });
+  });
+
   test("rótulo e texto formam pares de definição (dt/dd)", () => {
     const { container } = render(<Services />);
     expect(container.querySelectorAll("dl")).toHaveLength(3);

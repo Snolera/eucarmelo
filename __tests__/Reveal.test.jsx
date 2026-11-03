@@ -75,6 +75,20 @@ describe("Reveal (animação de entrada no scroll)", () => {
     expect(observers[0].disconnect).toHaveBeenCalled();
   });
 
+  test("onReveal avisa uma vez quando revela (ex.: cards dos Serviços esperam o cabeçalho)", () => {
+    const onReveal = vi.fn();
+    render(
+      <Reveal data-testid="reveal" onReveal={onReveal}>
+        conteúdo
+      </Reveal>
+    );
+    expect(onReveal).not.toHaveBeenCalled();
+    scrollTo(0.6, 300);
+    scrollTo(0.8, 400);
+    expect(onReveal).toHaveBeenCalledTimes(1);
+    expect(screen.getByTestId("reveal")).not.toHaveAttribute("onReveal");
+  });
+
   test("sem IntersectionObserver (navegador antigo), mostra direto", () => {
     delete window.IntersectionObserver;
     render(<Reveal data-testid="reveal">conteúdo</Reveal>);
@@ -90,6 +104,28 @@ describe("Reveal (animação de entrada no scroll)", () => {
     expect(revealState()).toBe("true");
     expect(screen.getByTestId("reveal").className).toMatch(/reveal--immediate/);
     expect(observers).toHaveLength(0);
+  });
+
+  // A caixa escura (fundo) fica parada; só o conteúdo de dentro entra
+  test.each([
+    ["Números", Stats],
+    ["Serviços", Services],
+    ["Sobre", About],
+    ["Fotos", Photos],
+  ])("%s: anima o conteúdo, não a caixa", (_, Section) => {
+    const { container } = render(<Section />);
+    const box = container.firstElementChild.firstElementChild; // section > caixa escura
+    expect(box).not.toHaveAttribute("data-revealed");
+    expect(box.firstElementChild).toHaveAttribute("data-revealed");
+  });
+
+  test("Hero: o card com o vídeo fica parado; só texto e botão entram", () => {
+    const { container } = render(<Hero />);
+    const reveal = container.querySelector("[data-revealed]");
+    expect(reveal).toContainElement(screen.getByRole("heading", { level: 1 }));
+    expect(reveal).toContainElement(screen.getByRole("link", { name: /fale comigo/i }));
+    expect(reveal.querySelector("video")).toBeNull();
+    expect(reveal.parentElement.querySelector(":scope > video")).toBeInTheDocument();
   });
 
   // Trabalhos não desliza: a galeria tem a própria entrada (queda + leque)

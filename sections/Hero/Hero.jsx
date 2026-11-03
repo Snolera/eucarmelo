@@ -8,24 +8,22 @@ import styles from "./Hero.module.css";
 export default function Hero() {
   return (
     <section className={`container ${styles.hero}`} aria-labelledby="hero-title">
-      {/* Entra da esquerda ao carregar: por CSS, sem esperar o JS (o H1 é o LCP) */}
-      <Reveal immediate>
-        {/* O HeroCard também desenha o showreel de fundo (sem som); clicar no card abre o player */}
-        <HeroCard className={styles.heroCard} video={hero.showreel}>
-          <div className={styles.heroContent}>
-            <div className={styles.heroText}>
-              <h1 id="hero-title" className={styles.heroTitle}>
-                {hero.title} <em>{hero.titleEm}</em>
-              </h1>
-              <p className={styles.heroRoles}>{roles}</p>
-            </div>
-
-            <Button href={instagram.dmUrl} variant="accent" className={styles.heroDirect}>
-              {hero.cta}&nbsp;· {instagram.handle}
-            </Button>
+      {/* O HeroCard desenha o showreel de fundo (sem som) e fica parado; clicar no card abre o player */}
+      <HeroCard className={styles.heroCard} video={hero.showreel}>
+        {/* Só o texto e o botão entram da esquerda ao carregar: por CSS, sem esperar o JS (o H1 é o LCP) */}
+        <Reveal immediate className={styles.heroContent}>
+          <div className={styles.heroText}>
+            <h1 id="hero-title" className={styles.heroTitle}>
+              {hero.title} <em>{hero.titleEm}</em>
+            </h1>
+            <p className={styles.heroRoles}>{roles}</p>
           </div>
-        </HeroCard>
-      </Reveal>
+
+          <Button href={instagram.dmUrl} variant="accent" className={styles.heroDirect}>
+            {hero.cta}&nbsp;· {instagram.handle}
+          </Button>
+        </Reveal>
+      </HeroCard>
     </section>
   );
 }

@@ -99,6 +99,7 @@ As seções são **Server Components** sempre que possível; o JavaScript só va
 |---|---|---|
 | `Hero`, `Stats`, `Work`, `Services`, `About`, `Photos`, `Footer` | Server | Conteúdo estático |
 | `Header` | Client | Abre e fecha o menu mobile |
+| `ServicesTimeline` | Client | Entrada do cabeçalho e da linha do tempo dos Serviços (scroll) |
 | `HeroCard` | Client | Card do hero inteiro clicável, abre o showreel |
 | `Gallery916` | Client | Leque do Portfólio (estado, teclado, swipe, entrada) |
 | `PhotoGrid`, `PhotoLightbox` | Client | Abrir e fechar a foto ampliada |
@@ -115,11 +116,13 @@ As seções são **Server Components** sempre que possível; o JavaScript só va
 - **`useVideoPlayer`:** o estado do `<video>` vem dos eventos nativos; expõe `togglePlay`, `toggleMute`, `setVolume` e `seek`. Onde o navegador não deixa mudar o volume (iPhone), o ícone só liga e desliga o som.
 - **`useGalleryIntro(stageRef, reduceMotion)`:** entrada do Portfólio. Quando o palco fica inteiro na tela (`useInView` do motion), os cards caem empilhados no centro, pausam 500ms e abrem em leque. Com "reduzir movimento" ou sem IntersectionObserver, vai direto para o leque.
 - **`useMediaQuery(query)`:** `true` enquanto a media query casa; o Portfólio usa para trocar os valores do leque em 768px.
-- **`useReveal`:** IntersectionObserver da entrada no scroll (usado pelo `Reveal`).
+- **`useReveal`:** IntersectionObserver da entrada no scroll (usado pelo `Reveal`, que tem `onReveal` para avisar quando revelou).
+- **`useTimelineReveal(count, { ready, skip })`:** revela os passos da linha do tempo em ordem, uma vez só, quando o ponto cruza a linha de leitura (80% da tela).
+- **`useTimelineLine(trackRef, dots, shown)`:** `scaleY` da linha dos Serviços ligado ao scroll, que só cresce e para no próximo ponto apagado (`capFraction`).
 
 ### Componentes compartilhados
 
-- **`Panel`:** a caixa escura arredondada de todas as seções, na coluna central. Props: `as` (tag externa: `section` por padrão, `footer` no rodapé) e `reveal` (entrada no scroll).
+- **`Panel`:** a caixa escura arredondada de todas as seções, na coluna central. Props: `as` (tag externa: `section` por padrão, `footer` no rodapé) e `reveal` (entrada no scroll só do conteúdo; a caixa fica parada). O `className` da seção vai em quem envolve o conteúdo.
 - **`SectionHeading`:** cabeçalho centralizado (pílula + H2 + texto de apoio opcional). Converte `*destaque*` e `\n` do `site.js` (`parseEmphasis`).
 - **`Kicker`:** a pílula em caixa alta ("PORTFÓLIO", "SOBRE").
 - **`Logo`:** "welinton" light + "carmelo" negrito, colados; anuncia "Welinton Carmelo" ao leitor de tela. Usado no header e no rodapé, com o tamanho vindo de quem usa.
@@ -170,7 +173,7 @@ Os estilos base são os do mobile e os breakpoints usam `min-width`: **768px** (
 | Header | Logo + ☰; menu abre abaixo com links grandes (28px) | Links em linha (14px) |
 | Hero | Botão do direct em largura total, abaixo do texto | Título à esquerda, botão em pílula à direita |
 | Portfólio | Leque compacto + bolinhas de posição | Leque largo, só as setas |
-| Serviços | 1 coluna | 2 ou 3 colunas (`auto-fit`, mín. 300px) |
+| Serviços | Linha do tempo vertical: ponto e linha dourada à esquerda de cada serviço | Igual até 1023px; a partir de 1024px, linha horizontal acima de uma coluna por serviço |
 | Sobre | Título, retrato, texto | Retrato à esquerda (240px; 300px a partir de 1024px), título e texto à direita, justificado |
 | Galeria de Fotos | 2 colunas; a 1ª foto ocupa as duas, em 4:3 | 3 colunas, todas 4:5 |
 | Contato (rodapé) | Centralizado: logo, funções, 4 redes, copyright | Igual |
@@ -185,9 +188,12 @@ Os estilos base são os do mobile e os breakpoints usam `min-width`: **768px** (
   - **não usar `introControls.set(...)`**: ele cria os valores do Motion sem dono e as animações caem para JavaScript quadro a quadro, o que engasga no celular;
   - os cards têm `will-change: transform` (camada própria, sem redesenhar a cada quadro).
 - **Vídeo do hero:** pausa quando o hero sai da tela (IntersectionObserver), para não disputar a GPU com as animações abaixo.
-- **Entrada no scroll (Hero, Números, Serviços, Sobre, Fotos):** desliza da esquerda com fade quando 60% da seção fica visível (ou ocupa 60% da tela). Uma vez só. O Hero usa `<Reveal immediate>` (CSS na primeira pintura, não atrasa o LCP). Sem JavaScript, tudo aparece normalmente.
+- **Entrada no scroll (Hero, Números, Sobre, Fotos):** a caixa escura (e o vídeo do Hero) fica parada e só o **conteúdo** desliza da esquerda com fade, quando 60% da seção fica visível (ou ocupa 60% da tela). Uma vez só. O Hero usa `<Reveal immediate>` (CSS na primeira pintura, não atrasa o LCP). Sem JavaScript, tudo aparece normalmente.
+- **Serviços (linha do tempo):** a caixa fica parada e o cabeçalho entra com o `Reveal`; os cards vêm depois (`ServicesTimeline`).
+  - **Mobile/tablet (< 1024px):** uma linha única desce com o scroll; a ponta segue uma "linha de leitura" a 80% da altura da tela (`useTimelineLine`: `useScroll` + `useSpring`, só `scaleY`). Quando um ponto cruza essa linha, ele acende e o card sobe 16px com fade (`useTimelineReveal`). O 1º card espera o cabeçalho (300ms); pontos que já passaram (ex.: âncora `#servicos`) entram em cascata (120ms). A linha só cresce e nunca passa de um ponto apagado.
+  - **Desktop (1024px+):** quando a fileira de pontos cruza a linha de leitura (e o cabeçalho já entrou), a linha horizontal corre da esquerda (`scaleX`, `linear`) e cada ponto + card entra quando ela chega: `--i × 350ms` (0 · 350 · 700ms, ~1,15s no total). Só CSS (`--tl-step`), disparado pelo `data-active`.
 - **Fotos:** miniatura cresce 2% no hover; a foto ampliada entra com fade + escala.
-- **Menos movimento:** com `prefers-reduced-motion`, nada desliza, a faixa para, o Portfólio pula a entrada e troca de card com transições curtas, e o scroll suave é desligado.
+- **Menos movimento:** com `prefers-reduced-motion`, nada desliza, a faixa para, a linha dos Serviços aparece cheia, o Portfólio pula a entrada e troca de card com transições curtas, e o scroll suave é desligado.
 
 ---
 
@@ -197,7 +203,7 @@ Os estilos base são os do mobile e os breakpoints usam `min-width`: **768px** (
 - Link "Pular para o conteúdo" no header, visível só com foco por teclado.
 - Foco visível dourado; áreas de toque de no mínimo 44×44px.
 - Portfólio: cada card é um `article` nomeado pelo seu `h3`, com `aria-current` no ativo. Só o **Assistir** do card ativo entra no Tab (as setas trocam o card); cards fora do leque ficam `inert`. As bolinhas são decorativas (`aria-hidden`).
-- Serviços: "Pra quem" e "O que resolve" são pares `dt`/`dd`.
+- Serviços: linha do tempo em lista ordenada (`ol`/`li`), ponto e linha decorativos (`aria-hidden`); "Pra quem" e "O que resolve" são pares `dt`/`dd`.
 - Fotos: cada miniatura é um botão "Ampliar: …"; a foto ampliada é um `<dialog>` com botão "Fechar foto".
 - Redes sem endereço aparecem como imagem "(em breve)", apagadas e sem link quebrado.
 
@@ -217,7 +223,8 @@ Para rodar: `npm test`. Os testes cobrem cada seção e componente:
 - **Portfólio (`Gallery916.test.jsx`):** conteúdo do card, card inicial, destacar por clique, setas/teclado, swipe, bolinhas, Assistir abrindo o player com o vídeo do projeto. Rodam com "reduzir movimento", que pula a entrada; a queda e o leque são conferidos no navegador.
 - **Serviços, Sobre, Fotos e Contato:** conteúdo, ordem do HTML, lightbox (abrir e fechar) e redes.
 - **Player:** abrir e fechar (Hero, foco), controles e estado sem vídeo.
-- **Entrada no scroll:** quais seções deslizam.
+- **Entrada no scroll:** quais seções deslizam, que a caixa/vídeo do Hero fica fora da animação e o `onReveal`.
+- **Linha do tempo dos Serviços (`ServicesTimeline.test.jsx`):** cards esperam o cabeçalho, cascata, ponto abaixo da linha não revela, uma vez só, reduzir movimento e sem IntersectionObserver; `capFraction` (limite da linha). O desenho da linha com o scroll é conferido no navegador.
 
 O `vitest.setup.js` tem um polyfill de `<dialog>.showModal/close`, porque o jsdom não implementa esses métodos.
 
