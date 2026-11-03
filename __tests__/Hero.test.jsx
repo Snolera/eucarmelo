@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Hero from "@/sections/Hero/Hero";
-import { hero } from "@/content/site";
+import { hero, roles } from "@/content/site";
 
 // jsdom não implementa play/pause de <video>: espiões que só registram as chamadas
 let play;
@@ -18,12 +18,11 @@ afterEach(() => {
 const backgroundVideo = (container) => container.querySelector("video[aria-hidden='true']");
 
 describe("Hero", () => {
-  test("mostra kicker e o h1 com a copy do design", () => {
+  test("h1 com a copy do design e, logo abaixo, a linha de funções", () => {
     render(<Hero />);
-    expect(screen.getByText("Direção / Roteiro / Montagem / Produção / Criação")).toBeInTheDocument();
-    expect(
-      screen.getByRole("heading", { level: 1, name: "Filmes curtos para marcas que vivem no feed." })
-    ).toBeInTheDocument();
+    const h1 = screen.getByRole("heading", { level: 1, name: "Filmes curtos para marcas que vivem no feed." });
+    const rolesLine = screen.getByText(roles);
+    expect(h1.compareDocumentPosition(rolesLine) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
   test("o topo do card não tem nome nem @ (o @ fica só no botão do direct)", () => {
@@ -67,23 +66,6 @@ describe("Hero", () => {
     await user.click(screen.getByRole("button", { name: /fechar/i }));
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
-
-  // Botão "Assistir showreel" comentado no Hero.jsx (some no mobile e no desktop)
-  test("o botão 'Assistir showreel' não aparece; o direct continua", () => {
-    render(<Hero />);
-    expect(screen.queryByRole("button", { name: /assistir showreel/i })).not.toBeInTheDocument();
-    expect(screen.getByRole("link", { name: new RegExp(hero.cta, "i") })).toBeInTheDocument();
-  });
-
-  // Para reativar junto com o botão:
-  // test("'Assistir showreel' abre o player", async () => {
-  //   const user = userEvent.setup();
-  //   render(<Hero />);
-  //
-  //   expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
-  //   await user.click(screen.getByRole("button", { name: /assistir showreel/i }));
-  //   expect(screen.getByRole("dialog", { name: /showreel/i })).toBeInTheDocument();
-  // });
 
   test("o card mostra o showreel de fundo: sem som, em loop, tocando sozinho", () => {
     const { container } = render(<Hero />);

@@ -10,8 +10,6 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
-    // Runtime do protótipo de design (não faz parte do site)
-    "support.js",
   ]),
 ]);
 

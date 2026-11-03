@@ -1,7 +1,6 @@
-import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Work from "@/sections/Work/Work";
-import Gallery916 from "@/components/Gallery916/Gallery916";
 import { work } from "@/content/site";
 
 // jsdom não tem matchMedia nem IntersectionObserver. Com "reduzir movimento" a galeria
@@ -24,11 +23,10 @@ function mockBrowser({ reduced = true } = {}) {
   vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(() => {});
 }
 
-const cards = () => screen.getAllByRole("button", { name: /^(assistir|destacar):/i });
-const activeCard = () => cards().find((c) => c.getAttribute("aria-pressed") === "true");
-const activeIs = (i) => expect(activeCard()).toHaveAccessibleName(`Assistir: ${work.items[i].title}`);
-// O modal tem animação de saída (AnimatePresence): espera ele sair da página
-const expectModalClosed = () => waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+const cards = () => screen.getAllByRole("article");
+const activeCard = () => cards().find((c) => c.getAttribute("aria-current") === "true");
+const activeIs = (i) => expect(activeCard()).toHaveAccessibleName(work.items[i].title);
+const watch = (i) => screen.getByRole("button", { name: `Assistir: ${work.items[i].title}` });
 
 beforeEach(() => mockBrowser());
 afterEach(() => {
@@ -37,47 +35,54 @@ afterEach(() => {
   delete window.IntersectionObserver;
 });
 
-describe("Galeria 9:16 na seção Trabalhos", () => {
-  test("cabeçalho da galeria: kicker (sem a contagem de vídeos), h2 e instrução; âncora #trabalhos", () => {
+describe("Portfólio (Gallery916 em leque) na seção Trabalhos", () => {
+  test("âncora #trabalhos nomeada pelo h2, com a pílula do kicker", () => {
     const { container } = render(<Work />);
-    const section = container.querySelector("section#trabalhos");
-    expect(section).toHaveAttribute("aria-labelledby", "work-title");
-    expect(screen.getByRole("heading", { level: 2, name: work.title })).toHaveAttribute("id", "work-title");
+    expect(container.querySelector("section#trabalhos")).toHaveAttribute("aria-labelledby", "work-title");
+    expect(screen.getByRole("heading", { level: 2, name: "Por trás de cada projeto" })).toHaveAttribute("id", "work-title");
     expect(screen.getByText(work.kicker)).toBeInTheDocument();
-    expect(screen.queryByText(/vídeos/i)).not.toBeInTheDocument();
-    // Instrução opcional: vazia em site.js, o parágrafo nem é criado
-    if (work.lead) expect(screen.getByText(work.lead)).toBeInTheDocument();
-  });
-
-  test("sem texto de instrução, não sobra parágrafo vazio no cabeçalho", () => {
-    const { container } = render(<Gallery916 items={work.items} kicker="Galeria" title="Título" lead="" />);
-    expect(container.querySelector("h2 + p")).not.toBeInTheDocument();
   });
 
   test("6 cards; começa no 3º (índice 2) ativo", () => {
     render(<Work />);
     expect(cards()).toHaveLength(6);
-    expect(activeCard()).toHaveAccessibleName(`Assistir: ${work.items[2].title}`);
-    expect(screen.getByRole("button", { name: `Destacar: ${work.items[0].title}` })).toBeInTheDocument();
+    activeIs(2);
   });
 
-  test("card no formato da print: imagem, título e o kicker como descrição (sem tags nem play)", () => {
+  test("card: título (h3), ano, descrição, tag, duração e botão Assistir", () => {
     render(<Work />);
     const item = work.items[0];
-    const card = screen.getByRole("button", { name: `Destacar: ${item.title}` });
+    const card = cards()[0];
+    expect(within(card).getByRole("heading", { level: 3, name: item.title })).toBeInTheDocument();
     expect(within(card).getByRole("img", { name: item.alt })).toBeInTheDocument();
-    expect(within(card).getByText(item.title)).toBeInTheDocument();
-    expect(within(card).getByText(item.kicker)).toBeInTheDocument();
-    expect(within(card).queryByText(item.duration)).not.toBeInTheDocument();
-    expect(within(card).queryByText("01")).not.toBeInTheDocument();
+    [item.year, item.desc, item.tag, item.duration].forEach((text) =>
+      expect(within(card).getByText(text)).toBeInTheDocument()
+    );
+    expect(within(card).getByRole("button", { name: `Assistir: ${item.title}` })).toBeInTheDocument();
   });
 
-  test("clicar num card inativo o destaca, sem abrir o player", async () => {
+  test("os vizinhos não são escurecidos: nenhum card tem camada de sombra", () => {
+    render(<Work />);
+    cards().forEach((card) => {
+      expect(card.style.getPropertyValue("--shade")).toBe("");
+      expect(card.querySelector("[class*='cardShade']")).toBeNull();
+    });
+  });
+
+  test("só o Assistir do card ativo entra no Tab", () => {
+    render(<Work />);
+    expect(watch(2)).not.toHaveAttribute("tabindex", "-1");
+    expect(watch(0)).toHaveAttribute("tabindex", "-1");
+  });
+
+  test("clicar num card inativo (inclusive no Assistir dele) o destaca, sem abrir o player", async () => {
     const user = userEvent.setup();
     render(<Work />);
 
-    await user.click(screen.getByRole("button", { name: `Destacar: ${work.items[0].title}` }));
-    expect(activeCard()).toHaveAccessibleName(`Assistir: ${work.items[0].title}`);
+    await user.click(cards()[0]);
+    activeIs(0);
+    await user.click(watch(1));
+    activeIs(1);
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
@@ -87,25 +92,14 @@ describe("Galeria 9:16 na seção Trabalhos", () => {
 
     await user.click(screen.getByRole("button", { name: "Próximo" }));
     activeIs(3);
-    await user.click(screen.getByRole("button", { name: `Destacar: ${work.items[0].title}` }));
+    await user.click(cards()[0]);
     await user.click(screen.getByRole("button", { name: "Anterior" }));
     activeIs(5);
     fireEvent.keyDown(window, { key: "ArrowRight" });
     activeIs(0);
   });
 
-  test("controles: só as duas setas, sem contador nem traços", () => {
-    render(<Work />);
-    const nav = screen.getByRole("navigation", { name: "Navegação da galeria" });
-    expect(within(nav).getAllByRole("button").map((b) => b.getAttribute("aria-label"))).toEqual([
-      "Anterior",
-      "Próximo",
-    ]);
-    expect(screen.queryByText(/^\d{2} \/ \d{2}$/)).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /^Ir para/ })).not.toBeInTheDocument();
-  });
-
-  test("setas do teclado dentro de um campo (ex.: barra do player) não mexem na galeria", () => {
+  test("setas do teclado dentro de um campo não mexem na galeria", () => {
     render(
       <>
         <Work />
@@ -116,54 +110,53 @@ describe("Galeria 9:16 na seção Trabalhos", () => {
     activeIs(2);
   });
 
-  test("clicar no card ativo abre a moldura com o player do site (volume em 50%)", async () => {
+  test("arrastar o dedo para a esquerda avança; para a direita volta (mínimo de 40px)", () => {
+    const { container } = render(<Work />);
+    const stage = container.querySelector("[aria-roledescription='carrossel']");
+    const swipe = (from, to) => {
+      fireEvent.touchStart(stage, { touches: [{ clientX: from }] });
+      fireEvent.touchEnd(stage, { changedTouches: [{ clientX: to }] });
+    };
+
+    swipe(200, 100);
+    activeIs(3);
+    swipe(100, 200);
+    activeIs(2);
+    swipe(100, 80); // 20px: não conta
+    activeIs(2);
+  });
+
+  test("bolinhas de posição: uma por card, decorativas, com a ativa marcada", () => {
+    const { container } = render(<Work />);
+    const dots = container.querySelectorAll("[data-dot]");
+    expect(dots).toHaveLength(6);
+    expect(dots[0].closest("[aria-hidden='true']")).toBeInTheDocument();
+    expect(dots[2]).toHaveAttribute("data-active", "true");
+  });
+
+  test("Assistir no card ativo abre o player do showreel com o vídeo do projeto", async () => {
     const user = userEvent.setup();
     render(<Work />);
     const item = work.items[2];
 
-    await user.click(activeCard());
-    const dialog = screen.getByRole("dialog", { name: `Vídeo: ${item.title}` });
-    expect(within(dialog).getByText(`03 · ${item.kicker}`)).toBeInTheDocument();
+    await user.click(watch(2));
+    const dialog = screen.getByRole("dialog", { name: item.title });
     const video = dialog.querySelector("video");
     expect(video).toHaveAttribute("src", item.video);
     expect(video).toHaveAttribute("poster", item.image);
     expect(video.volume).toBe(0.5);
-    // Controles do player do site (não os nativos)
-    expect(video).not.toHaveAttribute("controls");
     expect(within(dialog).getByRole("slider", { name: /progresso/i })).toBeInTheDocument();
-    expect(within(dialog).getByRole("button", { name: "Fechar" })).toHaveFocus();
+
+    await user.click(within(dialog).getByRole("button", { name: /fechar/i }));
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
-  test("o modal fecha com X, Esc e clique no fundo; clicar no vídeo não fecha", async () => {
+  test("com o player aberto, as setas do teclado não trocam o card", async () => {
     const user = userEvent.setup();
     render(<Work />);
-
-    await user.click(activeCard());
-    await user.click(screen.getByRole("button", { name: "Fechar" }));
-    await expectModalClosed();
-    expect(activeCard()).toHaveFocus(); // foco volta ao card
-
-    await user.click(activeCard());
-    await user.keyboard("{Escape}");
-    await expectModalClosed();
-
-    await user.click(activeCard());
-    await user.click(screen.getByRole("dialog").querySelector("video"));
-    expect(screen.getByRole("dialog")).toBeInTheDocument();
-    await user.click(screen.getByRole("dialog"));
-    await expectModalClosed();
-  });
-
-  test("Esc com a barra de volume aberta fecha só a barra, não o modal", async () => {
-    const user = userEvent.setup();
-    render(<Work />);
-
-    await user.click(activeCard());
-    fireEvent.loadedMetadata(screen.getByRole("dialog").querySelector("video"));
-    await user.click(screen.getByRole("button", { name: /ajustar volume/i }));
-    await user.keyboard("{Escape}");
-    expect(screen.queryByRole("slider", { name: /^volume$/i })).not.toBeInTheDocument();
-    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    await user.click(watch(2));
+    fireEvent.keyDown(window, { key: "ArrowRight" });
+    activeIs(2);
   });
 
   test("a seção Trabalhos não tem o deslize de entrada (a galeria tem a própria animação)", () => {

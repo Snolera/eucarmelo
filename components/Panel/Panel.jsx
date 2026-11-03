@@ -1,14 +1,14 @@
 import Reveal from "@/components/Reveal/Reveal";
 import styles from "./Panel.module.css";
 
-// Caixa arredondada das seções; variant: "solid" (cinza do design) ou "glass" (vidro/lente)
+// Caixa escura arredondada de todas as seções, na coluna central
 // as: tag externa ("section" por padrão; "footer" no rodapé)
 // reveal: entra da esquerda no scroll (60% visível)
-export default function Panel({ as: Tag = "section", variant = "solid", reveal = false, className = "", children, ...rest }) {
+export default function Panel({ as: Tag = "section", reveal = false, className = "", children, ...rest }) {
   const Box = reveal ? Reveal : "div";
   return (
     <Tag className={`container ${styles.panel}`} {...rest}>
-      <Box className={`${styles.panelBox} ${styles[`panelBox--${variant}`]} ${className}`}>{children}</Box>
+      <Box className={`${styles.panelBox} ${className}`}>{children}</Box>
     </Tag>
   );
 }

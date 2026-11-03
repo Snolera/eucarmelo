@@ -1,5 +1,5 @@
 import nextConfig, { BLOB_HOST } from "../next.config.mjs";
-import { about, hero, work } from "@/content/site";
+import { about, hero, photos, work } from "@/content/site";
 
 // Vídeos e pôsteres ficam no Vercel Blob (store público); null = ainda não enviado
 // Caminhos locais ("/retrato.jpg", da pasta public/) também valem
@@ -10,6 +10,7 @@ const media = [
   hero.showreel.poster,
   about.portrait.src,
   ...work.items.flatMap((item) => [item.image, item.video]),
+  ...photos.items.flatMap((item) => [item.thumb, item.full]),
 ].filter((url) => url?.startsWith("http"));
 
 describe("URLs do Vercel Blob", () => {

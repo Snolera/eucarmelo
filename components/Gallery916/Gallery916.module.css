@@ -1,441 +1,220 @@
-/* Galeria (Galeria Fotos) com cards horizontais. Mobile first: a base é a fileira com scroll e snap;
-   a partir de 768px os 6 cards ficam fixos, em linha e sobrepostos */
-
-/* ============ Tokens (escopo da galeria) ============ */
-/* A galeria fica num retângulo cinza-escuro (--color-surface-dark), com os cantos
-   arredondados do card do hero; textos e controles em branco sobre ele */
+/* Portfólio em leque (coverflow). Mobile-first: card 236×360 → 270×400 a partir de 768px
+   As posições (x, escala) vêm do JS (motion-config.js); aqui só o tamanho e a aparência */
 .gallery {
-  --color-bg: #f2f2f3;
-  --color-surface: #e9e9ea;
-  --color-text: #1d1f20;
-  --color-on-page: #ffffff;
-  --color-on-page-divider: color-mix(in srgb, #ffffff 24%, transparent);
-  --color-card: #232626; /* um pouco mais claro que o retângulo, para o card se destacar */
-  --color-accent: #5980a6;
-  --color-divider: color-mix(in srgb, #1d1f20 16%, transparent);
+  --card-w: 236px;
+  --card-h: 360px;
+  --stage-h: 400px;
 
-  --color-neutral-300: #d4d4d7;
-  --color-neutral-700: #5d5d60;
-  --color-neutral-800: #424244;
-
-  --color-accent-200: #d6ebff;
-  --color-accent-300: #b5d9fd;
-  --color-accent-600: #597ea3;
-  --color-accent-700: #416180;
-  --color-accent-800: #2c455d;
-  --color-accent-900: #1d2d3d;
-
-  --color-warm: oklch(0.8 0.13 62);
-
-  --font-heading: var(--font-barlow-condensed, "Barlow Condensed"), system-ui, sans-serif;
-  --font-body: var(--font-barlow, "Barlow"), system-ui, sans-serif;
-
-  --space-4: 13.6px;
-  --space-6: 20.4px;
-
-  --card-w: clamp(240px, 30vw, 300px);
-  /* Altura fixa do card, no mobile e no desktop (inativo; o ativo escala: 1,03× no mobile,
-     1,07× no desktop e 1,1× no hover) */
-  --card-h: 350px;
-  --gutter: clamp(16px, 4vw, 48px);
-
-  position: relative;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
-  padding: clamp(48px, 8vw, 104px) var(--gutter);
-  background: var(--color-surface-dark);
-  border-radius: var(--radius-container);
-  color: var(--color-on-page);
-  font-family: var(--font-body);
-  font-size: 16px;
-  line-height: normal; /* não herda a entrelinha do body do site */
-}
-
-/* ============ Blueprint (moldura com marcas "+", só na moldura do player) ============ */
-.blueprint {
-  position: relative;
-  border: 1px solid var(--color-divider);
-}
-
-.corner {
-  position: absolute;
-  width: 11px;
-  height: 11px;
-  color: color-mix(in srgb, var(--color-text) 55%, transparent);
-  pointer-events: none;
-}
-
-.corner::before,
-.corner::after {
-  content: "";
-  position: absolute;
-  background: currentColor;
-}
-
-.corner::before {
-  left: 5px;
-  top: 0;
-  width: 1px;
-  height: 100%;
-}
-
-.corner::after {
-  top: 5px;
-  left: 0;
+  gap: clamp(1.75rem, 3vw, 2.5rem);
   width: 100%;
-  height: 1px;
 }
 
-.tl {
-  top: -6px;
-  left: -6px;
-}
-
-.tr {
-  top: -6px;
-  right: -6px;
-}
-
-.bl {
-  bottom: -6px;
-  left: -6px;
-}
-
-.br {
-  bottom: -6px;
-  right: -6px;
-}
-
-/* ============ Header ============ */
-.header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  max-width: 560px;
-  text-align: center;
-}
-
-.kicker {
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-accent);
-}
-
-.title {
-  margin: 0;
-  font-family: var(--font-heading);
-  font-weight: 600;
-  font-size: clamp(32px, 5vw, 52px);
-  line-height: 1.02;
-  letter-spacing: 0.01em;
-  text-transform: uppercase;
-}
-
-.lead {
-  margin: 0;
-  font-size: 15px;
-  color: #a3a6a8;
-  text-wrap: pretty;
-}
-
-/* ============ Palco: fileira com scroll horizontal e snap (mobile) ============ */
+/* Palco: todos os cards nascem no centro; o leque abre para os dois lados */
 .stage {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 12px;
-  width: calc(100% + 2 * var(--gutter));
-  margin-inline: calc(-1 * var(--gutter));
-  padding-block: 40px;
-  padding-inline: calc(50% - min(39vw, 170px));
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-  overscroll-behavior-x: contain;
+  width: 100%;
+  max-width: 1144px;
+  height: var(--stage-h);
+  touch-action: pan-y; /* rolagem vertical continua; o arraste horizontal troca o card */
 }
 
-.stage::-webkit-scrollbar {
-  display: none;
-}
-
-/* Durante a entrada a fileira não pode rolar: nem pelo toque, nem pelo snap.
-   O Firefox recalcula o snap com os cards transformados (empilhados) e rolaria a fileira. */
-.stageLocked {
-  overflow-x: hidden;
-  scroll-snap-type: none;
-}
-
-/* Card no formato da print: cinza-escuro do site, cantos arredondados,
-   imagem 16:9 no topo (como o card do showreel) e texto embaixo */
 .card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  flex: 0 0 78vw;
-  max-width: 340px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--card-w);
   height: var(--card-h);
-  padding: 0;
+  /* Centraliza pela margem: o transform fica livre para o Motion (x, y, scale) */
+  margin: calc(var(--card-h) / -2) 0 0 calc(var(--card-w) / -2);
   overflow: hidden;
+  border-radius: 22px;
   background: var(--color-card);
-  border: 0;
-  border-radius: 12px;
-  color: #ffffff;
-  font: inherit;
-  text-align: left;
+  color: var(--color-text);
+  font-family: var(--font-ui);
   cursor: pointer;
-  scroll-snap-align: center;
-  will-change: transform;
-  -webkit-tap-highlight-color: transparent;
 }
 
-.card:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 4px;
+.card[aria-current="true"] {
+  cursor: default;
 }
 
-/* Com a altura fixa, a imagem ocupa o que sobra acima do texto (recorte em cover) */
-.media {
-  position: relative;
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-  background: #000;
-}
-
-.image {
+.cardImage {
   object-fit: cover;
 }
 
-.meta {
+/* Degradê da base: contraste do texto sobre a capa */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.88) 0%, rgba(0, 0, 0, 0.55) 38%, transparent 62%);
+  pointer-events: none;
+}
+
+.cardBody {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 2;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  min-width: 0;
-  padding: 20px 18px 24px;
-  font-family: var(--font-inter), system-ui, sans-serif;
+  gap: 10px;
+  padding: 16px;
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
 }
 
 .cardTitle {
   overflow: hidden;
-  font-weight: 700;
-  font-size: clamp(17px, 1.6vw, 20px);
-  line-height: 1.2;
-  letter-spacing: -0.01em;
+  font-family: var(--font-ui);
+  font-size: 1.3125rem; /* 21px */
+  line-height: 1.1;
+  letter-spacing: -0.03em;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.cardYear {
+  flex-shrink: 0;
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  background: var(--color-text);
+  color: var(--color-surface-dark);
+  font-size: 0.625rem;
+  font-weight: 700;
 }
 
 .cardDesc {
-  overflow: hidden;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 1.3;
-  color: #a3a6a8;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--color-text-soft);
 }
 
-/* ============ Controles ============ */
+.cardTags {
+  display: flex;
+  gap: 6px;
+}
+
+.cardTag {
+  padding: 4px 10px;
+  border: 1px solid var(--color-card-line);
+  border-radius: var(--radius-pill);
+  font-size: 0.625rem;
+}
+
+.cardTagTime {
+  font-variant-numeric: tabular-nums;
+}
+
+.cardWatch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  margin-top: 2px;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: var(--color-text);
+  color: var(--color-surface-dark);
+  font: inherit;
+  font-size: 0.8125rem;
+  cursor: inherit;
+  transition: background-color 0.2s ease;
+}
+
+.card[aria-current="true"] .cardWatch {
+  cursor: pointer;
+}
+
+.card[aria-current="true"] .cardWatch:hover {
+  background: var(--color-accent-light);
+}
+
+/* Controles: seta anterior (apagada), bolinhas (mobile) e seta próxima */
 .controls {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
 }
 
-.btnIcon {
+.arrow {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 44px;
   height: 44px;
   padding: 0;
-  background: transparent;
-  border: 1px solid var(--color-on-page-divider);
-  border-radius: 0;
-  color: var(--color-on-page);
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.btnIcon:hover {
-  background: color-mix(in srgb, currentColor 10%, transparent);
-}
-
-.btnIcon:active {
-  background: color-mix(in srgb, currentColor 18%, transparent);
-}
-
-/* Setas da galeria: redondas; 44px no mobile (área de toque recomendada) e 35px a partir
-   de 768px (20% menores que o .btnIcon). Ícone de 14px. O X do player continua no .btnIcon quadrado */
-.btnArrow {
-  width: 44px;
-  height: 44px;
+  border: 1.5px solid var(--color-text);
   border-radius: 50%;
-  -webkit-tap-highlight-color: transparent; /* tira o realce azul do toque (Chrome/Safari mobile) */
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
 }
 
-/* Clique/toque não mostra o anel azul de foco do navegador; quem navega pelo teclado
-   continua vendo um anel (branco, no formato redondo do botão) */
-.btnArrow:focus:not(:focus-visible) {
-  outline: none;
+.arrow:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
-.btnArrow:focus-visible {
-  outline: 2px solid var(--color-on-page);
-  outline-offset: 2px;
+.arrow--prev {
+  border-color: rgba(255, 255, 255, 0.22);
+  color: rgba(255, 255, 255, 0.45);
 }
 
-/* ============ Modal de vídeo ============ */
-.backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
+.arrow--prev:hover {
+  border-color: var(--color-text);
+  background: transparent;
+  color: var(--color-text);
+}
+
+.dots {
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 24px;
-  background: color-mix(in srgb, var(--color-accent-900) 82%, transparent);
+  gap: 6px;
 }
 
-.frame {
-  position: relative;
-  margin-top: 64px; /* reserva o espaço do header, que fica acima do frame */
-  aspect-ratio: 9 / 16;
-  height: min(calc(100vh - 136px), calc((100vw - 48px) * 16 / 9));
-  height: min(calc(100dvh - 136px), calc((100vw - 48px) * 16 / 9));
-  background: #000;
-  border-color: var(--color-accent-300);
+/* A bolinha ativa vira um traço: anima a largura de um elemento de 6px, barato e pontual */
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.3);
+  transition:
+    width 0.3s ease,
+    background-color 0.3s ease;
 }
 
-.frame .corner {
-  color: var(--color-accent-200);
+.dot[data-active="true"] {
+  width: 18px;
+  background: var(--color-text);
 }
 
-/* Player do site dentro da moldura: devolve os tokens que a galeria sobrescreve
-   (texto branco sobre o vídeo) e tira o arredondado (nada é arredondado na galeria) */
-.framePlayer {
-  --color-text: #ffffff;
-  --radius-card: 0;
-
-  position: absolute;
-  inset: 0;
-  font-family: var(--font-body);
-}
-
-.framePlayer > [data-video-player] {
-  width: 100%;
-  height: 100%;
-}
-
-.frameHeader {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: calc(100% + 12px);
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 12px;
-  color: var(--color-bg);
-}
-
-.frameKicker {
-  display: block;
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-accent-200);
-}
-
-.frameTitle {
-  display: block;
-  font-family: var(--font-heading);
-  font-weight: 600;
-  font-size: 22px;
-  text-transform: uppercase;
-}
-
-.btnOnDark {
-  color: var(--color-bg);
-  border-color: var(--color-accent-300);
-}
-
-.btnOnDark:hover {
-  background: color-mix(in srgb, var(--color-bg) 10%, transparent);
-}
-
-@media (min-width: 481px) {
-  .lead {
-    font-size: 16px;
-  }
-}
-
-/* ============ Tablet e desktop (≥ 768px): cards fixos, em linha e sobrepostos ============ */
 @media (min-width: 768px) {
   .gallery {
-    /* Passo entre os centros dos cards após o leque, em larguras de card:
-       0,85 = sobreposição de 1/4 (era 0,5 = metade). Mais perto de 1, menos sobreposição */
-    --card-step: 0.85;
-    /* O leque ocupa (5 passos + o ativo escalado 1,1×) larguras de card:
-       a largura sai do espaço útil da coluna (1240px − gutters), até 340px */
-    --card-w: min(
-      340px,
-      (min(1240px, 100vw - 40px) - 2 * var(--gutter)) / (5 * var(--card-step) + 1.1)
-    );
-    gap: 40px;
+    --card-w: 270px;
+    --card-h: 400px;
+    --stage-h: 440px;
   }
 
-  .stage {
-    justify-content: center;
-    gap: 0;
-    width: 100%;
-    max-width: 1200px;
-    /* altura do card com folga p/ o ativo escalado + lift */
-    height: calc(var(--card-h) * 1.1 + 72px);
-    margin-inline: 0;
-    padding: 0;
-    overflow: visible;
-    scroll-snap-type: none;
-  }
-
-  .stageLocked {
-    overflow-x: visible;
-  }
-
-  .card {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    flex: none;
-    width: var(--card-w);
-    max-width: none;
-    /* Posição fixa: centros a --card-step larguras de card um do outro; o Motion anima só y/scale */
-    translate: calc(-50% + var(--d) * var(--card-w) * var(--card-step)) -50%;
-    scroll-snap-align: none;
-  }
-
-  .controls {
-    gap: 20px;
-  }
-
-  .btnArrow {
-    width: 35px;
-    height: 35px;
+  .dots {
+    display: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .btnIcon {
+  .dot {
     transition: none;
-  }
-
-  .stage {
-    scroll-behavior: auto;
   }
 }

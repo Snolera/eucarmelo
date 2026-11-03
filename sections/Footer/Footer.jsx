@@ -1,12 +1,15 @@
+import Logo from "@/components/Logo/Logo";
+import Panel from "@/components/Panel/Panel";
 import SocialIcon from "@/components/SocialIcon/SocialIcon";
-import { footer, social } from "@/content/site";
+import { footer, roles, social } from "@/content/site";
 import styles from "./Footer.module.css";
 
-// Rodapé na coluna central: copyright à esquerda, redes à direita
+// Rodapé = seção Contato (#contato): logo, funções, redes e copyright, centralizados
 export default function Footer() {
   return (
-    <footer className={`container ${styles.footer}`}>
-      <p className={styles.footerCopy}>{footer.copyright}</p>
+    <Panel as="footer" id="contato" className={styles.footer}>
+      <Logo className={styles.footerLogo} />
+      <p className={styles.footerRoles}>{roles}</p>
 
       <nav aria-label="Redes sociais">
         <ul className={styles.footerSocial}>
@@ -38,6 +41,8 @@ export default function Footer() {
           })}
         </ul>
       </nav>
-    </footer>
+
+      <p className={styles.footerCopy}>{footer.copyright}</p>
+    </Panel>
   );
 }

@@ -16,24 +16,12 @@ const noopSubscribe = () => () => {};
 const getSupport = () => "IntersectionObserver" in window;
 const getServerSupport = () => true;
 
-// Distância (px) de cada card até o centro visível do palco.
-function measureStackOffsets(stage, cards) {
-  const s = stage.getBoundingClientRect();
-  const center = s.left + s.width / 2;
-  return cards.map((card) => {
-    const r = card.getBoundingClientRect();
-    return center - (r.left + r.width / 2);
-  });
-}
-
 // Entrada da galeria em duas fases: os cards caem empilhados no centro, pausam e abrem em leque
 // Só começa com o palco inteiro na tela; com "reduzir movimento" (ou navegador sem
 // IntersectionObserver) vai direto para o leque
-// `beforeMeasure`: deixa o palco na posição final (ex.: scroll do mobile) antes de medir
-export function useGalleryIntro(stageRef, cardRefs, reduceMotion, beforeMeasure) {
+export function useGalleryIntro(stageRef, reduceMotion) {
   const introControls = useAnimationControls();
   const [amount, setAmount] = useState(FULL_VIEW);
-  const [stackOffsets, setStackOffsets] = useState(null);
   const [sequenceDone, setSequenceDone] = useState(false);
   const supportsObserver = useSyncExternalStore(noopSubscribe, getSupport, getServerSupport);
   // Sem suporte, observa um ref vazio: o useInView do Motion não cria o observer
@@ -52,19 +40,9 @@ export function useGalleryIntro(stageRef, cardRefs, reduceMotion, beforeMeasure)
     };
   }, [stageRef]);
 
-  // Gatilho: mede as posições (após o layout/scroll inicial) e arma a sequência.
+  // Sequência: hidden → stacked → pausa → fanned
   useEffect(() => {
-    if (!inView || reduceMotion || stackOffsets) return;
-    const frame = requestAnimationFrame(() => {
-      beforeMeasure?.();
-      setStackOffsets(measureStackOffsets(stageRef.current, cardRefs.current));
-    });
-    return () => cancelAnimationFrame(frame);
-  }, [inView, reduceMotion, stackOffsets, stageRef, cardRefs, beforeMeasure]);
-
-  // Sequência: hidden → stacked → pausa → fanned.
-  useEffect(() => {
-    if (!stackOffsets || introDone) return;
+    if (!inView || introDone) return;
     let cancelled = false;
     let holdTimer;
     const hold = () => new Promise((resolve) => (holdTimer = setTimeout(resolve, STACK_HOLD_MS)));
@@ -84,7 +62,7 @@ export function useGalleryIntro(stageRef, cardRefs, reduceMotion, beforeMeasure)
       clearTimeout(holdTimer);
       introControls.stop();
     };
-  }, [stackOffsets, introDone, introControls]);
+  }, [inView, introDone, introControls]);
 
-  return { introControls, introDone, stackOffsets };
+  return { introControls, introDone };
 }

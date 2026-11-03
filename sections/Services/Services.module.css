@@ -1,0 +1,68 @@
+.services {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.75rem, 4vw, 3rem);
+  padding: var(--space-box-y) var(--space-box-x);
+}
+
+/* 1 coluna no mobile, 3 no desktop: cada card tem no mínimo 300px */
+.servicesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: clamp(0.75rem, 1.6vw, 1.25rem);
+  width: 100%;
+}
+
+.servicesCard {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: clamp(1.5rem, 2.5vw, 2rem) clamp(1.25rem, 2.2vw, 1.75rem);
+  border: 1px solid var(--color-line);
+  border-radius: 20px;
+  font-family: var(--font-ui);
+}
+
+.servicesNumber {
+  font-size: 0.75rem;
+  color: var(--color-accent-light);
+  font-variant-numeric: tabular-nums;
+}
+
+.servicesTitle {
+  font-family: var(--font-ui);
+  font-size: clamp(1.5rem, 2.2vw, 1.75rem); /* 24 → 28px */
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.servicesList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-line);
+}
+
+.servicesItem {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.servicesLabel {
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.servicesText {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--color-text-soft);
+}

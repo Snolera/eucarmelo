@@ -3,7 +3,9 @@ import Reveal from "@/components/Reveal/Reveal";
 import Hero from "@/sections/Hero/Hero";
 import Stats from "@/sections/Stats/Stats";
 import Work from "@/sections/Work/Work";
+import Services from "@/sections/Services/Services";
 import About from "@/sections/About/About";
+import Photos from "@/sections/Photos/Photos";
 import Footer from "@/sections/Footer/Footer";
 
 // IntersectionObserver falso: guardamos o callback para simular a rolagem
@@ -91,12 +93,14 @@ describe("Reveal (animação de entrada no scroll)", () => {
   });
 
   // Trabalhos não desliza: a galeria tem a própria entrada (queda + leque)
-  test("Hero, Números e Sobre têm a animação; Trabalhos e o rodapé não", () => {
+  test("Hero, Números, Serviços, Sobre e Fotos têm a animação; Trabalhos e o rodapé não", () => {
     const count = (ui) => render(ui).container.querySelectorAll("[data-revealed]").length;
     expect(count(<Hero />)).toBe(1);
     expect(count(<Stats />)).toBe(1);
     expect(count(<Work />)).toBe(0);
+    expect(count(<Services />)).toBe(1);
     expect(count(<About />)).toBe(1);
+    expect(count(<Photos />)).toBe(1);
     expect(count(<Footer />)).toBe(0);
   });
 });

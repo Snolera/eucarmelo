@@ -1,0 +1,16 @@
+.logo {
+  font-family: var(--font-ui);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.logo:hover {
+  color: var(--color-text);
+}
+
+.logoBold {
+  font-weight: 700;
+}

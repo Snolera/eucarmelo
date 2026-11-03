@@ -1,11 +1,7 @@
 /* Faixa da direita para a esquerda, em todas as telas, sem repetir valores */
+/* A caixa escura e o raio vêm do Panel */
 .stats {
-  --stats-gap: 3rem;
-
-  overflow: hidden; /* a faixa respeita o raio da caixa */
-  /* Mesmo cinza escuro do header e do card do hero */
-  background: var(--color-surface-dark);
-  border: 0;
+  --stats-gap: clamp(3rem, 6vw, 4.5rem); /* 48 → 72px */
 }
 
 /* Degradê nas pontas: os números entram e saem suavemente */
@@ -33,20 +29,20 @@
 .statsItem {
   display: flex;
   align-items: baseline;
-  gap: 1.125rem;
-  padding: 1.5rem 0;
+  gap: clamp(0.75rem, 1.4vw, 1.125rem); /* 12 → 18px */
+  padding: clamp(1.75rem, 3vw, 2.5rem) 0; /* 28 → 40px */
   white-space: nowrap;
 }
 
 .statsValue {
   font-family: var(--font-heading);
-  font-size: clamp(2.75rem, 2rem + 2vw, 3.75rem); /* 60px no desktop */
+  font-size: clamp(2.75rem, 4.7vw, 3.75rem); /* 44 → 60px */
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }
 
 .statsLabel {
-  font-size: 0.875rem;
+  font-size: clamp(0.8125rem, 1.1vw, 0.875rem); /* 13 → 14px */
 }
 
 /* Começa fora da caixa à direita e termina toda fora à esquerda */
@@ -56,16 +52,6 @@
   }
   to {
     transform: translateX(-100%);
-  }
-}
-
-@media (min-width: 768px) {
-  .stats {
-    --stats-gap: 4.5rem;
-  }
-
-  .statsItem {
-    padding: 2.5rem 0;
   }
 }
 
@@ -80,7 +66,7 @@
     justify-content: center;
     gap: 0 var(--stats-gap);
     width: 100%;
-    padding: 0 var(--space-container);
+    padding: 0 var(--space-box-x);
     animation: none;
   }
 }

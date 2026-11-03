@@ -14,9 +14,16 @@ describe("Home", () => {
     expect(screen.getByRole("main")).toHaveAttribute("id", "conteudo");
   });
 
-  test("seções na ordem: hero, números, trabalhos, sobre", () => {
+  test("seções na ordem: hero, números, trabalhos, serviços, sobre, fotos", () => {
     render(<Home />);
     const regions = screen.getAllByRole("region").map((r) => r.getAttribute("aria-labelledby") || r.getAttribute("aria-label"));
-    expect(regions).toEqual(["hero-title", "Números", "work-title", "about-title"]);
+    expect(regions).toEqual(["hero-title", "Números", "work-title", "services-title", "about-title", "photos-title"]);
+  });
+
+  test("toda âncora do menu tem uma seção de destino", () => {
+    const { container } = render(<Home />);
+    ["trabalhos", "servicos", "sobre", "contato"].forEach((id) =>
+      expect(container.querySelector(`#${id}`)).toBeInTheDocument()
+    );
   });
 });

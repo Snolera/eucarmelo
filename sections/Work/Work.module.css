@@ -1,4 +1,12 @@
-/* A galeria cuida do próprio espaçamento interno */
+/* Sem respiro lateral: o leque usa a largura toda e é cortado pela borda da caixa */
 .work {
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.75rem, 3vw, 2.5rem);
+  padding: clamp(4rem, 8vw, 6.375rem) 0 var(--space-box-y); /* 64 → 102px em cima */
+}
+
+.workHeading {
+  padding-inline: 1.25rem;
 }

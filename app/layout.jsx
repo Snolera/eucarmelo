@@ -1,50 +1,28 @@
-import { Barlow, Barlow_Condensed, Cormorant_Garamond, Inter, Lora, Space_Grotesk } from "next/font/google";
+import { Inter, Playfair_Display, Space_Grotesk } from "next/font/google";
 import { getSiteUrl } from "@/lib/siteUrl";
 import "./globals.css";
 
-// Fontes do design (títulos e corpo), expostas como variáveis CSS
-const cormorant = Cormorant_Garamond({
-  variable: "--font-cormorant",
-  subsets: ["latin"],
-  weight: ["400", "600"],
-  style: ["normal", "italic"],
-  display: "swap",
-});
-
-// Títulos H1/H2: fonte variável, um arquivo cobre 300 (light) a 700 (bold)
+// Texto do site, H1 e números: fonte variável, um arquivo cobre 300 (light) a 700 (bold)
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
   subsets: ["latin"],
   display: "swap",
 });
 
-const lora = Lora({
-  variable: "--font-lora",
-  subsets: ["latin"],
-  weight: ["400", "600"],
-  display: "swap",
-});
-
-// Galeria 9:16 (Trabalhos): Barlow no texto, Barlow Condensed nos títulos e números
-const barlow = Barlow({
-  variable: "--font-barlow",
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  display: "swap",
-});
-
-const barlowCondensed = Barlow_Condensed({
-  variable: "--font-barlow-condensed",
-  subsets: ["latin"],
-  weight: ["500", "600"],
-  display: "swap",
-});
-
-// Logo do header: "welinton" light (300) + "carmelo" negrito (700)
+// Logo, H2 das seções, pílulas e cards: light (300), regular (400) e negrito (700)
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
   weight: ["300", "400", "700"],
+  display: "swap",
+});
+
+// Palavras em destaque nos H2 ("Por trás de *cada* projeto"): só o itálico 700
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
+  subsets: ["latin"],
+  weight: "700",
+  style: "italic",
   display: "swap",
 });
 
@@ -70,7 +48,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="pt-BR" className={`${cormorant.variable} ${lora.variable} ${spaceGrotesk.variable} ${barlow.variable} ${barlowCondensed.variable} ${inter.variable}`}>
+    <html lang="pt-BR" className={`${spaceGrotesk.variable} ${inter.variable} ${playfair.variable}`}>
       <body>{children}</body>
     </html>
   );

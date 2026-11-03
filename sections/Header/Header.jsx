@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { Menu, X } from "lucide-react";
+import Logo from "@/components/Logo/Logo";
 import { nav } from "@/content/site";
 import styles from "./Header.module.css";
 
@@ -25,13 +25,7 @@ export default function Header() {
 
       {/* Header na largura toda (fundo e borda); conteúdo na coluna central */}
       <div className={`container ${styles.headerInner}`}>
-        {/* "welintoncarmelo" colado; o aria-label separa as palavras para o leitor de tela */}
-        <Link href="/" className={styles.headerLogo} aria-label="Welinton Carmelo">
-          welinton
-          <span className={styles.headerLogoBold} data-logo-bold>
-            carmelo
-          </span>
-        </Link>
+        <Logo className={styles.headerLogo} />
 
         <button
           type="button"

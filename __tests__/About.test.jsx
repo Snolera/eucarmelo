@@ -1,6 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import About from "@/sections/About/About";
 
+const follows = (a, b) => Boolean(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING);
+
 describe("About", () => {
   test("seção com âncora #sobre, nomeada pelo h2", () => {
     const { container } = render(<About />);
@@ -12,18 +14,20 @@ describe("About", () => {
     ).toBeInTheDocument();
   });
 
-  test("mostra o kicker e os dois parágrafos da copy", () => {
+  test("mostra a pílula e os dois parágrafos da copy", () => {
     render(<About />);
     expect(screen.getByText("Sobre")).toBeInTheDocument();
     expect(screen.getByText(/sou welinton carmelo, videomaker focado/i)).toBeInTheDocument();
     expect(screen.getByText(/trabalho com marcas que querem estar presentes/i)).toBeInTheDocument();
   });
 
-  test("retrato vem depois do texto", () => {
+  test("ordem do mobile no HTML: título, retrato, texto", () => {
     const { container } = render(<About />);
-    const lastParagraph = screen.getByText(/trabalho com marcas que querem estar presentes/i);
+    const title = screen.getByRole("heading", { level: 2 });
     const figure = container.querySelector("figure");
-    expect(lastParagraph.compareDocumentPosition(figure) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    const firstParagraph = screen.getByText(/sou welinton carmelo/i);
+    expect(follows(title, figure)).toBe(true);
+    expect(follows(figure, firstParagraph)).toBe(true);
   });
 
   test("sem foto, mostra o placeholder do retrato (sem <img>)", () => {

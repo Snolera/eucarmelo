@@ -1,21 +1,12 @@
-/* Coluna central (.container no JSX) e 40px até o próximo bloco; a caixa interna ocupa 100% */
+/* Coluna central (.container no JSX) e o espaço até a próxima caixa */
 .panel {
-  padding: 0 0 40px;
+  padding-bottom: var(--space-section);
+  scroll-margin-top: var(--header-offset); /* âncora não fica sob o header fixo */
 }
 
 .panelBox {
+  overflow: hidden;
   border-radius: var(--radius-container);
+  background: var(--color-surface-dark);
   color: var(--color-text);
-}
-
-/* Cinza sólido do layout base */
-.panelBox--solid {
-  background: var(--color-container);
-  border: 1px solid var(--color-container);
-}
-
-/* Temporário (fundo bege): sem caixa, conteúdo direto sobre a página, com texto preto
-   O vidro antigo fica no histórico do Git até os novos painéis entrarem */
-.panelBox--glass {
-  color: var(--color-ink);
 }

@@ -2,55 +2,46 @@
 :root {
   /* Cores */
   --color-bg: #000000;
-  --color-page: #eaeaea; /* fundo da página (atrás das seções) */
-  --color-ink: #000000; /* texto direto sobre o fundo da página */
-  --color-surface-dark: #151717; /* cinza escuro: header, card do hero e faixa de números */
-  --color-container: #666666;
+  --color-page: #eaeaea; /* fundo da página (atrás das caixas) */
+  --color-surface-dark: #151717; /* caixas: header, hero, seções e rodapé */
+  --color-card: #232626; /* cards e molduras sobre as caixas */
   --color-text: #ffffff;
-  --color-text-footer: #b3b3b3;
-  --color-divider: #2a2a2a;
-  --color-card-line: rgba(255, 255, 255, 0.35);
-  --color-accent: #b68235;
-  --color-accent-light: #e1ad66;
+  --color-text-soft: rgba(255, 255, 255, 0.8); /* descrições e parágrafos sobre o escuro */
+  --color-text-muted: #a3a6a8; /* rótulos pequenos ("Pra quem") */
+  --color-pill-bg: rgba(255, 255, 255, 0.08);
+  --color-pill-text: #d9d9d9;
+  --color-line: rgba(255, 255, 255, 0.12); /* bordas e divisórias sobre o escuro */
+  --color-divider: #2a2a2a; /* linha do header e do menu mobile */
+  --color-card-line: rgba(255, 255, 255, 0.35); /* tags dos cards e bordas do player */
+  --color-accent: #b68235; /* links e foco visível */
   --color-accent-hover: #a06f24;
+  --color-accent-light: #e1ad66; /* CTA, números dos serviços e hover dos ícones */
   --color-hero-text: #f8f4f4;
 
-  --color-neutral-100: #f8f4f4;
   --color-neutral-200: #eae7e7;
-  --color-neutral-500: #9b9797;
-  --color-neutral-600: #7d7979;
-  --color-neutral-700: #605d5d;
   --color-neutral-800: #444141;
   --color-neutral-900: #2d2b2b;
-  --color-surface: #eae9e9;
 
   /* Fontes (carregadas pelo next/font no layout) */
-  --font-heading: var(--font-space-grotesk), system-ui, sans-serif;
-  --font-display: var(--font-space-grotesk), system-ui, sans-serif; /* H1 e H2 */
+  --font-heading: var(--font-space-grotesk), system-ui, sans-serif; /* H1, H2 do Sobre, números */
   --font-body: var(--font-space-grotesk), system-ui, sans-serif;
+  --font-ui: var(--font-inter), "Helvetica Neue", Arial, sans-serif; /* logo, H2 das seções, cards */
+  --font-accent: var(--font-playfair), Georgia, serif; /* palavras em destaque (itálico 700) */
 
-  /* Espaçamentos (mobile-first; crescem nos breakpoints abaixo) */
-  --space-page: 1rem;
-  --space-container: 1.5rem;
+  /* Espaçamentos fluidos (360px → 1280px) */
+  --space-gutter: clamp(12px, 1.5vw, 20px); /* recuo lateral da coluna central */
+  --space-section: clamp(1rem, 3vw, 2.5rem); /* entre uma caixa e a próxima (16 → 40px) */
+  --space-box-y: clamp(3rem, 8vw, 6.375rem); /* respiro vertical das caixas (48 → 102px) */
+  --space-box-x: clamp(1.25rem, 4.5vw, 3.5rem); /* respiro lateral das caixas (20 → 56px) */
 
   /* Raios */
-  --radius-container: 24px;
+  --radius-container: clamp(20px, 2vw, 24px);
   --radius-card: 16px;
   --radius-button: 4px;
-}
+  --radius-pill: 999px;
 
-@media (min-width: 768px) {
-  :root {
-    --space-page: 2rem;
-    --space-container: 2.5rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  :root {
-    --space-page: 3.125rem; /* 50px do design */
-    --space-container: 3.5rem; /* 56px do design */
-  }
+  /* Altura máxima do header fixo: âncoras não ficam escondidas atrás dele */
+  --header-offset: 96px;
 }
 
 *,
@@ -63,7 +54,7 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Trava o scroll da página enquanto o modal de vídeo está aberto */
+/* Trava o scroll da página enquanto um modal (vídeo ou foto) está aberto */
 html:has(dialog[open]) {
   overflow: hidden;
 }
@@ -74,7 +65,7 @@ body {
   color: var(--color-text);
   font-family: var(--font-body);
   font-size: 15px;
-  line-height: 0.5;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -84,21 +75,10 @@ h3 {
   font-family: var(--font-heading);
   font-weight: 400;
   margin: 0;
-
 }
 
-/* Space Grotesk nos títulos principais (pesos 300, 400, 500 e 700 disponíveis) */
-h1,
-h2 {
-  font-family: var(--font-display);
-}
-
-/* Parágrafos: letras um pouco mais próximas e linhas bem juntas (Space Grotesk em texto corrido)
-   Classes com letter-spacing próprio (kickers) continuam com o seu */
 p {
   margin: 0;
-  line-height: 1;
-  letter-spacing: -0.5px;
 }
 
 a {
@@ -120,10 +100,9 @@ video {
   outline-offset: 2px;
 }
 
-/* Coluna central do layout: até 1240px, centralizada; abaixo de 1280px sobram 20px de cada lado
-   Usada no header, hero, seções e rodapé */
+/* Coluna central do layout: até 1240px, centralizada, com 12px → 20px de cada lado */
 .container {
-  width: min(1240px, 100% - 40px);
+  width: min(1240px, 100% - var(--space-gutter) * 2);
   margin-inline: auto;
 }
 

@@ -1,7 +1,9 @@
 /* Mobile-first: logo + botão Menu; links aparecem em linha a partir de 768px
-   Fundo e borda na largura toda; o conteúdo fica na coluna central (.container) */
+   Fixo no topo; fundo e borda na largura toda, conteúdo na coluna central (.container) */
 .header {
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 50;
   background: var(--color-surface-dark);
   border-bottom: 1px solid var(--color-divider);
 }
@@ -10,8 +12,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between; /* logo à esquerda, links à direita da coluna */
-  gap: 1rem;
-  padding: 1.25rem 0;
+  gap: 1.5rem;
+  padding: clamp(0.75rem, 2.2vw, 1.75rem) 0; /* 12 → 28px */
 }
 
 /* Visível só quando recebe foco pelo teclado */
@@ -31,23 +33,8 @@
   transform: none;
 }
 
-/* Logo em Inter: "welinton" light + "carmelo" negrito, colados e em minúsculas */
 .headerLogo {
-  font-family: var(--font-inter), "Helvetica Neue", Arial, sans-serif;
-  font-weight: 300;
-  letter-spacing: -0.02em;
-  font-size: 1.375rem;
-  line-height: 1;
-  color: var(--color-text);
-  text-decoration: none;
-}
-
-.headerLogo:hover {
-  color: var(--color-text);
-}
-
-.headerLogoBold {
-  font-weight: 700;
+  font-size: clamp(1.25rem, 2vw, 1.5rem); /* 20 → 24px */
 }
 
 /* Só o ícone, sem caixa; 44×44 mantém a área de toque */
@@ -57,6 +44,7 @@
   justify-content: center;
   width: 44px;
   height: 44px;
+  margin-right: -10px; /* o ícone alinha com a borda da coluna */
   padding: 0;
   border: 0;
   background: transparent;
@@ -71,8 +59,8 @@
   top: 100%;
   left: 0;
   right: 0;
-  z-index: 20;
   background: var(--color-surface-dark);
+  border-top: 1px solid var(--color-divider);
   border-bottom: 1px solid var(--color-divider);
 }
 
@@ -84,17 +72,24 @@
   display: flex;
   flex-direction: column;
   margin: 0;
-  /* Alinhado com a coluna central (mesma margem do .container) */
-  padding: 0.5rem max(20px, (100% - 1240px) / 2) 1rem;
+  /* Alinhado com a coluna central (mesmo recuo do .container) */
+  padding: 0.5rem max(var(--space-gutter), (100% - 1240px) / 2) 1.5rem;
   list-style: none;
 }
 
+/* Mobile: links grandes, um por linha, com divisória */
 .headerLink {
-  display: block;
-  padding: 0.75rem 0;
+  display: flex;
+  align-items: center;
+  min-height: 56px;
   color: var(--color-text);
-  font-size: 1.125rem;
+  font-size: 1.75rem; /* 28px */
+  letter-spacing: -0.02em;
   text-decoration: none;
+}
+
+.headerList li + li {
+  border-top: 1px solid var(--color-divider);
 }
 
 .headerLink:hover {
@@ -102,15 +97,6 @@
 }
 
 @media (min-width: 768px) {
-  .headerInner {
-    gap: 2.25rem; /* 36px */
-    padding: 1.75rem 0; /* 28px */
-  }
-
-  .headerLogo {
-    font-size: 1.5rem;
-  }
-
   .headerToggle {
     display: none;
   }
@@ -124,12 +110,17 @@
 
   .headerList {
     flex-direction: row;
-    gap: 2.25rem;
+    gap: 2.25rem; /* 36px */
     padding: 0;
   }
 
+  .headerList li + li {
+    border: 0;
+  }
+
   .headerLink {
-    padding: 0;
-    font-size: 0.875rem;
+    min-height: 0;
+    font-size: 0.875rem; /* 14px */
+    letter-spacing: normal;
   }
 }
