@@ -1,0 +1,107 @@
+/* Faixa infinita de logos da direita para a esquerda, em todas as telas */
+/* A caixa escura e o raio vêm do Panel */
+/* px fixos múltiplos de 8 (não vw/rem): cada logo cai em pixel físico inteiro e o Firefox */
+/* não "reposiciona" um logo de cada vez durante a animação (testado nos DPRs 1 a 3) */
+.partners {
+  --partners-logo: 152px;
+  --partners-gap: 48px;
+}
+
+@media (min-width: 768px) {
+  .partners {
+    --partners-logo: 176px;
+    --partners-gap: 56px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .partners {
+    --partners-logo: 192px;
+    --partners-gap: 64px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .partners {
+    --partners-logo: 208px;
+    --partners-gap: 72px;
+  }
+}
+
+/* Degradê nas pontas: os logos entram e saem suavemente */
+.partnersViewport {
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+}
+
+/* Lista + cópia lado a lado: -50% = exatamente uma lista, então o recomeço não aparece */
+.partnersTrack {
+  display: flex;
+  width: max-content;
+  animation: partnersMarquee 25s linear infinite;
+  will-change: transform; /* camada própria na GPU: move sem redesenhar nem arredondar para o pixel */
+}
+
+/* Pausa ao passar o mouse */
+.partnersTrack:hover {
+  animation-play-state: paused;
+}
+
+/* padding-right = gap: o espaço entre o último logo e a cópia é igual aos outros */
+.partnersList {
+  display: flex;
+  gap: var(--partners-gap);
+  margin: 0;
+  padding: 0 var(--partners-gap) 0 0;
+  list-style: none;
+}
+
+.partnersItem {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1.25rem, 2.4vw, 2rem) 0; /* 20 → 32px */
+}
+
+/* PNG já recortado (1080×660), branco e transparente: sem filter/blend, nada é redesenhado ao mover */
+.partnersLogo {
+  display: block;
+  width: var(--partners-logo);
+  height: auto;
+}
+
+/* Anda uma lista inteira (metade da trilha) e volta ao início sem salto visível */
+@keyframes partnersMarquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Menos movimento: faixa parada, logos centralizados */
+@media (prefers-reduced-motion: reduce) {
+  .partnersViewport {
+    mask-image: none;
+  }
+
+  .partnersTrack {
+    width: 100%;
+    animation: none;
+  }
+
+  .partnersList {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0 var(--partners-gap);
+    width: 100%;
+    padding: 0 var(--space-box-x);
+  }
+
+  /* Faixa parada: a cópia não é necessária */
+  .partnersList[aria-hidden] {
+    display: none;
+  }
+}

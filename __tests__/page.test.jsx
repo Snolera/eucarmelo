@@ -14,10 +14,10 @@ describe("Home", () => {
     expect(screen.getByRole("main")).toHaveAttribute("id", "conteudo");
   });
 
-  test("seções na ordem: hero, números, trabalhos, serviços, sobre, fotos", () => {
+  test("seções na ordem: hero, parceiros, trabalhos, serviços, sobre, fotos", () => {
     render(<Home />);
     const regions = screen.getAllByRole("region").map((r) => r.getAttribute("aria-labelledby") || r.getAttribute("aria-label"));
-    expect(regions).toEqual(["hero-title", "Números", "work-title", "services-title", "about-title", "photos-title"]);
+    expect(regions).toEqual(["hero-title", "Marcas parceiras", "work-title", "services-title", "about-title", "photos-title"]);
   });
 
   test("toda âncora do menu tem uma seção de destino", () => {

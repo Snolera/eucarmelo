@@ -3,8 +3,8 @@
 Site one-page do **Welinton Carmelo**, videomaker de conteúdo para Instagram (gravação no celular). O público são marcas que querem contratar reels, e a ação principal é mandar um **direct no Instagram** (`ig.me/m/eucarmelo`).
 
 - Idioma: somente português (`pt-BR`).
-- Status: layout v2 portado. Header, Hero, Números, Portfólio, Serviços, Sobre, Galeria de Fotos e Contato (rodapé) prontos.
-- Vídeos, fotos, retrato, números e redes ainda são **placeholders**, aguardando o material real.
+- Status: layout v2 portado. Header, Hero, Marcas parceiras, Portfólio, Serviços, Sobre, Galeria de Fotos e Contato (rodapé) prontos.
+- Vídeos, fotos, retrato e redes ainda são **placeholders**, aguardando o material real.
 
 ---
 
@@ -15,7 +15,7 @@ Site one-page do **Welinton Carmelo**, videomaker de conteúdo para Instagram (g
 | Framework | **Next.js 16.4** (App Router, Turbopack, `cacheComponents`) |
 | UI | **React 19**, **JavaScript** (sem TypeScript) |
 | Estilos | **CSS Modules** + variáveis globais em `app/globals.css` |
-| Fontes | `next/font/google`: **Space Grotesk** (todos os h1/h2/h3 e parágrafos, números), **Inter** (logo, pílulas, tags/ano/botão dos cards), **Playfair Display** itálico 700 (palavras em destaque, exceto nos Serviços) |
+| Fontes | `next/font/google`: **Space Grotesk** (todos os h1/h2/h3 e parágrafos), **Inter** (logo, pílulas, tags/ano/botão dos cards), **Playfair Display** itálico 700 (palavras em destaque, exceto nos Serviços) |
 | Ícones | `lucide-react` (interface) + SVG próprio para as redes sociais |
 | Animação | `motion` (entrada e leque do Portfólio) + CSS (`transform`/`opacity`) no resto |
 | Testes | **Vitest** + **React Testing Library** + `jest-dom` (ambiente `jsdom`) |
@@ -54,7 +54,7 @@ Sem ela, `lib/siteUrl.js` usa `VERCEL_PROJECT_PRODUCTION_URL`, preenchida automa
 
 ```
 app/            Rotas (App Router): layout, página, robots.js, sitemap.js, estilos globais
-sections/       Blocos da página, na ordem: Header, Hero, Stats, Work, Services, About, Photos, Footer
+sections/       Blocos da página, na ordem: Header, Hero, Partners, Work, Services, About, Photos, Footer
 components/     Peças reutilizáveis (Panel, SectionHeading, Kicker, Logo, Button, Reveal,
                 Gallery916, PhotoGrid, PhotoLightbox, VideoPlayer, VideoModal, SocialIcon)
 hooks/          Lógica reutilizável (useVideoPlayer, useGalleryIntro, useMediaQuery, useReveal)
@@ -75,7 +75,7 @@ Todo texto, link e mídia fica em **`content/site.js`**. Para trocar uma copy, a
 | `roles` | linha de funções (hero e rodapé) |
 | `nav` | links do menu (`#trabalhos`, `#servicos`, `#sobre`, `#contato`) |
 | `hero` | título, CTA e showreel |
-| `stats` | números da faixa |
+| `partners` | marcas da faixa (`{ name, logo }`, logos em `content/media/partners/`) |
 | `work` | Portfólio: pílula, título e projetos (`title`, `tag`, `duration`, `year`, `desc`, `image`, `alt`, `video`) |
 | `services` | pílula, título, texto de apoio e os 3 serviços (`title` e `text` opcional) |
 | `about` | pílula, título, parágrafos e retrato |
@@ -97,7 +97,7 @@ As seções são **Server Components** sempre que possível; o JavaScript só va
 
 | Componente | Tipo | Por quê |
 |---|---|---|
-| `Hero`, `Stats`, `Work`, `Services`, `About`, `Photos`, `Footer` | Server | Conteúdo estático |
+| `Hero`, `Partners`, `Work`, `Services`, `About`, `Photos`, `Footer` | Server | Conteúdo estático |
 | `Header` | Client | Abre e fecha o menu mobile |
 | `ServicesTimeline` | Client | Entrada do cabeçalho e da linha do tempo dos Serviços (scroll) |
 | `HeroCard` | Client | Card do hero inteiro clicável, abre o showreel |
@@ -162,7 +162,6 @@ Fonte do layout: protótipo **Welinton Carmelo v2** (handoff local). O que vale 
 - **H2 do Sobre:** Space Grotesk 400, 32px → 44px, entrelinha 1.05 (protótipo: 0.92).
 - **Cards:** título (H3) e descrição em Space Grotesk; tags, ano e botão em Inter. **Pílulas:** Inter.
 - **Corpo:** Space Grotesk 15px, entrelinha 1.5.
-- **Números:** `font-variant-numeric: tabular-nums`.
 
 ### Responsivo (mobile-first)
 
@@ -182,13 +181,13 @@ Os estilos base são os do mobile e os breakpoints usam `min-width`: **768px** (
 
 - **Abertura do player (Hero e Portfólio):** o player sai do elemento clicado e vai ao centro em **240ms** (FLIP com Web Animations API, `OPEN_DURATION` em `VideoModal.jsx`), com fade no fundo.
 - **Hero:** o showreel sem som cobre o card; clicar em **qualquer parte do card** abre o player (menos no CTA ou selecionando texto).
-- **Números:** faixa contínua da direita para a esquerda (25s, `linear`), sem repetir valores; pausa com o mouse por cima.
+- **Marcas parceiras:** faixa infinita de logos da direita para a esquerda (25s por volta, `linear`): lista + cópia `aria-hidden` (alt vazio), trilha anda -50% e recomeça sem emenda; pausa com o mouse por cima. Logos PNG 1080×660 já brancos com fundo transparente (sem `filter`/`mix-blend-mode`, que faziam a faixa tremer); trilha com `will-change: transform`. Logo e espaço em **px múltiplos de 8** por breakpoint (152/48 → 176/56 em 768 → 192/64 em 1024 → 208/72 em 1280), sem `vw`: o Firefox arredonda cada imagem para o pixel físico e, com posições fracionadas, cada logo "pulava" numa hora diferente.
 - **Portfólio:** entrada própria (queda empilhada → leque) quando o palco fica inteiro na tela, por isso a seção não usa o `Reveal`. Queda e troca de card animam só `transform` e `opacity`, que o Motion roda na GPU (Web Animations API), fora da thread principal:
   - as posições são uma string `transform` inteira (`toTransform` em `motion-config.js`), não `x`/`y`/`scale` soltos;
   - **não usar `introControls.set(...)`**: ele cria os valores do Motion sem dono e as animações caem para JavaScript quadro a quadro, o que engasga no celular;
   - os cards têm `will-change: transform` (camada própria, sem redesenhar a cada quadro).
 - **Vídeo do hero:** pausa quando o hero sai da tela (IntersectionObserver), para não disputar a GPU com as animações abaixo.
-- **Entrada no scroll (Hero, Números, Sobre, Fotos):** a caixa escura (e o vídeo do Hero) fica parada e só o **conteúdo** desliza da esquerda com fade, quando 60% da seção fica visível (ou ocupa 60% da tela). Uma vez só. O Hero usa `<Reveal immediate>` (CSS na primeira pintura, não atrasa o LCP). Sem JavaScript, tudo aparece normalmente.
+- **Entrada no scroll (Hero, Marcas parceiras, Sobre, Fotos):** a caixa escura (e o vídeo do Hero) fica parada e só o **conteúdo** desliza da esquerda com fade, quando 60% da seção fica visível (ou ocupa 60% da tela). Uma vez só. O Hero usa `<Reveal immediate>` (CSS na primeira pintura, não atrasa o LCP). Sem JavaScript, tudo aparece normalmente.
 - **Serviços (linha do tempo):** a caixa fica parada e o cabeçalho entra com o `Reveal`; os cards vêm depois (`ServicesTimeline`).
   - **Mobile/tablet (< 1024px):** uma linha única desce com o scroll; a ponta segue uma "linha de leitura" a 80% da altura da tela (`useTimelineLine`: `useScroll` + `useSpring`, só `scaleY`). Quando um ponto cruza essa linha, ele acende e o card sobe 16px com fade (`useTimelineReveal`). O 1º card espera o cabeçalho (300ms); pontos que já passaram (ex.: âncora `#servicos`) entram em cascata (120ms). A linha só cresce e nunca passa de um ponto apagado.
   - **Desktop (1024px+):** quando a fileira de pontos cruza a linha de leitura (e o cabeçalho já entrou), a linha horizontal corre da esquerda (`scaleX`, `linear`) e cada ponto + card entra quando ela chega: `--i × 350ms` (0 · 350 · 700ms, ~1,15s no total). Só CSS (`--tl-step`), disparado pelo `data-active`.
@@ -264,10 +263,10 @@ Os vídeos e pôsteres ficam num **Blob Store público** da Vercel (`store_Rm7Tm
 - [ ] Vídeos reais (showreel e projetos do Portfólio) no Vercel Blob.
 - [ ] Capas reais do Portfólio, fotos da Galeria (com `alt` descritivo) e retrato do Welinton.
 - [ ] Remover os domínios do `picsum.photos` do `next.config.mjs` quando as imagens reais entrarem.
-- [ ] Números reais e, futuramente, a vitrine de logos de marcas na faixa.
+- [x] Vitrine de logos de marcas na faixa (substituiu os números).
 - [ ] Imagem de compartilhamento (Open Graph, 1200×630), favicon próprio e JSON-LD.
 - [ ] Domínio definitivo e `NEXT_PUBLIC_SITE_URL`.
-- [ ] Botão de pausar a faixa de números no toque (WCAG 2.2.2), se desejado.
+- [ ] Botão de pausar a faixa de marcas no toque (WCAG 2.2.2), se desejado.
 - [ ] Lighthouse depois do primeiro deploy.
 
 ## Arquivos locais (fora do git)

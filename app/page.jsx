@@ -1,6 +1,6 @@
 import Header from "@/sections/Header/Header";
 import Hero from "@/sections/Hero/Hero";
-import Stats from "@/sections/Stats/Stats";
+import Partners from "@/sections/Partners/Partners";
 import Work from "@/sections/Work/Work";
 import Services from "@/sections/Services/Services";
 import About from "@/sections/About/About";
@@ -13,7 +13,7 @@ export default function Home() {
       <Header />
       <main id="conteudo">
         <Hero />
-        <Stats />
+        <Partners />
         <Work />
         <Services />
         <About />

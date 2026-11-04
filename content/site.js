@@ -9,6 +9,12 @@ import photo06 from "./media/photos/06.jpg";
 import photo07 from "./media/photos/07.jpg";
 import photo08 from "./media/photos/08.jpg";
 import photo09 from "./media/photos/09.jpg";
+import logoCupularia from "./media/partners/cupularia.png";
+import logoFestaDaCindy from "./media/partners/festadacindy.png";
+import logoOcupacionalSS from "./media/partners/ocupacionalss.png";
+import logoZig from "./media/partners/zig.png";
+import logoQuality from "./media/partners/quality.png";
+import logoTura from "./media/partners/turaconstrutora.png";
 
 export const instagram = {
   handle: "@eucarmelo",
@@ -51,11 +57,16 @@ export const hero = {
   },
 };
 
-// Placeholder: no futuro vira a vitrine de marcas atendidas
-export const stats = [
-  { value: "30M", label: "visualizações geradas" },
-  { value: "250+", label: "reels entregues" },
-  { value: "60", label: "marcas atendidas" },
+// Faixa de marcas parceiras: PNG 1080×660, logo branco em fundo transparente, centralizado e com a mesma área visual
+// Logo novo precisa do mesmo tratamento (branco, transparente, mesma área)
+// Trocar logo = substituir o arquivo em media/partners/ com o mesmo nome
+export const partners = [
+  { name: "Cupularia Gláucia Moreno", logo: logoCupularia },
+  { name: "A Festa da Cindy", logo: logoFestaDaCindy },
+  { name: "Ocupacional SS", logo: logoOcupacionalSS },
+  { name: "Zig", logo: logoZig },
+  { name: "Quality Eventos", logo: logoQuality },
+  { name: "Tura Construtora", logo: logoTura },
 ];
 
 // Portfólio: textos, imagens (picsum) e vídeo (MDN) são placeholders

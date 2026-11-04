@@ -1,7 +1,7 @@
 import { act, render, screen } from "@testing-library/react";
 import Reveal from "@/components/Reveal/Reveal";
 import Hero from "@/sections/Hero/Hero";
-import Stats from "@/sections/Stats/Stats";
+import Partners from "@/sections/Partners/Partners";
 import Work from "@/sections/Work/Work";
 import Services from "@/sections/Services/Services";
 import About from "@/sections/About/About";
@@ -108,7 +108,7 @@ describe("Reveal (animação de entrada no scroll)", () => {
 
   // A caixa escura (fundo) fica parada; só o conteúdo de dentro entra
   test.each([
-    ["Números", Stats],
+    ["Marcas parceiras", Partners],
     ["Serviços", Services],
     ["Sobre", About],
     ["Fotos", Photos],
@@ -129,10 +129,10 @@ describe("Reveal (animação de entrada no scroll)", () => {
   });
 
   // Trabalhos não desliza: a galeria tem a própria entrada (queda + leque)
-  test("Hero, Números, Serviços, Sobre e Fotos têm a animação; Trabalhos e o rodapé não", () => {
+  test("Hero, Parceiros, Serviços, Sobre e Fotos têm a animação; Trabalhos e o rodapé não", () => {
     const count = (ui) => render(ui).container.querySelectorAll("[data-revealed]").length;
     expect(count(<Hero />)).toBe(1);
-    expect(count(<Stats />)).toBe(1);
+    expect(count(<Partners />)).toBe(1);
     expect(count(<Work />)).toBe(0);
     expect(count(<Services />)).toBe(1);
     expect(count(<About />)).toBe(1);
