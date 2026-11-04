@@ -24,9 +24,10 @@ export default function PhotoGrid({ items = [] }) {
               onClick={() => setOpenId(photo.id)}
             >
               <Image
-                src={photo.thumb}
+                src={photo.image}
                 alt={photo.alt}
                 fill
+                placeholder="blur"
                 sizes={i === 0 ? "(min-width: 768px) 33vw, 100vw" : "(min-width: 768px) 33vw, 50vw"}
                 className={styles.gridImage}
               />

@@ -11,7 +11,7 @@ const nextConfig = {
     // Só o nosso store: o next/image não otimiza imagens de outros domínios
     remotePatterns: [
       { protocol: "https", hostname: BLOB_HOST, pathname: "/**" },
-      // Placeholders da galeria (Galeria Fotos) até as imagens reais irem para o Blob
+      // Placeholders das capas do Portfólio até as imagens reais entrarem
       { protocol: "https", hostname: "picsum.photos", pathname: "/**" },
       { protocol: "https", hostname: "fastly.picsum.photos", pathname: "/**" },
     ],

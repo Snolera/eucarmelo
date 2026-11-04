@@ -21,6 +21,41 @@ describe("Galeria de Fotos", () => {
     expect(within(thumbs()[0]).getByRole("img", { name: photos.items[0].alt })).toBeInTheDocument();
   });
 
+  test("fotos são imports locais: dimensões e blur vêm do arquivo", () => {
+    photos.items.forEach(({ image }) =>
+      expect(image).toEqual(expect.objectContaining({ width: expect.any(Number), height: expect.any(Number), blurDataURL: expect.stringMatching(/^data:image/) }))
+    );
+  });
+
+  test("miniatura mostra a versão borrada enquanto carrega", () => {
+    render(<Photos />);
+    const img = within(thumbs()[0]).getByRole("img");
+    expect(img.getAttribute("style")).toMatch(/background-image:.*data:image/);
+  });
+
+  test("foto ampliada usa a proporção real do arquivo", async () => {
+    const user = userEvent.setup();
+    render(<Photos />);
+    const { image, alt } = photos.items[4];
+
+    await user.click(thumbs()[4]);
+    const img = within(screen.getByRole("dialog")).getByRole("img", { name: alt });
+    expect(img).toHaveAttribute("width", String(image.width));
+    expect(img).toHaveAttribute("height", String(image.height));
+  });
+
+  test("foto ampliada mostra o alt como legenda (figure + figcaption)", async () => {
+    const user = userEvent.setup();
+    render(<Photos />);
+    const { alt } = photos.items[2];
+
+    await user.click(thumbs()[2]);
+    // jsdom não nomeia o figure pelo figcaption (navegadores sim): checa a estrutura direto
+    const figure = within(screen.getByRole("dialog")).getByRole("figure");
+    expect(within(figure).getByRole("img", { name: alt })).toBeInTheDocument();
+    expect(figure.querySelector("figcaption")).toHaveTextContent(alt);
+  });
+
   test("clicar numa miniatura abre a foto ampliada", async () => {
     const user = userEvent.setup();
     render(<Photos />);

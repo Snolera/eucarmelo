@@ -29,17 +29,21 @@ export default function PhotoLightbox({ photo, onClose }) {
       onClose={onClose}
       onClick={(e) => e.target === dialogRef.current && close()}
     >
-      <button type="button" className={styles.lightboxClose} onClick={close} aria-label="Fechar foto">
-        <X size={18} strokeWidth={1.5} aria-hidden="true" />
-      </button>
-      <Image
-        src={photo.full}
-        alt={photo.alt}
-        width={1200}
-        height={1500}
-        sizes="(min-width: 768px) 720px, 100vw"
-        className={styles.lightboxImage}
-      />
+      {/* Moldura do tamanho da foto: o X se posiciona em relação a ela; legenda = alt */}
+      <figure className={styles.lightboxFrame}>
+        <button type="button" className={styles.lightboxClose} onClick={close} aria-label="Fechar foto">
+          <X size={18} strokeWidth={1.5} aria-hidden="true" />
+        </button>
+        {/* Import estático: largura/altura reais e blur vêm do arquivo */}
+        <Image
+          src={photo.image}
+          alt={photo.alt}
+          placeholder="blur"
+          sizes="(min-width: 768px) 720px, 100vw"
+          className={styles.lightboxImage}
+        />
+        <figcaption className={styles.lightboxCaption}>{photo.alt}</figcaption>
+      </figure>
     </dialog>
   );
 }

@@ -1,5 +1,15 @@
 // Copy, links e mídia do site (fonte: export/Welinton Carmelo v2)
 // Títulos de seção: *palavra* vira destaque em Playfair itálico e \n quebra a linha
+import photo01 from "./media/photos/01.jpg";
+import photo02 from "./media/photos/02.jpg";
+import photo03 from "./media/photos/03.jpg";
+import photo04 from "./media/photos/04.jpg";
+import photo05 from "./media/photos/05.jpg";
+import photo06 from "./media/photos/06.jpg";
+import photo07 from "./media/photos/07.jpg";
+import photo08 from "./media/photos/08.jpg";
+import photo09 from "./media/photos/09.jpg";
+
 export const instagram = {
   handle: "@eucarmelo",
   dmUrl: "https://ig.me/m/eucarmelo",
@@ -86,17 +96,22 @@ export const about = {
   portrait: { src: null, alt: "Retrato de Welinton Carmelo" },
 };
 
-// Galeria de Fotos: placeholders do picsum (miniatura 4:5 e versão ampliada)
-// Trocar por fotos reais no Vercel Blob e alt descritivo de cada uma
+// Galeria de Fotos: imports locais (content/media/photos), o Next lê dimensões e gera o blur no build
+// Trocar foto = substituir o arquivo com o mesmo nome; alt provisório, revisar com o Welinton
 export const photos = {
   kicker: "Fotografia",
   title: "Entre linhas, luzes e *Silêncios.*",
   lead: "O cotidiano não é comum quando você observa.",
 
-  items: Array.from({ length: 9 }, (_, i) => ({
-    id: i + 1,
-    alt: `Foto ${i + 1}`,
-    thumb: `https://picsum.photos/seed/foto-0${i + 1}/800/1000`,
-    full: `https://picsum.photos/seed/foto-0${i + 1}/1200/1500`,
-  })),
+  items: [
+    { id: 1, image: photo01, alt: "Ciclista" },
+    { id: 2, image: photo02, alt: "Sombras" },
+    { id: 3, image: photo03, alt: "Moldura" },
+    { id: 4, image: photo04, alt: "Palhaços" },
+    { id: 5, image: photo05, alt: "Lua" },
+    { id: 6, image: photo06, alt: "Presente" },
+    { id: 7, image: photo07, alt: "Quero-quero" },
+    { id: 8, image: photo08, alt: "Folhas" },
+    { id: 9, image: photo09, alt: "Trabalhadores" },
+  ],
 };

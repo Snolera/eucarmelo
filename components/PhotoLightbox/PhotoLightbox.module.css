@@ -23,22 +23,44 @@
   backdrop-filter: blur(6px);
 }
 
-/* Foto 4:5 que cabe na altura da tela (64px de respiro em cima e embaixo) */
+/* Encolhe até o tamanho da foto: referência para o botão de fechar */
+.lightboxFrame {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+  cursor: default;
+}
+
+/* width 0 + min-width 100%: a legenda quebra na largura da foto, sem alargar a moldura */
+.lightboxCaption {
+  width: 0;
+  min-width: 100%;
+  font-family: var(--font-body);
+  font-size: clamp(0.8125rem, 0.78rem + 0.15vw, 0.9375rem);
+  line-height: 1.45;
+  color: var(--color-text-soft);
+}
+
+/* Foto inteira que cabe na tela (64px de respiro em cima e embaixo, 16px nas laterais, ~4rem para a legenda) */
 .lightboxImage {
-  width: min(100%, 720px, (100dvh - 8rem) * 0.8);
+  /* Proporção real do arquivo (width/height do import); sem cortar */
+  width: auto;
   height: auto;
-  aspect-ratio: 4 / 5;
-  object-fit: cover;
+  max-width: min(100vw - 2rem, 720px);
+  max-height: calc(100dvh - 12rem);
   border-radius: var(--radius-card);
   background: var(--color-card);
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
   cursor: default;
 }
 
+/* Logo acima do canto superior direito da foto (8px de folga), dentro do respiro de 64px */
 .lightboxClose {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
+  bottom: calc(100% + 0.5rem);
+  right: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
