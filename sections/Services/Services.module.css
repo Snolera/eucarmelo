@@ -6,11 +6,17 @@
   padding: var(--space-box-y) var(--space-box-x);
 }
 
+/* Só nos Serviços: destaques do título em Space Grotesk (sem itálico próprio, o navegador inclina)
+   As outras seções mantêm o Playfair itálico */
+.servicesHeading h2 em {
+  font-family: var(--font-heading);
+}
+
 /* Linha do tempo — mobile/tablet: vertical, marcador numa coluna de 28px à esquerda */
 .servicesTimeline {
   --tl-gap: 0.75rem; /* espaço entre os passos (12px; 20px no desktop) */
-  --tl-dot: 11px;
-  --tl-dot-top: 2rem; /* centro do ponto alinhado à linha do título (24px de padding + 26px de altura) */
+  --tl-dot: 16px; /* tamanho do ícone (asterisco) */
+  --tl-dot-top: calc(2.35rem - var(--tl-dot) / 2); /* centro do ícone a ~37px: meio da 1ª linha do título */
   --tl-line: color-mix(in srgb, var(--color-accent-light) 45%, transparent);
   --tl-duration: 450ms;
   position: relative;
@@ -46,7 +52,7 @@
   position: relative;
 }
 
-/* Ponto; a sombra da cor do fundo "recorta" a linha em volta dele */
+/* Marcador: círculo da cor do fundo esconde a linha entre as pétalas; a sombra recorta em volta */
 .servicesDot {
   position: absolute;
   top: var(--tl-dot-top);
@@ -55,8 +61,17 @@
   width: var(--tl-dot);
   height: var(--tl-dot);
   border-radius: 50%;
-  background: var(--color-accent-light);
+  background: var(--color-surface-dark);
   box-shadow: 0 0 0 4px var(--color-surface-dark);
+}
+
+/* Asterisco: o SVG só dá a forma (máscara); a cor vem do token */
+.servicesDot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--color-accent-light);
+  mask: url("./asterisk.svg") center / contain no-repeat;
 }
 
 .servicesCard {
@@ -64,33 +79,18 @@
   flex-direction: column;
   gap: 1.25rem;
   padding: 1.5rem 0;
-  font-family: var(--font-ui);
-}
-
-.servicesHead {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  min-height: 26px;
-}
-
-.servicesNumber {
-  flex: 0 0 1rem;
-  font-size: 0.75rem;
-  color: var(--color-accent-light);
-  font-variant-numeric: tabular-nums;
+  font-family: var(--font-heading); /* Space Grotesk: título e texto do card */
 }
 
 .servicesTitle {
-  font-family: var(--font-ui);
   font-size: clamp(1.5rem, 2.2vw, 1.75rem); /* 24 → 28px */
   line-height: 1.1;
   letter-spacing: -0.03em;
 }
 
-/* Recuo de 28px: alinha com o título, depois do número */
+/* Sem recuo: alinha com o título (o recuo de 28px era para o número, removido) */
 .servicesText {
-  margin: 0 0 0 1.75rem;
+  margin: 0;
   font-size: 0.875rem;
   line-height: 1.45;
   color: var(--color-text-soft);

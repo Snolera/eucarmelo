@@ -15,7 +15,7 @@ export function parseEmphasis(source) {
   return parts;
 }
 
-// Cabeçalho centralizado das seções: pílula, H2 (Inter light + destaques em Playfair) e lead opcional
+// Cabeçalho centralizado das seções: pílula, H2 (Space Grotesk light + destaques em Playfair) e lead opcional
 export default function SectionHeading({ kicker, title, titleId, lead, className = "" }) {
   return (
     <div className={`${styles.heading} ${className}`}>

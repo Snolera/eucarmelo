@@ -32,15 +32,12 @@ export default function ServicesTimeline({ heading, items }) {
         />
         <ol className={styles.servicesSteps}>
           {items.map((item, i) => (
-            <li key={item.n} className={styles.servicesStep} data-shown={i < shown} style={{ "--i": i }}>
+            <li key={item.title} className={styles.servicesStep} data-shown={i < shown} style={{ "--i": i }}>
               <span className={styles.servicesMarker} data-timeline-marker aria-hidden="true">
                 <span ref={setDot(i)} className={styles.servicesDot} />
               </span>
               <article className={styles.servicesCard}>
-                <div className={styles.servicesHead}>
-                  <span className={styles.servicesNumber}>{item.n}</span>
-                  <h3 className={styles.servicesTitle}>{item.title}</h3>
-                </div>
+                <h3 className={styles.servicesTitle}>{item.title}</h3>
                 {item.text && <p className={styles.servicesText}>{item.text}</p>}
               </article>
             </li>

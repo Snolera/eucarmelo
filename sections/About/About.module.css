@@ -23,7 +23,7 @@
   align-content: start;
 }
 
-/* Tipografia igual ao cabeçalho das seções (Serviços): Inter light 40 → 60px, destaque em Playfair */
+/* Tipografia igual ao cabeçalho das seções: Space Grotesk light 40 → 60px, destaque em Playfair */
 .aboutTitle {
   composes: headingTitle from "../../components/SectionHeading/SectionHeading.module.css";
   grid-area: title;
@@ -52,7 +52,7 @@
   object-fit: cover;
 }
 
-/* Mesma fonte do texto de apoio de Serviços (Inter 14 → 15px); justificado, com hifenização
+/* Mesma fonte do texto de apoio de Serviços (Space Grotesk 14 → 15px); justificado, com hifenização
    para não abrir buracos entre as palavras */
 .aboutText {
   composes: headingLead from "../../components/SectionHeading/SectionHeading.module.css";

@@ -80,9 +80,9 @@ export const services = {
   title: "A forma *importa.*\n A intenção *Transforma.*",
   lead: "Cada projeto começa com uma intenção clara. Conecto narrativa, posicionamento e execução para transformar ideias em experiências que fortalecem marcas e geram resultado.",
   items: [
-    { n: "01", title: "Produção Audiovisual", text: "Transformo momentos, ideias e experiências em narrativas visuais com agilidade, mobilidade e direção criativa. Produzo conteúdos que aproximam marcas de pessoas e amplificam mensagens." },
-    { n: "02", title: "Edição e Pós-Produção", text: "Cada imagem tem uma intenção. Por meio do ritmo, da narrativa e da linguagem visual, construo histórias que despertam sensações, comunicam mensagens e valorizam a identidade de cada projeto."  },
-    { n: "03", title: "Estratégia de Marca Digital", text: "Conecto identidade, comunicação e objetivos de negócio para construir uma presença digital relevante. Desenvolvo estratégias que fortalecem o posicionamento das marcas, criam conexões com o público e geram resultados." },
+    { title: "Produção Audiovisual", text: "Transformo momentos, ideias e experiências em narrativas visuais com agilidade, mobilidade e direção criativa. Produzo conteúdos que aproximam marcas de pessoas e amplificam mensagens." },
+    { title: "Edição e Pós-Produção", text: "Cada imagem tem uma intenção. Por meio do ritmo, da narrativa e da linguagem visual, construo histórias que despertam sensações, comunicam mensagens e valorizam a identidade de cada projeto."  },
+    { title: "Estratégia de Marca Digital", text: "Conecto identidade, comunicação e objetivos de negócio para construir uma presença digital relevante. Desenvolvo estratégias que fortalecem o posicionamento das marcas, criam conexões com o público e geram resultados." },
   ],
 };
 

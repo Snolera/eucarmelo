@@ -9,7 +9,7 @@ const spaceGrotesk = Space_Grotesk({
   display: "swap",
 });
 
-// Logo, H2 das seções, pílulas e cards: light (300), regular (400) e negrito (700)
+// Logo, pílulas e detalhes dos cards (tags, ano, botão): light (300), regular (400) e negrito (700)
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],

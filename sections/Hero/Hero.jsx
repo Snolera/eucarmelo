@@ -14,7 +14,7 @@ export default function Hero() {
         <Reveal immediate className={styles.heroContent}>
           <div className={styles.heroText}>
             <h1 id="hero-title" className={styles.heroTitle}>
-              {hero.title} <em>{hero.titleEm}</em>
+              {hero.title} <em className={styles.heroTitleEm}>{hero.titleEm}</em>
             </h1>
             <p className={styles.heroRoles}>{roles}</p>
           </div>

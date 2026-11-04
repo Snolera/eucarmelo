@@ -9,7 +9,15 @@ export default function Services() {
   return (
     <Panel id="servicos" aria-labelledby="services-title" className={styles.services}>
       <ServicesTimeline
-        heading={<SectionHeading kicker={services.kicker} title={services.title} titleId="services-title" lead={services.lead} />}
+        heading={
+          <SectionHeading
+            className={styles.servicesHeading}
+            kicker={services.kicker}
+            title={services.title}
+            titleId="services-title"
+            lead={services.lead}
+          />
+        }
         items={services.items}
       />
     </Panel>

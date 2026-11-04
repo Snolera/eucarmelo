@@ -15,7 +15,7 @@
   --color-card-line: rgba(255, 255, 255, 0.35); /* tags dos cards e bordas do player */
   --color-accent: #b68235; /* links e foco visível */
   --color-accent-hover: #a06f24;
-  --color-accent-light: #e1ad66; /* CTA, números dos serviços e hover dos ícones */
+  --color-accent-light: #e1ad66; /* CTA, pontos da linha dos serviços e hover dos ícones */
   --color-hero-text: #f8f4f4;
 
   --color-neutral-200: #eae7e7;
@@ -23,10 +23,10 @@
   --color-neutral-900: #2d2b2b;
 
   /* Fontes (carregadas pelo next/font no layout) */
-  --font-heading: var(--font-space-grotesk), system-ui, sans-serif; /* H1, H2 do Sobre, números */
+  --font-heading: var(--font-space-grotesk), system-ui, sans-serif; /* todos os h1, h2, h3 e parágrafos, números */
   --font-body: var(--font-space-grotesk), system-ui, sans-serif;
-  --font-ui: var(--font-inter), "Helvetica Neue", Arial, sans-serif; /* logo, H2 das seções, cards */
-  --font-accent: var(--font-playfair), Georgia, serif; /* palavras em destaque (itálico 700) */
+  --font-ui: var(--font-inter), "Helvetica Neue", Arial, sans-serif; /* logo, pílulas e detalhes dos cards (tags, ano, botão) */
+  --font-accent: var(--font-playfair), Georgia, serif; /* palavras em destaque (itálico 700), exceto nos Serviços */
 
   /* Espaçamentos fluidos (360px → 1280px) */
   --space-gutter: clamp(12px, 1.5vw, 20px); /* recuo lateral da coluna central */

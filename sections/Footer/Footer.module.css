@@ -59,6 +59,7 @@
 }
 
 .footerCopy {
+  font-family: var(--font-heading);
   font-size: 0.8125rem; /* 13px */
   letter-spacing: -0.2px;
   color: var(--color-pill-text);

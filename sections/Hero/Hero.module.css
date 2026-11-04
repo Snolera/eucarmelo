@@ -69,8 +69,13 @@
   text-wrap: balance;
 }
 
+/* Frase em itálico sempre começa numa linha nova: o "É" não fica sozinho na linha de cima */
+.heroTitleEm {
+  display: block;
+}
+
 .heroRoles {
-  font-size: clamp(0.8125rem, 1.2vw, 0.9375rem); /* 13 → 15px */
+  font-size: clamp(0.9375rem, 1.44vw, 1.125rem); /* 15 → 18px (máximo a partir de 1250px) */
   line-height: 1.5;
 }
 

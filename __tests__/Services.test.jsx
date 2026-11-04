@@ -12,15 +12,14 @@ describe("Serviços", () => {
     expect(screen.getByText(services.lead)).toBeInTheDocument();
   });
 
-  test("3 cards, cada um com número e h3", () => {
+  test("3 cards, cada um começando pelo h3 (sem número antes)", () => {
     render(<Services />);
     const cards = screen.getAllByRole("article");
     expect(cards).toHaveLength(3);
 
     services.items.forEach((item, i) => {
       const card = within(cards[i]);
-      expect(card.getByText(item.n)).toBeInTheDocument();
-      expect(card.getByRole("heading", { level: 3, name: item.title })).toBeInTheDocument();
+      expect(cards[i].firstElementChild).toBe(card.getByRole("heading", { level: 3, name: item.title }));
       if (item.text) expect(card.getByText(item.text)).toBeInTheDocument();
     });
   });

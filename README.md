@@ -15,7 +15,7 @@ Site one-page do **Welinton Carmelo**, videomaker de conteúdo para Instagram (g
 | Framework | **Next.js 16.4** (App Router, Turbopack, `cacheComponents`) |
 | UI | **React 19**, **JavaScript** (sem TypeScript) |
 | Estilos | **CSS Modules** + variáveis globais em `app/globals.css` |
-| Fontes | `next/font/google`: **Space Grotesk** (texto, H1, números), **Inter** (logo, H2 das seções, cards, pílulas), **Playfair Display** itálico 700 (palavras em destaque) |
+| Fontes | `next/font/google`: **Space Grotesk** (todos os h1/h2/h3 e parágrafos, números), **Inter** (logo, pílulas, tags/ano/botão dos cards), **Playfair Display** itálico 700 (palavras em destaque, exceto nos Serviços) |
 | Ícones | `lucide-react` (interface) + SVG próprio para as redes sociais |
 | Animação | `motion` (entrada e leque do Portfólio) + CSS (`transform`/`opacity`) no resto |
 | Testes | **Vitest** + **React Testing Library** + `jest-dom` (ambiente `jsdom`) |
@@ -77,7 +77,7 @@ Todo texto, link e mídia fica em **`content/site.js`**. Para trocar uma copy, a
 | `hero` | título, CTA e showreel |
 | `stats` | números da faixa |
 | `work` | Portfólio: pílula, título e projetos (`title`, `tag`, `duration`, `year`, `desc`, `image`, `alt`, `video`) |
-| `services` | pílula, título, texto de apoio e os 3 serviços (`n`, `title` e `text` opcional) |
+| `services` | pílula, título, texto de apoio e os 3 serviços (`title` e `text` opcional) |
 | `about` | pílula, título, parágrafos e retrato |
 | `photos` | pílula, título, texto de apoio (`lead`) e fotos (`alt`, `thumb`, `full`) |
 | `social` | redes do rodapé (TikTok, Instagram, WhatsApp, E-mail) |
@@ -148,7 +148,7 @@ Fonte do layout: protótipo **Welinton Carmelo v2** (handoff local). O que vale 
 | `--color-pill-bg` / `--color-pill-text` | branco 8% / `#d9d9d9` | Pílulas e copyright |
 | `--color-line` | branco 12% | Bordas dos cards de serviço e divisórias |
 | `--color-accent` | `#b68235` | Links e foco visível |
-| `--color-accent-light` | `#e1ad66` | CTA do hero, números dos serviços, hover dos ícones e do Assistir |
+| `--color-accent-light` | `#e1ad66` | CTA do hero, pontos da linha dos serviços, hover dos ícones e do Assistir |
 | `--radius-container` | 20px → 24px | Caixas e card do hero |
 | `--space-gutter` | 12px → 20px | Recuo lateral da coluna central (`.container`, até 1240px) |
 | `--space-section` | 16px → 40px | Espaço entre uma caixa e a próxima |
@@ -158,9 +158,9 @@ Fonte do layout: protótipo **Welinton Carmelo v2** (handoff local). O que vale 
 ### Tipografia
 
 - **H1 (hero):** Space Grotesk 400, 46px → 92px, entrelinha 1 no mobile e 0.95 a partir de 768px. O protótipo usa 0.86/0.7; os valores foram aumentados para as linhas não encostarem. O `<em>` ("no feed.") é o itálico simulado da própria Space Grotesk.
-- **H2 das seções:** Inter 300, 40px → 60px, com palavras em **Playfair Display itálico 700**.
+- **H2 das seções:** Space Grotesk 300, 40px → 60px, com palavras em **Playfair Display itálico 700** (nos Serviços, Space Grotesk inclinada).
 - **H2 do Sobre:** Space Grotesk 400, 32px → 44px, entrelinha 1.05 (protótipo: 0.92).
-- **Cards (H3) e pílulas:** Inter.
+- **Cards:** título (H3) e descrição em Space Grotesk; tags, ano e botão em Inter. **Pílulas:** Inter.
 - **Corpo:** Space Grotesk 15px, entrelinha 1.5.
 - **Números:** `font-variant-numeric: tabular-nums`.
 
