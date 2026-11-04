@@ -2,15 +2,17 @@ import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Photos from "@/sections/Photos/Photos";
 import { photos } from "@/content/site";
+import { headingName } from "./helpers";
 
 const thumbs = () => screen.getAllByRole("button", { name: /^ampliar:/i });
 
 describe("Galeria de Fotos", () => {
-  test("âncora #galeria nomeada pelo h2, com a pílula", () => {
+  test("âncora #galeria nomeada pelo h2, com a pílula e o texto de apoio", () => {
     const { container } = render(<Photos />);
     expect(container.querySelector("section#galeria")).toBeInTheDocument();
-    expect(screen.getByRole("region", { name: "Galeria de Fotos" })).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: headingName(photos.title) })).toBeInTheDocument();
     expect(screen.getByText(photos.kicker)).toBeInTheDocument();
+    expect(screen.getByText(photos.lead)).toBeInTheDocument();
   });
 
   test("uma miniatura clicável por foto, com o alt da foto", () => {

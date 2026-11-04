@@ -2,9 +2,11 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+// Volume ao abrir o player (0 a 1); no iPhone o volume é sempre o do aparelho
+export const INITIAL_VOLUME = 0.05;
+
 // Estado do <video> controlado por eventos nativos (fonte da verdade é o elemento)
-// initialVolume: volume ao abrir (0 a 1); no iPhone o volume é sempre o do aparelho
-export function useVideoPlayer({ initialVolume = 0.5 } = {}) {
+export function useVideoPlayer({ initialVolume = INITIAL_VOLUME } = {}) {
   const videoRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);

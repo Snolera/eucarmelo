@@ -23,12 +23,16 @@
   align-content: start;
 }
 
+/* Tipografia igual ao cabeçalho das seções (Serviços): Inter light 40 → 60px, destaque em Playfair */
 .aboutTitle {
+  composes: headingTitle from "../../components/SectionHeading/SectionHeading.module.css";
   grid-area: title;
   max-width: 40rem;
-  font-size: clamp(2rem, 3.5vw, 2.75rem); /* 32 → 44px */
-  line-height: 1.05; /* protótipo usa 0.92; 1.05 evita encostar as linhas */
-  letter-spacing: -0.02em;
+  text-align: center;
+}
+
+.aboutEm {
+  composes: headingEm from "../../components/SectionHeading/SectionHeading.module.css";
 }
 
 /* Retrato 4:5 com moldura (borda 6px + contorno) */
@@ -48,15 +52,20 @@
   object-fit: cover;
 }
 
-/* Texto alinhado à esquerda no mobile: justificado em coluna estreita abre buracos */
+/* Mesma fonte do texto de apoio de Serviços (Inter 14 → 15px); justificado, com hifenização
+   para não abrir buracos entre as palavras */
 .aboutText {
+  composes: headingLead from "../../components/SectionHeading/SectionHeading.module.css";
   grid-area: text;
   display: flex;
   flex-direction: column;
   gap: 0.875rem;
-  font-size: 1rem;
-  line-height: 1.3;
-  letter-spacing: -0.4px;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.aboutText p {
+  margin: 0;
 }
 
 @media (min-width: 768px) {
@@ -65,12 +74,15 @@
     grid-template-areas:
       "img title"
       "img text";
+    /* A sobra de altura do retrato vai para a linha do texto, não para o vão entre título e texto */
+    grid-template-rows: auto 1fr;
+    row-gap: clamp(1.125rem, 1.8vw, 1.375rem); /* 18 → 22px, igual ao cabeçalho de Serviços */
     column-gap: 2.5rem;
   }
 
-  .aboutText {
-    text-align: justify;
-    hyphens: auto;
+  /* Ao lado do retrato, o título alinha à esquerda (centralizado ficaria solto da foto) */
+  .aboutTitle {
+    text-align: left;
   }
 }
 

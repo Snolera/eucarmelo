@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Kicker from "@/components/Kicker/Kicker";
 import Panel from "@/components/Panel/Panel";
+import { parseEmphasis } from "@/components/SectionHeading/SectionHeading";
 import { about } from "@/content/site";
 import styles from "./About.module.css";
 
@@ -12,7 +13,15 @@ export default function About() {
 
       <div className={styles.aboutGrid}>
         <h2 id="about-title" className={styles.aboutTitle}>
-          {about.title}
+          {parseEmphasis(about.title).map((part, i) =>
+            part.type === "em" ? (
+              <em key={i} className={styles.aboutEm}>{part.value}</em>
+            ) : part.type === "br" ? (
+              <br key={i} />
+            ) : (
+              part.value
+            )
+          )}
         </h2>
 
         <figure className={styles.aboutPortrait}>

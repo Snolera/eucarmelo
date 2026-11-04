@@ -2,6 +2,10 @@ import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Hero from "@/sections/Hero/Hero";
 import { hero, roles } from "@/content/site";
+import { SHOWREEL_AUTOPLAY } from "@/sections/Hero/HeroCard";
+
+// Testes do vídeo de fundo tocando: pulados enquanto o autoplay do showreel estiver desligado
+const autoplayTest = test.skipIf(!SHOWREEL_AUTOPLAY);
 
 // jsdom não implementa play/pause de <video>: espiões que só registram as chamadas
 let play;
@@ -20,7 +24,7 @@ const backgroundVideo = (container) => container.querySelector("video[aria-hidde
 describe("Hero", () => {
   test("h1 com a copy do design e, logo abaixo, a linha de funções", () => {
     render(<Hero />);
-    const h1 = screen.getByRole("heading", { level: 1, name: "Filmes curtos para marcas que vivem no feed." });
+    const h1 = screen.getByRole("heading", { level: 1, name: `${hero.title} ${hero.titleEm}` });
     const rolesLine = screen.getByText(roles);
     expect(h1.compareDocumentPosition(rolesLine) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
@@ -67,7 +71,7 @@ describe("Hero", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
-  test("o card mostra o showreel de fundo: sem som, em loop, tocando sozinho", () => {
+  autoplayTest("o card mostra o showreel de fundo: sem som, em loop, tocando sozinho", () => {
     const { container } = render(<Hero />);
     const video = backgroundVideo(container);
     expect(video).toHaveAttribute("src", hero.showreel.src);
@@ -80,7 +84,7 @@ describe("Hero", () => {
     expect(play).toHaveBeenCalled();
   });
 
-  test("o vídeo de fundo pausa quando o hero sai da tela e volta quando ele reaparece", () => {
+  autoplayTest("o vídeo de fundo pausa quando o hero sai da tela e volta quando ele reaparece", () => {
     let observerCallback;
     window.IntersectionObserver = class {
       constructor(cb) {
@@ -108,7 +112,7 @@ describe("Hero", () => {
     expect(play).not.toHaveBeenCalled();
   });
 
-  test("o player abre o mesmo vídeo do início, com som; o fundo pausa e volta ao fechar", async () => {
+  autoplayTest("o player abre o mesmo vídeo do início, com som; o fundo pausa e volta ao fechar", async () => {
     const user = userEvent.setup();
     const { container } = render(<Hero />);
     play.mockClear();

@@ -1,6 +1,6 @@
 import { render, screen, within } from "@testing-library/react";
 import Footer from "@/sections/Footer/Footer";
-import { roles } from "@/content/site";
+import { roles, social } from "@/content/site";
 
 describe("Footer (Contato)", () => {
   test("rodapé é o destino do link Contato (#contato)", () => {
@@ -16,13 +16,13 @@ describe("Footer (Contato)", () => {
     expect(footer.getByText("Copyright © 2026 Welinton Carmelo")).toBeInTheDocument();
   });
 
-  test("4 redes na ordem do layout: Facebook, Instagram, X e E-mail", () => {
+  test("4 redes na ordem do layout: TikTok, Instagram, WhatsApp e E-mail", () => {
     render(<Footer />);
     const nav = screen.getByRole("navigation", { name: /redes sociais/i });
     const names = within(nav)
       .getAllByRole("listitem")
-      .map((li) => li.firstElementChild.getAttribute("aria-label"));
-    expect(names).toEqual(["Facebook (em breve)", "Instagram", "X (em breve)", "E-mail (em breve)"]);
+      .map((li) => li.firstElementChild.getAttribute("aria-label").replace(" (em breve)", ""));
+    expect(names).toEqual(["TikTok", "Instagram", "WhatsApp", "E-mail"]);
   });
 
   test("Instagram é um link externo para o perfil", () => {
@@ -33,9 +33,16 @@ describe("Footer (Contato)", () => {
     expect(link).toHaveAttribute("rel", expect.stringContaining("noopener"));
   });
 
-  test("redes sem endereço definido aparecem sem link (nada quebrado)", () => {
+  // Vale para o conteúdo atual do site.js: rede com href vira link; href null aparece sem link (nada quebrado)
+  test("cada rede vira link quando tem endereço e fica 'em breve' quando não tem", () => {
     render(<Footer />);
-    expect(screen.getByRole("img", { name: /facebook.*em breve/i })).toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: /facebook/i })).not.toBeInTheDocument();
+    social.forEach(({ label, href }) => {
+      if (href) {
+        expect(screen.getByRole("link", { name: label })).toHaveAttribute("href", href);
+      } else {
+        expect(screen.getByRole("img", { name: `${label} (em breve)` })).toBeInTheDocument();
+        expect(screen.queryByRole("link", { name: label })).not.toBeInTheDocument();
+      }
+    });
   });
 });

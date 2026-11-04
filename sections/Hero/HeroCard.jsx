@@ -4,6 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import VideoModal from "@/components/VideoModal/VideoModal";
 import styles from "./Hero.module.css";
 
+// Autoplay do showreel de fundo (sem som, em loop). false = o card mostra o 1º quadro/poster
+export const SHOWREEL_AUTOPLAY = true;
+
 const prefersReducedMotion = () =>
   window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 
@@ -29,7 +32,7 @@ export default function HeroCard({ className, video, children }) {
   useEffect(() => {
     const background = backgroundRef.current;
     if (!background) return;
-    if (open || !onScreen || prefersReducedMotion()) background.pause();
+    if (!SHOWREEL_AUTOPLAY || open || !onScreen || prefersReducedMotion()) background.pause();
     // Navegador bloqueou: fica no 1º quadro (play() sem Promise em navegadores antigos/jsdom)
     else background.play()?.catch(() => {});
   }, [open, onScreen]);

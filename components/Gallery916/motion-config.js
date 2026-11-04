@@ -11,7 +11,7 @@ export const SWIPE_MIN = 40; // px de arraste para trocar de card
 // ---- Entrada em duas fases (queda → pausa empilhado → leque) ----
 export const DROP_DISTANCE = 520; // px acima do centro de onde os cards caem
 export const DROP_STAGGER = 0.08; // s entre cada card na queda
-export const STACK_HOLD_MS = 500; // pausa com os cards empilhados
+export const STACK_HOLD_MS = 200; // pausa com os cards empilhados
 export const FAN_STAGGER = 0.06; // s entre cada "anel" do leque, a partir do centro
 // Fração do palco que precisa estar visível; 0.99 evita arredondamento subpixel do threshold 1.
 export const FULL_VIEW = 0.99;

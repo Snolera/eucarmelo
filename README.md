@@ -77,10 +77,10 @@ Todo texto, link e mídia fica em **`content/site.js`**. Para trocar uma copy, a
 | `hero` | título, CTA e showreel |
 | `stats` | números da faixa |
 | `work` | Portfólio: pílula, título e projetos (`title`, `tag`, `duration`, `year`, `desc`, `image`, `alt`, `video`) |
-| `services` | pílula, título, texto de apoio e os 3 serviços (`n`, `title`, `who`, `what`) |
+| `services` | pílula, título, texto de apoio e os 3 serviços (`n`, `title` e `text` opcional) |
 | `about` | pílula, título, parágrafos e retrato |
-| `photos` | pílula, título e fotos (`alt`, `thumb`, `full`) |
-| `social` | redes do rodapé (Facebook, Instagram, X, E-mail) |
+| `photos` | pílula, título, texto de apoio (`lead`) e fotos (`alt`, `thumb`, `full`) |
+| `social` | redes do rodapé (TikTok, Instagram, WhatsApp, E-mail) |
 | `footer` | copyright |
 
 **Títulos das seções:** `*palavra*` vira destaque em Playfair itálico e `\n` quebra a linha. Exemplo: `"Por trás de *cada*\n*projeto*"`.
@@ -114,7 +114,7 @@ As seções são **Server Components** sempre que possível; o JavaScript só va
 ### Hooks
 
 - **`useVideoPlayer`:** o estado do `<video>` vem dos eventos nativos; expõe `togglePlay`, `toggleMute`, `setVolume` e `seek`. Onde o navegador não deixa mudar o volume (iPhone), o ícone só liga e desliga o som.
-- **`useGalleryIntro(stageRef, reduceMotion)`:** entrada do Portfólio. Quando o palco fica inteiro na tela (`useInView` do motion), os cards caem empilhados no centro, pausam 500ms e abrem em leque. Com "reduzir movimento" ou sem IntersectionObserver, vai direto para o leque.
+- **`useGalleryIntro(stageRef, reduceMotion)`:** entrada do Portfólio. Quando o palco fica inteiro na tela (`useInView` do motion), os cards caem empilhados no centro, pausam 200ms e abrem em leque. Com "reduzir movimento" ou sem IntersectionObserver, vai direto para o leque.
 - **`useMediaQuery(query)`:** `true` enquanto a media query casa; o Portfólio usa para trocar os valores do leque em 768px.
 - **`useReveal`:** IntersectionObserver da entrada no scroll (usado pelo `Reveal`, que tem `onReveal` para avisar quando revelou).
 - **`useTimelineReveal(count, { ready, skip })`:** revela os passos da linha do tempo em ordem, uma vez só, quando o ponto cruza a linha de leitura (80% da tela).
@@ -129,7 +129,7 @@ As seções são **Server Components** sempre que possível; o JavaScript só va
 - **`Button`:** botão outline; vira `<a>` com `href`, e links externos ganham `target="_blank"` e `rel="noopener noreferrer"`.
 - **`Gallery916`:** o Portfólio em leque (coverflow). 6 cards (236×360 no mobile, 270×400 a partir de 768px), o ativo no centro e até 2 vizinhos visíveis de cada lado, menores e sem escurecimento. As posições ficam em `FAN` (`motion-config.js`). Clique num card inativo o traz para o centro; **Assistir** no card ativo abre o `VideoModal`, que sai do card (FLIP). Controles: setas, ← → do teclado (fora de campos e com o player fechado), swipe (40px) e, só no mobile, bolinhas de posição.
 - **`PhotoGrid` + `PhotoLightbox`:** grid de miniaturas e foto ampliada em `<dialog>` nativo (X, Esc ou clique no fundo fecham).
-- **`SocialIcon`:** Facebook e X preenchidos, Instagram e E-mail em contorno, herdando a cor do texto.
+- **`SocialIcon`:** TikTok e WhatsApp preenchidos, Instagram e E-mail em contorno, herdando a cor do texto.
 
 ---
 
@@ -260,7 +260,7 @@ Os vídeos e pôsteres ficam num **Blob Store público** da Vercel (`store_Rm7Tm
 
 ## Pendências
 
-- [ ] Links do **Facebook**, **X** e **E-mail** no rodapé: preencher `href` em `social`, no `content/site.js`.
+- [ ] Links do **TikTok**, **WhatsApp** e **E-mail** no rodapé: preencher `href` em `social`, no `content/site.js`.
 - [ ] Vídeos reais (showreel e projetos do Portfólio) no Vercel Blob.
 - [ ] Capas reais do Portfólio, fotos da Galeria (com `alt` descritivo) e retrato do Welinton.
 - [ ] Remover os domínios do `picsum.photos` do `next.config.mjs` quando as imagens reais entrarem.

@@ -41,16 +41,7 @@ export default function ServicesTimeline({ heading, items }) {
                   <span className={styles.servicesNumber}>{item.n}</span>
                   <h3 className={styles.servicesTitle}>{item.title}</h3>
                 </div>
-                <dl className={styles.servicesList}>
-                  <div className={styles.servicesItem}>
-                    <dt className={styles.servicesLabel}>Pra quem</dt>
-                    <dd className={styles.servicesText}>{item.who}</dd>
-                  </div>
-                  <div className={styles.servicesItem}>
-                    <dt className={styles.servicesLabel}>O que resolve</dt>
-                    <dd className={styles.servicesText}>{item.what}</dd>
-                  </div>
-                </dl>
+                {item.text && <p className={styles.servicesText}>{item.text}</p>}
               </article>
             </li>
           ))}

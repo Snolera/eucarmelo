@@ -7,14 +7,14 @@ export const instagram = {
 };
 
 // Linha de funções: no hero (abaixo do título) e no rodapé
-export const roles = "Direção / Roteiro / Montagem / Produção / Criação";
+export const roles = "audiovisual, estratégia & arte.";
 
 // Redes do rodapé, nesta ordem: href null = ainda sem endereço (ícone aparece sem link)
 export const social = [
-  { id: "facebook", label: "Facebook", href: null }, // PREENCHER: ex. "https://facebook.com/usuario"
+  { id: "tiktok", label: "TikTok", href: "https://www.tiktok.com/@eucarmelo" }, 
   { id: "instagram", label: "Instagram", href: "https://instagram.com/eucarmelo" },
-  { id: "x", label: "X", href: null }, // PREENCHER: ex. "https://x.com/usuario"
-  { id: "email", label: "E-mail", href: null }, // PREENCHER: ex. "mailto:contato@dominio.com"
+  { id: "whatsapp", label: "WhatsApp", href: "https://wa.me/5511981685510" }, 
+  { id: "email", label: "E-mail", href: "mailto:wcarmelo@outlook.com" }, 
 ];
 
 export const footer = {
@@ -29,8 +29,8 @@ export const nav = [
 ];
 
 export const hero = {
-  title: "Filmes curtos para marcas que vivem",
-  titleEm: "no feed.",
+  title: "NÃO BASTA OLHAR.",
+  titleEm: "É PRECISO SENTIR.",
   cta: "Fale Comigo",
   // Showreel no Vercel Blob: toca sem som no fundo do card e, ao clicar, do início e com som no player
   // poster null: o card mostra o 1º quadro do vídeo
@@ -54,7 +54,7 @@ const SAMPLE_VIDEO = "https://interactive-examples.mdn.mozilla.net/media/cc0-vid
 
 export const work = {
   kicker: "Portfólio",
-  title: "Por trás de *cada*\n*projeto*",
+  title: "Congelar o *Tempo* em *Movimento*",
   items: [
     { id: 1, title: "Montagem", tag: "Bastidores", duration: "0:45", year: "2026", desc: "Do primeiro dia de obra à estrutura de pé, em ritmo de reel.", image: "https://picsum.photos/seed/obra-01/540/960", alt: "Montagem da estrutura no canteiro de obras", video: SAMPLE_VIDEO },
     { id: 2, title: "Estrutura", tag: "Processo", duration: "0:38", year: "2026", desc: "Cada etapa do projeto mostrada de perto, sem perder o fio.", image: "https://picsum.photos/seed/obra-02/540/960", alt: "Etapa estrutural do projeto", video: SAMPLE_VIDEO },
@@ -67,21 +67,20 @@ export const work = {
 
 export const services = {
   kicker: "Serviços",
-  title: "O que eu *resolvo*\ne pra *quem*",
-  lead: "Vídeo curto bem feito não é sorte. É roteiro pensado para o feed, gravação ágil e edição no ritmo certo — para que a sua marca seja vista, lembrada e procurada.",
+  title: "A forma *importa.*\n A intenção *Transforma.*",
+  lead: "Cada projeto começa com uma intenção clara. Conecto narrativa, posicionamento e execução para transformar ideias em experiências que fortalecem marcas e geram resultado.",
   items: [
-    { n: "01", title: "Reels para marcas", who: "Pra marcas e negócios locais que precisam aparecer no feed com frequência, mas não têm tempo nem equipe para produzir.", what: "Roteiro, gravação e edição de vídeos curtos que prendem nos primeiros segundos e fazem o perfil crescer com consistência." },
-    { n: "02", title: "Registro de obras e projetos", who: "Pra construtoras, arquitetos e escritórios que querem mostrar o processo — não só o resultado.", what: "Bastidores, etapas e entrega transformados em conteúdo que gera confiança e vende o próximo projeto." },
-    { n: "03", title: "Eventos e lançamentos", who: "Pra marcas que vão abrir, lançar ou celebrar algo e querem que isso dure além do dia.", what: "Cobertura com celular, ágil e discreta, com reels entregues rápido para aproveitar o momento enquanto ele acontece." },
+    { n: "01", title: "Produção Audiovisual", text: "Transformo momentos, ideias e experiências em narrativas visuais com agilidade, mobilidade e direção criativa. Produzo conteúdos que aproximam marcas de pessoas e amplificam mensagens." },
+    { n: "02", title: "Edição e Pós-Produção", text: "Cada imagem tem uma intenção. Por meio do ritmo, da narrativa e da linguagem visual, construo histórias que despertam sensações, comunicam mensagens e valorizam a identidade de cada projeto."  },
+    { n: "03", title: "Estratégia de Marca Digital", text: "Conecto identidade, comunicação e objetivos de negócio para construir uma presença digital relevante. Desenvolvo estratégias que fortalecem o posicionamento das marcas, criam conexões com o público e geram resultados." },
   ],
 };
 
 export const about = {
   kicker: "Sobre",
-  title: "Um celular, um olhar e o ritmo certo para prender os primeiros segundos.",
+  title: "Entre o *olhar* e a *intenção.*",
   paragraphs: [
-    "Sou Welinton Carmelo, videomaker focado em conteúdo para Instagram. Gravo tudo com o celular: equipamento leve, que entra em qualquer espaço e deixa as pessoas à vontade diante da câmera.",
-    "Trabalho com marcas que querem estar presentes no feed com consistência — do roteiro à edição, entregando vídeos prontos para postar e pensados para reter a atenção.",
+    "Ao longo de mais de quinze anos, conectei arte, comunicação e marketing. Essa vivência me ensinou que toda boa execução nasce de uma visão clara e organizada. Hoje uno sensibilidade artística e estratégia para transformar ideias em experiências."
   ],
   // Foto ainda não enviada: null mostra o placeholder
   portrait: { src: null, alt: "Retrato de Welinton Carmelo" },
@@ -91,7 +90,9 @@ export const about = {
 // Trocar por fotos reais no Vercel Blob e alt descritivo de cada uma
 export const photos = {
   kicker: "Fotografia",
-  title: "Galeria de *Fotos*",
+  title: "Entre linhas, luzes e *Silêncios.*",
+  lead: "O cotidiano não é comum quando você observa.",
+
   items: Array.from({ length: 9 }, (_, i) => ({
     id: i + 1,
     alt: `Foto ${i + 1}`,

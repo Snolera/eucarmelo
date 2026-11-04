@@ -8,7 +8,7 @@ import styles from "./Photos.module.css";
 export default function Photos() {
   return (
     <Panel id="galeria" aria-labelledby="photos-title" reveal className={styles.photos}>
-      <SectionHeading kicker={photos.kicker} title={photos.title} titleId="photos-title" />
+      <SectionHeading kicker={photos.kicker} title={photos.title} titleId="photos-title" lead={photos.lead} />
       <PhotoGrid items={photos.items} />
     </Panel>
   );

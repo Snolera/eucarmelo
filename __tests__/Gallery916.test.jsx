@@ -2,6 +2,8 @@ import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Work from "@/sections/Work/Work";
 import { work } from "@/content/site";
+import { INITIAL_VOLUME } from "@/hooks/useVideoPlayer";
+import { headingName } from "./helpers";
 
 // jsdom não tem matchMedia nem IntersectionObserver. Com "reduzir movimento" a galeria
 // pula a entrada (queda + leque) e já fica interativa
@@ -39,7 +41,7 @@ describe("Portfólio (Gallery916 em leque) na seção Trabalhos", () => {
   test("âncora #trabalhos nomeada pelo h2, com a pílula do kicker", () => {
     const { container } = render(<Work />);
     expect(container.querySelector("section#trabalhos")).toHaveAttribute("aria-labelledby", "work-title");
-    expect(screen.getByRole("heading", { level: 2, name: "Por trás de cada projeto" })).toHaveAttribute("id", "work-title");
+    expect(screen.getByRole("heading", { level: 2, name: headingName(work.title) })).toHaveAttribute("id", "work-title");
     expect(screen.getByText(work.kicker)).toBeInTheDocument();
   });
 
@@ -144,7 +146,7 @@ describe("Portfólio (Gallery916 em leque) na seção Trabalhos", () => {
     const video = dialog.querySelector("video");
     expect(video).toHaveAttribute("src", item.video);
     expect(video).toHaveAttribute("poster", item.image);
-    expect(video.volume).toBe(0.5);
+    expect(video.volume).toBe(INITIAL_VOLUME);
     expect(within(dialog).getByRole("slider", { name: /progresso/i })).toBeInTheDocument();
 
     await user.click(within(dialog).getByRole("button", { name: /fechar/i }));

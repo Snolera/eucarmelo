@@ -1,6 +1,9 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import VideoPlayer from "@/components/VideoPlayer/VideoPlayer";
+import { INITIAL_VOLUME } from "@/hooks/useVideoPlayer";
+
+const initialPercent = `${Math.round(INITIAL_VOLUME * 100)}%`;
 
 describe("VideoPlayer", () => {
   beforeEach(() => {
@@ -21,10 +24,10 @@ describe("VideoPlayer", () => {
 
   afterEach(() => vi.restoreAllMocks());
 
-  test("o som começa em 50% do volume", () => {
+  test("o som começa no volume inicial (INITIAL_VOLUME)", () => {
     const { container } = render(<VideoPlayer src="/reel.mp4" title="Showreel" autoPlay />);
     const video = container.querySelector("video");
-    expect(video.volume).toBe(0.5);
+    expect(video.volume).toBe(INITIAL_VOLUME);
     expect(video.muted).toBe(false);
   });
 
@@ -38,7 +41,7 @@ describe("VideoPlayer", () => {
   const volumeButton = () => screen.getByRole("button", { name: /ajustar volume/i });
   const volumeSlider = () => screen.queryByRole("slider", { name: /^volume$/i });
 
-  test("clicar no ícone de som abre a barra de volume acima dele, em 50%", async () => {
+  test("clicar no ícone de som abre a barra de volume acima dele, no volume inicial", async () => {
     const user = userEvent.setup();
     renderLoaded();
     expect(volumeSlider()).not.toBeInTheDocument();
@@ -46,8 +49,8 @@ describe("VideoPlayer", () => {
 
     await user.click(volumeButton());
     expect(volumeButton()).toHaveAttribute("aria-expanded", "true");
-    expect(volumeSlider()).toHaveValue("0.5");
-    expect(volumeSlider()).toHaveAttribute("aria-valuetext", "50%");
+    expect(volumeSlider()).toHaveValue(String(INITIAL_VOLUME));
+    expect(volumeSlider()).toHaveAttribute("aria-valuetext", initialPercent);
     expect(volumeSlider()).toHaveFocus(); // teclado: setas já mudam o volume
   });
 

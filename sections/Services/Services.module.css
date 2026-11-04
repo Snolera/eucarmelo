@@ -89,31 +89,8 @@
 }
 
 /* Recuo de 28px: alinha com o título, depois do número */
-.servicesList {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  margin: 0 0 0 1.75rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--color-line);
-}
-
-.servicesItem {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.servicesLabel {
-  font-size: 0.625rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--color-text-muted);
-}
-
 .servicesText {
-  margin: 0;
+  margin: 0 0 0 1.75rem;
   font-size: 0.875rem;
   line-height: 1.45;
   color: var(--color-text-soft);
@@ -143,6 +120,12 @@
 @media (min-width: 1024px) {
   .servicesTimeline {
     --tl-gap: 1.25rem;
+  }
+
+  /* Só no desktop: linha entre título e texto separa melhor os cards lado a lado */
+  .servicesText {
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-line);
   }
 
   .servicesTrack {
