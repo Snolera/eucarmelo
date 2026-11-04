@@ -161,10 +161,16 @@
   background: transparent;
   color: var(--color-text);
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent; /* sem o retângulo azul ao tocar no celular */
   transition:
     background-color 0.2s ease,
     color 0.2s ease,
     border-color 0.2s ease;
+}
+
+/* Toque/clique não deixa contorno; o foco dourado do teclado (:focus-visible, globals.css) continua */
+.arrow:focus:not(:focus-visible) {
+  outline: none;
 }
 
 .arrow:hover {

@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Work from "@/sections/Work/Work";
@@ -164,5 +166,15 @@ describe("Portfólio (Gallery916 em leque) na seção Trabalhos", () => {
   test("a seção Trabalhos não tem o deslize de entrada (a galeria tem a própria animação)", () => {
     const { container } = render(<Work />);
     expect(container.querySelector("[data-revealed]")).not.toBeInTheDocument();
+  });
+
+  // Toque no celular: sem o realce azul do navegador nem o contorno de foco; teclado mantém o foco dourado (globals.css)
+  test("setas sem realce de toque e sem contorno no clique, só no foco por teclado", () => {
+    const css = readFileSync(resolve(__dirname, "../components/Gallery916/Gallery916.module.css"), "utf8");
+    const arrow = css.match(/\.arrow\s*\{([^}]*)\}/)[1];
+
+    expect(arrow).toMatch(/-webkit-tap-highlight-color:\s*transparent/);
+    expect(css).toMatch(/\.arrow:focus:not\(:focus-visible\)\s*\{[^}]*outline:\s*none/);
+    expect(css).not.toMatch(/\.arrow:focus-visible\s*\{[^}]*outline:\s*none/);
   });
 });
