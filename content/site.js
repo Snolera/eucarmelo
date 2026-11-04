@@ -61,11 +61,11 @@ export const hero = {
 // Logo novo precisa do mesmo tratamento (branco, transparente, mesma área)
 // Trocar logo = substituir o arquivo em media/partners/ com o mesmo nome
 export const partners = [
-  { name: "Cupularia Gláucia Moreno", logo: logoCupularia },
-  { name: "A Festa da Cindy", logo: logoFestaDaCindy },
-  { name: "Ocupacional SS", logo: logoOcupacionalSS },
   { name: "Zig", logo: logoZig },
   { name: "Quality Eventos", logo: logoQuality },
+  { name: "Ocupacional SS", logo: logoOcupacionalSS },
+  { name: "A Festa da Cindy", logo: logoFestaDaCindy },
+  { name: "Cupularia Gláucia Moreno", logo: logoCupularia },
   { name: "Tura Construtora", logo: logoTura },
 ];
 
