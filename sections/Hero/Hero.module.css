@@ -87,8 +87,15 @@
 }
 
 @media (min-width: 768px) {
+  /* 2 linhas: cada frase sem quebra (a mais larga tem ~8,4em: 770px a 92px, cabe até em 768px) */
   .heroTitle {
     line-height: 0.95; /* protótipo usa 0.7 */
+    white-space: nowrap;
+  }
+
+  /* Sem o limite de 760px: a largura vem do título */
+  .heroText {
+    max-width: none;
   }
 
   .heroContent .heroDirect {

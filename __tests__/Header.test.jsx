@@ -1,6 +1,7 @@
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Header from "@/sections/Header/Header";
+import { nav as navItems } from "@/content/site";
 
 describe("Header", () => {
   test("mostra o logo e os 4 links de navegação com âncoras", () => {
@@ -13,12 +14,10 @@ describe("Header", () => {
     expect(logo.querySelector("[data-logo-bold]")).toHaveTextContent("carmelo");
 
     const nav = screen.getByRole("navigation", { name: /principal/i });
-    expect(within(nav).getAllByRole("link").map((a) => [a.textContent, a.getAttribute("href")])).toEqual([
-      ["Trabalhos", "#trabalhos"],
-      ["Serviços", "#servicos"],
-      ["Sobre", "#sobre"],
-      ["Contato", "#contato"],
-    ]);
+    expect(within(nav).getAllByRole("link").map((a) => [a.textContent, a.getAttribute("href")])).toEqual(
+      navItems.map((item) => [item.label, item.href]) // copy vem do site.js
+    );
+    expect(navItems.map((item) => item.href)).toEqual(["#trabalhos", "#servicos", "#sobre", "#contato"]);
   });
 
   test("tem link para pular direto ao conteúdo", () => {

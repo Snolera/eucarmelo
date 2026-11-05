@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Hero from "@/sections/Hero/Hero";
@@ -127,5 +129,13 @@ describe("Hero", () => {
 
     await user.click(screen.getByRole("button", { name: /fechar/i }));
     expect(play.mock.contexts).toContain(backgroundVideo(container));
+  });
+
+  // A partir de 768px o título fica em 2 linhas: cada frase sem quebra e o bloco largo o bastante (8,37em a 92px)
+  test("título em 2 linhas a partir de 768px", () => {
+    const css = readFileSync(resolve(__dirname, "../sections/Hero/Hero.module.css"), "utf8");
+    const tablet = css.slice(css.indexOf("@media (min-width: 768px)"));
+    expect(tablet.match(/\.heroTitle\s*\{([^}]*)\}/)[1]).toMatch(/white-space:\s*nowrap/);
+    expect(tablet.match(/\.heroText\s*\{([^}]*)\}/)[1]).toMatch(/max-width:\s*none/);
   });
 });
