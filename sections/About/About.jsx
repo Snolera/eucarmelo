@@ -30,6 +30,7 @@ export default function About() {
               src={about.portrait.src}
               alt={about.portrait.alt}
               fill
+              placeholder="blur"
               sizes="(min-width: 1024px) 300px, (min-width: 768px) 240px, 100vw"
               className={styles.aboutPortraitImage}
             />

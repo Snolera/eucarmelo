@@ -16,6 +16,7 @@ import logoZig from "./media/partners/zig.png";
 import logoQuality from "./media/partners/quality.png";
 import logoTura from "./media/partners/turaconstrutora.png";
 // Capas do Portfólio: 1º quadro de cada vídeo (720×1280), nome = id do card
+import portrait from "@/sections/About/media/sobre.jpeg";
 import cover01 from "./media/work/01.jpg";
 import cover02 from "./media/work/02.jpg";
 import cover03 from "./media/work/03.jpg";
@@ -45,7 +46,7 @@ export const footer = {
 };
 
 export const nav = [
-  { label: "Trabalhos", href: "#trabalhos" },
+  { label: "Filmes", href: "#trabalhos" },
   { label: "Serviços", href: "#servicos" },
   { label: "Sobre", href: "#sobre" },
   { label: "Contato", href: "#contato" },
@@ -170,8 +171,8 @@ export const about = {
   paragraphs: [
     "Ao longo de mais de quinze anos, conectei arte, comunicação e marketing. Essa vivência me ensinou que toda boa execução nasce de uma visão clara e organizada. Hoje uno sensibilidade artística e estratégia para transformar ideias em experiências."
   ],
-  // Foto ainda não enviada: null mostra o placeholder
-  portrait: { src: null, alt: "Retrato de Welinton Carmelo" },
+  // Import local (sections/About/media): o Next lê dimensões e gera o blur; null volta ao placeholder
+  portrait: { src: portrait, alt: "Retrato de Welinton Carmelo" },
 };
 
 // Galeria de Fotos: imports locais (content/media/photos), o Next lê dimensões e gera o blur no build

@@ -48,8 +48,11 @@
   background: repeating-linear-gradient(135deg, var(--color-card) 0 10px, #1c1e1e 10px 20px);
 }
 
+/* Foto horizontal (16:9) num recorte 4:5: 56% leva o rosto (x≈678 de 1280px) ao centro da moldura.
+   Trocar a foto = revisar este valor */
 .aboutPortraitImage {
   object-fit: cover;
+  object-position: 56% center;
 }
 
 /* Mesma fonte do texto de apoio de Serviços (Space Grotesk 14 → 15px); justificado, com hifenização
