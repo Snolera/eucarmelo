@@ -3,8 +3,6 @@ import { about, hero, photos, work } from "@/content/site";
 
 // Vídeos ficam no Vercel Blob (store público); null = ainda não enviado
 // Fotos são imports locais (content/media): objetos, não URLs, então ficam fora desta checagem
-// Placeholders do portfólio (picsum e vídeo de exemplo da MDN) valem até o conteúdo real entrar
-const PLACEHOLDER_HOSTS = ["picsum.photos", "interactive-examples.mdn.mozilla.net"];
 const media = [
   hero.showreel.src,
   hero.showreel.poster,
@@ -21,6 +19,11 @@ describe("URLs do Vercel Blob", () => {
   });
 
   test("toda mídia externa no site.js aponta para o store do projeto", () => {
-    media.forEach((url) => expect([BLOB_HOST, ...PLACEHOLDER_HOSTS]).toContain(new URL(url).hostname));
+    media.forEach((url) => expect(new URL(url).hostname).toBe(BLOB_HOST));
+  });
+
+  // Capas do Portfólio são locais (content/media/work): nenhum domínio de placeholder liberado
+  test("next/image libera só o store do Blob", () => {
+    expect(nextConfig.images.remotePatterns.map((p) => p.hostname)).toEqual([BLOB_HOST]);
   });
 });

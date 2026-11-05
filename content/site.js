@@ -21,6 +21,7 @@ import cover02 from "./media/work/02.jpg";
 import cover03 from "./media/work/03.jpg";
 import cover04 from "./media/work/04.jpg";
 import cover05 from "./media/work/05.jpg";
+import cover06 from "./media/work/06.jpg";
 
 export const instagram = {
   handle: "@eucarmelo",
@@ -76,10 +77,8 @@ export const partners = [
 ];
 
 // Portfólio: um bloco por card, na ordem da galeria (o 3º começa no centro)
-// video: URL do Vercel Blob (como o showreel); trocar o SAMPLE_VIDEO de cada card pela URL real
-// duration: "m:ss" (ex.: "0:45"); image: capa local em media/work (1º quadro do vídeo; picsum é placeholder); alt: descreve a capa
-// Quando todos os vídeos forem trocados, apagar o SAMPLE_VIDEO (o lint avisa que ficou sem uso)
-const SAMPLE_VIDEO = "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4";
+// video: URL do Vercel Blob (como o showreel); duration: "m:ss" real, arredondada para baixo como o player
+// image: capa local em media/work/<id>.jpg (quadro do vídeo, 720×1280); alt: descreve a capa
 
 export const work = {
   kicker: "Portfólio",
@@ -142,13 +141,13 @@ export const work = {
     },
     {
       id: 6,
-      title: "Cliente",
-      tag: "Depoimento",
-      duration: "1:05",
+      title: "Samsung Buds Live",
+      tag: "Work",
+      duration: "0:37",
       year: "2026",
-      desc: "Quem contratou conta como foi — direto, sem roteiro engessado.",
-      video: SAMPLE_VIDEO,
-      image: "https://picsum.photos/seed/obra-06/540/960",
+      desc: "Trabalho feito para a Samsung, com a criação de um vídeo para a divulgação do produto Samsung Buds Live.",
+      video: "https://rm7tmby09itxgh0l.public.blob.vercel-storage.com/Samsung%20Buds%20Live.mp4",
+      image: cover06,
       alt: "Depoimento do cliente",
     },
   ],
@@ -167,7 +166,7 @@ export const services = {
 
 export const about = {
   kicker: "Sobre",
-  title: "Entre o *olhar* e a *intenção.*",
+  title: " Visão e *Intenção.*",
   paragraphs: [
     "Ao longo de mais de quinze anos, conectei arte, comunicação e marketing. Essa vivência me ensinou que toda boa execução nasce de uma visão clara e organizada. Hoje uno sensibilidade artística e estratégia para transformar ideias em experiências."
   ],

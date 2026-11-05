@@ -248,10 +248,10 @@ Os vídeos e pôsteres ficam num **Blob Store público** da Vercel (`store_Rm7Tm
 
 **Configuração:**
 
-- `next.config.mjs` libera no `next/image` o domínio do store (`BLOB_HOST`) e, por enquanto, o `picsum.photos` dos placeholders.
+- `next.config.mjs` libera no `next/image` só o domínio do store (`BLOB_HOST`). Capas do Portfólio são locais (`content/media/work/<id>.jpg`, um quadro do vídeo, 720×1280).
 - O teste `__tests__/blobUrls.test.js` falha se alguma URL do `site.js` for de outro domínio.
 
-**Formato dos arquivos:** MP4 (H.264 + AAC), 9:16, 1080×1920 no máximo, de preferência abaixo de 15 MB. Capas do Portfólio em JPG ou WebP, mín. 540×800. Fotos em 4:5 (miniatura 800×1000, ampliada 1200×1500).
+**Formato dos arquivos:** MP4 (H.264 + AAC), 9:16, 1080×1920 no máximo, de preferência abaixo de 15 MB. Capas do Portfólio: JPG 720×1280 tirado do próprio vídeo (1º quadro; outro segundo se o início for preto). Fotos em 4:5 (miniatura 800×1000, ampliada 1200×1500).
 
 **Cache:** o CDN guarda cada arquivo por até 1 mês. Para trocar um arquivo, envie com **outro nome** (ex.: `cafe-bruma-v2.mp4`) e atualize a URL.
 
@@ -260,9 +260,10 @@ Os vídeos e pôsteres ficam num **Blob Store público** da Vercel (`store_Rm7Tm
 ## Pendências
 
 - [ ] Links do **TikTok**, **WhatsApp** e **E-mail** no rodapé: preencher `href` em `social`, no `content/site.js`.
-- [ ] Vídeos reais (showreel e projetos do Portfólio) no Vercel Blob.
-- [ ] Capas reais do Portfólio, fotos da Galeria (com `alt` descritivo) e retrato do Welinton.
-- [ ] Remover os domínios do `picsum.photos` do `next.config.mjs` quando as imagens reais entrarem.
+- [x] Vídeos reais (showreel e projetos do Portfólio) no Vercel Blob.
+- [x] Capas reais do Portfólio (quadro de cada vídeo).
+- [ ] Retrato do Welinton; `alt` descritivo nas fotos da Galeria e nos cards do Portfólio.
+- [x] Domínios do `picsum.photos` removidos do `next.config.mjs`.
 - [x] Vitrine de logos de marcas na faixa (substituiu os números).
 - [ ] Imagem de compartilhamento (Open Graph, 1200×630), favicon próprio e JSON-LD.
 - [ ] Domínio definitivo e `NEXT_PUBLIC_SITE_URL`.
