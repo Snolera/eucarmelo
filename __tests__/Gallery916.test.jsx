@@ -147,12 +147,36 @@ describe("Portfólio (Gallery916 em leque) na seção Trabalhos", () => {
     const dialog = screen.getByRole("dialog", { name: item.title });
     const video = dialog.querySelector("video");
     expect(video).toHaveAttribute("src", item.video);
-    expect(video).toHaveAttribute("poster", item.image);
+    expect(video).toHaveAttribute("poster", item.image.src ?? item.image); // import local ou URL
     expect(video.volume).toBe(INITIAL_VOLUME);
     expect(within(dialog).getByRole("slider", { name: /progresso/i })).toBeInTheDocument();
 
     await user.click(within(dialog).getByRole("button", { name: /fechar/i }));
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
+
+  // Capa = 1º quadro do vídeo, salvo em content/media/work (import estático: dimensões + blur)
+  const localCovers = () => work.items.map((item, i) => [item, i]).filter(([item]) => typeof item.image === "object");
+
+  test("cards com vídeo do Blob têm capa local (1º quadro) com dimensões e blur", () => {
+    const blobItems = work.items.filter((item) => item.video.includes("blob.vercel-storage.com"));
+    expect(blobItems.length).toBeGreaterThan(0);
+    blobItems.forEach(({ image }) =>
+      expect(image).toEqual(expect.objectContaining({ width: 720, height: 1280, blurDataURL: expect.stringMatching(/^data:image/) }))
+    );
+  });
+
+  test("capa local mostra a versão borrada enquanto carrega; o player usa a capa como pôster", async () => {
+    const user = userEvent.setup();
+    render(<Work />);
+    localCovers().forEach(([item, i]) => {
+      expect(within(cards()[i]).getByRole("img", { name: item.alt }).getAttribute("style")).toMatch(/background-image:.*data:image/);
+    });
+
+    const [item, i] = localCovers()[0];
+    await user.click(cards()[i]); // traz para o centro
+    await user.click(watch(i));
+    expect(screen.getByRole("dialog", { name: item.title }).querySelector("video")).toHaveAttribute("poster", item.image.src);
   });
 
   test("com o player aberto, as setas do teclado não trocam o card", async () => {

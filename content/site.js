@@ -15,6 +15,12 @@ import logoOcupacionalSS from "./media/partners/ocupacionalss.png";
 import logoZig from "./media/partners/zig.png";
 import logoQuality from "./media/partners/quality.png";
 import logoTura from "./media/partners/turaconstrutora.png";
+// Capas do Portfólio: 1º quadro de cada vídeo (720×1280), nome = id do card
+import cover01 from "./media/work/01.jpg";
+import cover02 from "./media/work/02.jpg";
+import cover03 from "./media/work/03.jpg";
+import cover04 from "./media/work/04.jpg";
+import cover05 from "./media/work/05.jpg";
 
 export const instagram = {
   handle: "@eucarmelo",
@@ -69,20 +75,82 @@ export const partners = [
   { name: "Tura Construtora", logo: logoTura },
 ];
 
-// Portfólio: textos, imagens (picsum) e vídeo (MDN) são placeholders
-// Trocar pelo conteúdo real (capas mín. 540×800; vídeos no Vercel Blob)
+// Portfólio: um bloco por card, na ordem da galeria (o 3º começa no centro)
+// video: URL do Vercel Blob (como o showreel); trocar o SAMPLE_VIDEO de cada card pela URL real
+// duration: "m:ss" (ex.: "0:45"); image: capa local em media/work (1º quadro do vídeo; picsum é placeholder); alt: descreve a capa
+// Quando todos os vídeos forem trocados, apagar o SAMPLE_VIDEO (o lint avisa que ficou sem uso)
 const SAMPLE_VIDEO = "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4";
 
 export const work = {
   kicker: "Portfólio",
   title: "Congelo o *Tempo* em *Movimento*",
   items: [
-    { id: 1, title: "Montagem", tag: "Bastidores", duration: "0:45", year: "2026", desc: "Do primeiro dia de obra à estrutura de pé, em ritmo de reel.", image: "https://picsum.photos/seed/obra-01/540/960", alt: "Montagem da estrutura no canteiro de obras", video: SAMPLE_VIDEO },
-    { id: 2, title: "Estrutura", tag: "Processo", duration: "0:38", year: "2026", desc: "Cada etapa do projeto mostrada de perto, sem perder o fio.", image: "https://picsum.photos/seed/obra-02/540/960", alt: "Etapa estrutural do projeto", video: SAMPLE_VIDEO },
-    { id: 3, title: "Acabamento", tag: "Detalhe", duration: "0:30", year: "2026", desc: "Texturas, materiais e o cuidado que faz a diferença no final.", image: "https://picsum.photos/seed/obra-03/540/960", alt: "Detalhes de acabamento", video: SAMPLE_VIDEO },
-    { id: 4, title: "Na obra", tag: "Equipe", duration: "0:52", year: "2026", desc: "As pessoas por trás do projeto, à vontade diante da câmera.", image: "https://picsum.photos/seed/obra-04/540/960", alt: "Equipe trabalhando na obra", video: SAMPLE_VIDEO },
-    { id: 5, title: "Resultado", tag: "Entrega", duration: "0:41", year: "2026", desc: "O espaço pronto, apresentado para prender os primeiros segundos.", image: "https://picsum.photos/seed/obra-05/540/960", alt: "Resultado final entregue", video: SAMPLE_VIDEO },
-    { id: 6, title: "Cliente", tag: "Depoimento", duration: "1:05", year: "2026", desc: "Quem contratou conta como foi — direto, sem roteiro engessado.", image: "https://picsum.photos/seed/obra-06/540/960", alt: "Depoimento do cliente", video: SAMPLE_VIDEO },
+    {
+      id: 1,
+      title: "Cine Vista",
+      tag: "Vlog",
+      duration: "0:49",
+      year: "2026",
+      desc: "Visita ao Cine Vista, um dos cinemas mais modernos de São Paulo.",
+      video: "https://rm7tmby09itxgh0l.public.blob.vercel-storage.com/Cine%20Vista%20-%20SP.mp4",
+      image: cover01,
+      alt: "vlog do cine vista",
+    },
+    {
+      id: 2,
+      title: "Floating Bar",
+      tag: "Work",
+      duration: "0:26",
+      year: "2026",
+      desc: "Trablaho feito para a Heineken Floating Bar, um evento de barco na cidade de São Paulo.",
+      video: "https://rm7tmby09itxgh0l.public.blob.vercel-storage.com/Heineken%20Floating%20Bar%20-%20SP.mp4",
+      image: cover02,
+      alt: "Capturação de video do evento",
+    },
+    {
+      id: 3,
+      title: "Rodoviária",
+      tag: "Vlog",
+      duration: "0:41",
+      year: "2025",
+      desc: "Uma viagem para o Rio de Janeiro.",
+      video: "https://rm7tmby09itxgh0l.public.blob.vercel-storage.com/Rodoviaria%20Rio%20de%20Janeiro.mp4",
+      image: cover03,
+      alt: "Viagem para o Rio de Janeiro",
+    },
+    {
+      id: 4,
+      title: "Jaguariana Rodeo Festival",
+      tag: "Work",
+      duration: "0:56",
+      year: "2026",
+      desc: "Trabalho feito para a Quality Eventos, em um dos eventos mais importantes do Circuito Sertanejo.",
+      video: "https://rm7tmby09itxgh0l.public.blob.vercel-storage.com/Jaguari%C3%BAna%20Rodeo%20Festival%202025Este%20%C3%A9%20um%20dos%20eventos%20mais%20importantes%20do%20Circuito%20Sertanejo.mp4",
+      image: cover04,
+      alt: "Capturação de video do evento",
+    },
+    {
+      id: 5,
+      title: "Eat",
+      tag: "Vlog",
+      duration: "0:34",
+      year: "2026",
+      desc: "Vlog do Eat, um restaurante de comida japonesa em São Paulo.",
+      video: "https://rm7tmby09itxgh0l.public.blob.vercel-storage.com/Eat.mp4",
+      image: cover05,
+      alt: "vlog do eat",
+    },
+    {
+      id: 6,
+      title: "Cliente",
+      tag: "Depoimento",
+      duration: "1:05",
+      year: "2026",
+      desc: "Quem contratou conta como foi — direto, sem roteiro engessado.",
+      video: SAMPLE_VIDEO,
+      image: "https://picsum.photos/seed/obra-06/540/960",
+      alt: "Depoimento do cliente",
+    },
   ],
 };
 

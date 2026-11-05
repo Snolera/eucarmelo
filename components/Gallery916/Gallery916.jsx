@@ -52,6 +52,9 @@ export default function Gallery916({ items = [], initialActive = 2, label = "Pro
     if (Math.abs(dx) >= SWIPE_MIN) step(dx < 0 ? 1 : -1);
   };
 
+  // Prévia em autoplay só no card ativo, depois da entrada (não disputa a GPU) e sem "reduzir movimento"
+  const showPreview = introDone && !reduceMotion;
+
   if (!count) return null;
   const activeItem = items[active];
 
@@ -78,6 +81,8 @@ export default function Gallery916({ items = [], initialActive = 2, label = "Pro
               introControls={introControls}
               introDone={introDone}
               reduceMotion={reduceMotion}
+              preview={showPreview && i === active}
+              previewPlaying={!playerOpen}
               onSelect={select}
               onWatch={setOriginRect}
             />
@@ -106,7 +111,7 @@ export default function Gallery916({ items = [], initialActive = 2, label = "Pro
         onClose={() => setOriginRect(null)}
         title={activeItem.title}
         src={activeItem.video}
-        poster={activeItem.image}
+        poster={activeItem.image?.src ?? activeItem.image} // import local é objeto; o <video> quer a URL
         originRect={originRect}
       />
     </div>

@@ -3,6 +3,7 @@
 import { useId } from "react";
 import { motion } from "motion/react";
 import Image from "next/image";
+import CardPreview from "./CardPreview";
 import { DROP_DISTANCE, DROP_SPRING, DROP_STAGGER, FAN_SPRING, FAN_STAGGER, SPRING, toTransform } from "./motion-config";
 import styles from "./Gallery916.module.css";
 
@@ -33,7 +34,8 @@ const introVariants = {
 
 // Card do leque: capa, título + ano, descrição, tag + duração e botão Assistir
 // Clique em qualquer parte de um card inativo o traz para o centro; Assistir no ativo abre o player
-export default function GalleryCard({ item, index, distance, fanned, isActive, introControls, introDone, reduceMotion, onSelect, onWatch }) {
+// preview: o card em destaque mostra o vídeo sem som por cima da capa; previewPlaying pausa com o player aberto
+export default function GalleryCard({ item, index, distance, fanned, isActive, introControls, introDone, reduceMotion, preview, previewPlaying, onSelect, onWatch }) {
   const titleId = useId();
   const hidden = fanned.opacity === 0;
   const custom = { index, fanned, stackZ: fanned.zIndex, ring: Math.abs(distance) };
@@ -58,7 +60,15 @@ export default function GalleryCard({ item, index, distance, fanned, isActive, i
       transition={transition}
       onClick={() => !isActive && onSelect(index)}
     >
-      <Image src={item.image} alt={item.alt} fill sizes="(min-width: 768px) 270px, 236px" className={styles.cardImage} />
+      <Image
+        src={item.image}
+        alt={item.alt}
+        fill
+        sizes="(min-width: 768px) 270px, 236px"
+        placeholder={typeof item.image === "object" ? "blur" : "empty"} // blur só em import local (URL não tem blurDataURL)
+        className={styles.cardImage}
+      />
+      {preview && item.video && <CardPreview src={item.video} playing={previewPlaying} />}
 
       <div className={styles.cardBody}>
         <div className={styles.cardHead}>
