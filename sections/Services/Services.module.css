@@ -6,12 +6,6 @@
   padding: var(--space-box-y) var(--space-box-x);
 }
 
-/* Só nos Serviços: destaques do título em Space Grotesk (sem itálico próprio, o navegador inclina)
-   As outras seções mantêm o Playfair itálico */
-.servicesHeading h2 em {
-  font-family: var(--font-heading);
-}
-
 /* Linha do tempo — mobile/tablet: vertical, marcador numa coluna de 28px à esquerda */
 .servicesTimeline {
   --tl-gap: 0.75rem; /* espaço entre os passos (12px; 20px no desktop) */

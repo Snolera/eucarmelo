@@ -17,10 +17,11 @@
   text-wrap: balance;
 }
 
-/* Palavra em destaque: Playfair Display itálico 700 */
+/* Palavra em destaque: mesma fonte do título (Space Grotesk), só em 700 e reta (tira o itálico padrão do <em>) */
 .headingEm {
-  font-family: var(--font-accent);
+  font-family: var(--font-heading);
   font-weight: 700;
+  font-style: normal;
   letter-spacing: -0.01em;
 }
 

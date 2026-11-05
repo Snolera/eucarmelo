@@ -15,7 +15,7 @@ Site one-page do **Welinton Carmelo**, videomaker de conteúdo para Instagram (g
 | Framework | **Next.js 16.4** (App Router, Turbopack, `cacheComponents`) |
 | UI | **React 19**, **JavaScript** (sem TypeScript) |
 | Estilos | **CSS Modules** + variáveis globais em `app/globals.css` |
-| Fontes | `next/font/google`: **Space Grotesk** (todos os h1/h2/h3 e parágrafos), **Inter** (logo, pílulas, tags/ano/botão dos cards), **Playfair Display** itálico 700 (palavras em destaque, exceto nos Serviços) |
+| Fontes | `next/font/google`: **Space Grotesk** (todos os h1/h2/h3 e parágrafos), **Inter** (logo, pílulas, tags/ano/botão dos cards) |
 | Ícones | `lucide-react` (interface) + SVG próprio para as redes sociais |
 | Animação | `motion` (entrada e leque do Portfólio) + CSS (`transform`/`opacity`) no resto |
 | Testes | **Vitest** + **React Testing Library** + `jest-dom` (ambiente `jsdom`) |
@@ -83,7 +83,7 @@ Todo texto, link e mídia fica em **`content/site.js`**. Para trocar uma copy, a
 | `social` | redes do rodapé (TikTok, Instagram, WhatsApp, E-mail) |
 | `footer` | copyright |
 
-**Títulos das seções:** `*palavra*` vira destaque em Playfair itálico e `\n` quebra a linha. Exemplo: `"Por trás de *cada*\n*projeto*"`.
+**Títulos das seções:** `*palavra*` vira destaque (Space Grotesk 700, sem itálico) e `\n` quebra a linha. Exemplo: `"Por trás de *cada*\n*projeto*"`.
 
 Mídia com `src: null` (vídeo, retrato) mostra um placeholder; rede com `href: null` aparece apagada, sem link.
 
@@ -158,7 +158,7 @@ Fonte do layout: protótipo **Welinton Carmelo v2** (handoff local). O que vale 
 ### Tipografia
 
 - **H1 (hero):** Space Grotesk 400, 46px → 92px, entrelinha 1 no mobile e 0.95 a partir de 768px. O protótipo usa 0.86/0.7; os valores foram aumentados para as linhas não encostarem. O `<em>` ("no feed.") é o itálico simulado da própria Space Grotesk.
-- **H2 das seções:** Space Grotesk 300, 40px → 60px, com palavras em **Playfair Display itálico 700** (nos Serviços, Space Grotesk inclinada).
+- **H2 das seções:** Space Grotesk 300, 40px → 60px, com palavras em destaque em Space Grotesk 700, sem itálico.
 - **H2 do Sobre:** Space Grotesk 400, 32px → 44px, entrelinha 1.05 (protótipo: 0.92).
 - **Cards:** título (H3) e descrição em Space Grotesk; tags, ano e botão em Inter. **Pílulas:** Inter.
 - **Corpo:** Space Grotesk 15px, entrelinha 1.5.

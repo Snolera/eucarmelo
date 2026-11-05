@@ -1,4 +1,4 @@
-import { Inter, Playfair_Display, Space_Grotesk } from "next/font/google";
+import { Inter, Space_Grotesk } from "next/font/google";
 import { getSiteUrl } from "@/lib/siteUrl";
 import "./globals.css";
 
@@ -14,15 +14,6 @@ const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
   weight: ["300", "400", "700"],
-  display: "swap",
-});
-
-// Palavras em destaque nos H2 ("Por trás de *cada* projeto"): só o itálico 700
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
-  subsets: ["latin"],
-  weight: "700",
-  style: "italic",
   display: "swap",
 });
 
@@ -48,7 +39,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="pt-BR" className={`${spaceGrotesk.variable} ${inter.variable} ${playfair.variable}`}>
+    <html lang="pt-BR" className={`${spaceGrotesk.variable} ${inter.variable}`}>
       <body>{children}</body>
     </html>
   );

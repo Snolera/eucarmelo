@@ -1,5 +1,5 @@
 // Copy, links e mídia do site (fonte: export/Welinton Carmelo v2)
-// Títulos de seção: *palavra* vira destaque em Playfair itálico e \n quebra a linha
+// Títulos de seção: *palavra* vira destaque (Space Grotesk 700, sem itálico) e \n quebra a linha
 import photo01 from "./media/photos/01.jpg";
 import photo02 from "./media/photos/02.jpg";
 import photo03 from "./media/photos/03.jpg";
@@ -75,7 +75,7 @@ const SAMPLE_VIDEO = "https://interactive-examples.mdn.mozilla.net/media/cc0-vid
 
 export const work = {
   kicker: "Portfólio",
-  title: "Congelar o *Tempo* em *Movimento*",
+  title: "Congelo o *Tempo* em *Movimento*",
   items: [
     { id: 1, title: "Montagem", tag: "Bastidores", duration: "0:45", year: "2026", desc: "Do primeiro dia de obra à estrutura de pé, em ritmo de reel.", image: "https://picsum.photos/seed/obra-01/540/960", alt: "Montagem da estrutura no canteiro de obras", video: SAMPLE_VIDEO },
     { id: 2, title: "Estrutura", tag: "Processo", duration: "0:38", year: "2026", desc: "Cada etapa do projeto mostrada de perto, sem perder o fio.", image: "https://picsum.photos/seed/obra-02/540/960", alt: "Etapa estrutural do projeto", video: SAMPLE_VIDEO },

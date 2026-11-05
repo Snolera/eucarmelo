@@ -23,7 +23,7 @@
   align-content: start;
 }
 
-/* Tipografia igual ao cabeçalho das seções: Space Grotesk light 40 → 60px, destaque em Playfair */
+/* Tipografia igual ao cabeçalho das seções: Space Grotesk light 40 → 60px, destaque em 700 */
 .aboutTitle {
   composes: headingTitle from "../../components/SectionHeading/SectionHeading.module.css";
   grid-area: title;

@@ -11,7 +11,6 @@ export default function Services() {
       <ServicesTimeline
         heading={
           <SectionHeading
-            className={styles.servicesHeading}
             kicker={services.kicker}
             title={services.title}
             titleId="services-title"
