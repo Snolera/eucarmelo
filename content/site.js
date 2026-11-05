@@ -102,7 +102,7 @@ export const work = {
       tag: "Work",
       duration: "0:26",
       year: "2026",
-      desc: "Trablaho feito para a Heineken Floating Bar, um evento de barco na cidade de São Paulo.",
+      desc: "Trabalho feito para a Heineken Floating Bar, um evento de barco na cidade de São Paulo.",
       video: "https://rm7tmby09itxgh0l.public.blob.vercel-storage.com/Heineken%20Floating%20Bar%20-%20SP.mp4",
       image: cover02,
       alt: "Capturação de video do evento",
