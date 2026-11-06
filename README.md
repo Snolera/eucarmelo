@@ -1,6 +1,6 @@
 # Welinton Carmelo — site (@eucarmelo)
 
-Site one-page do **Welinton Carmelo**, videomaker de conteúdo para Instagram (gravação no celular). O público são marcas que querem contratar reels, e a ação principal é mandar um **direct no Instagram** (`ig.me/m/eucarmelo`).
+Site one-page do **Welinton Carmelo**, videomaker de conteúdo para Instagram (gravação no celular). O público são marcas que querem contratar reels, e a ação principal é chamar no **WhatsApp** (botão "Fale Comigo" do Hero, `wa.me/5511981685510`, mesmo link do rodapé).
 
 - Idioma: somente português (`pt-BR`).
 - Status: layout v2 portado. Header, Hero, Marcas parceiras, Portfólio, Serviços, Sobre, Galeria de Fotos e Contato (rodapé) prontos.
@@ -46,7 +46,7 @@ npm run dev          # http://localhost:3000
 |---|---|---|
 | `NEXT_PUBLIC_SITE_URL` | Não | URL pública usada no canonical, Open Graph, `sitemap.xml` e `robots.txt`. |
 
-Sem ela, `lib/siteUrl.js` usa `VERCEL_PROJECT_PRODUCTION_URL`, preenchida automaticamente pela Vercel, e por último `http://localhost:3000`. Há um modelo em `.env.example`.
+Sem ela, `lib/siteUrl.js` usa o domínio oficial `https://www.welintoncarmelo.com.br` (constante `SITE_URL`), inclusive nos previews da Vercel. Para trocar de domínio, edite essa constante. Há um modelo em `.env.example`.
 
 ---
 
@@ -145,6 +145,7 @@ Fonte do layout: protótipo **Welinton Carmelo v2** (handoff local). O que vale 
 | `--color-surface-dark` | `#151717` | Header, hero e caixas de todas as seções |
 | `--color-card` | `#232626` | Cards do Portfólio, moldura do retrato, fundo das fotos |
 | `--color-text` / `--color-text-soft` / `--color-text-muted` | `#fff` / 80% / `#a3a6a8` | Texto principal / descrições / rótulos pequenos |
+| `--text-body-size` / `--text-body-leading` / `--text-body-color` | `1rem` (16px) / 1.5 / `--color-text-soft` | Parágrafos de Sobre, Serviços (cabeçalho e cards) e Fotografia |
 | `--color-pill-bg` / `--color-pill-text` | branco 8% / `#d9d9d9` | Pílulas e copyright |
 | `--color-line` | branco 12% | Bordas dos cards de serviço e divisórias |
 | `--color-accent` | `#b68235` | Links e foco visível |
@@ -170,7 +171,7 @@ Os estilos base são os do mobile e os breakpoints usam `min-width`: **768px** (
 | Seção | Mobile | 768px+ |
 |---|---|---|
 | Header | Logo + ☰; menu abre abaixo com links grandes (28px) | Links em linha (14px) |
-| Hero | Botão do direct em largura total, abaixo do texto | Título à esquerda, botão em pílula à direita |
+| Hero | Botão do WhatsApp em largura total, abaixo do texto | Título à esquerda, botão em pílula à direita |
 | Portfólio | Leque compacto + bolinhas de posição | Leque largo, só as setas |
 | Serviços | Linha do tempo vertical: ponto e linha dourada à esquerda de cada serviço | Igual até 1023px; a partir de 1024px, linha horizontal acima de uma coluna por serviço |
 | Sobre | Título, retrato, texto | Retrato à esquerda (240px; 300px a partir de 1024px), título e texto à direita, justificado |
@@ -266,7 +267,7 @@ Os vídeos e pôsteres ficam num **Blob Store público** da Vercel (`store_Rm7Tm
 - [x] Domínios do `picsum.photos` removidos do `next.config.mjs`.
 - [x] Vitrine de logos de marcas na faixa (substituiu os números).
 - [ ] Imagem de compartilhamento (Open Graph, 1200×630), favicon próprio e JSON-LD.
-- [ ] Domínio definitivo e `NEXT_PUBLIC_SITE_URL`.
+- [x] Domínio definitivo: `https://www.welintoncarmelo.com.br` (`SITE_URL` em `lib/siteUrl.js`).
 - [ ] Botão de pausar a faixa de marcas no toque (WCAG 2.2.2), se desejado.
 - [ ] Lighthouse depois do primeiro deploy.
 

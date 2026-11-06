@@ -31,17 +31,17 @@ describe("Hero", () => {
     expect(h1.compareDocumentPosition(rolesLine) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
-  test("o topo do card não tem nome nem @ (o @ fica só no botão do direct)", () => {
+  test("o card não mostra nome nem @; o botão do direct diz só o texto do CTA", () => {
     render(<Hero />);
     expect(screen.queryByText("welinton.carmelo")).not.toBeInTheDocument();
-    expect(screen.queryByText("@eucarmelo")).not.toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /@eucarmelo/ })).toBeInTheDocument();
+    expect(screen.queryByText(/@eucarmelo/)).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: hero.cta })).toBeInTheDocument();
   });
 
-  test("CTA leva ao direct do Instagram", () => {
+  test("CTA leva ao WhatsApp", () => {
     render(<Hero />);
     const cta = screen.getByRole("link", { name: new RegExp(hero.cta, "i") });
-    expect(cta).toHaveAttribute("href", "https://ig.me/m/eucarmelo");
+    expect(cta).toHaveAttribute("href", "https://wa.me/5511981685510");
     expect(cta).toHaveAttribute("rel", expect.stringContaining("noopener"));
   });
 

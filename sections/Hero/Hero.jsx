@@ -1,8 +1,11 @@
 import Button from "@/components/Button/Button";
 import Reveal from "@/components/Reveal/Reveal";
-import { hero, instagram, roles } from "@/content/site";
+import { hero, roles, social } from "@/content/site";
 import HeroCard from "./HeroCard";
 import styles from "./Hero.module.css";
+
+// CTA usa o mesmo WhatsApp do rodapé (link definido só no site.js)
+const whatsapp = social.find((s) => s.id === "whatsapp");
 
 // Server Component: o conteúdo vem pronto no HTML; só o HeroCard e o Reveal rodam no cliente
 export default function Hero() {
@@ -19,8 +22,8 @@ export default function Hero() {
             <p className={styles.heroRoles}>{roles}</p>
           </div>
 
-          <Button href={instagram.dmUrl} variant="accent" className={styles.heroDirect}>
-            {hero.cta}&nbsp;· {instagram.handle}
+          <Button href={whatsapp.href} variant="accent" className={styles.heroDirect}>
+            {hero.cta}
           </Button>
         </Reveal>
       </HeroCard>
