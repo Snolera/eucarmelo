@@ -6,10 +6,13 @@ import Services from "@/sections/Services/Services";
 import About from "@/sections/About/About";
 import Photos from "@/sections/Photos/Photos";
 import Footer from "@/sections/Footer/Footer";
+import JsonLd from "@/components/JsonLd/JsonLd";
+import { buildJsonLd } from "@/lib/seo";
 
 export default function Home() {
   return (
     <>
+      <JsonLd data={buildJsonLd()} />
       <Header />
       <main id="conteudo">
         <Hero />

@@ -44,16 +44,17 @@ describe("Galeria de Fotos", () => {
     expect(img).toHaveAttribute("height", String(image.height));
   });
 
-  test("foto ampliada mostra o alt como legenda (figure + figcaption)", async () => {
+  // alt descreve a foto (acessibilidade/SEO); a legenda visível é a palavra curta (caption)
+  test("foto ampliada: alt descritivo na imagem e caption como legenda (figure + figcaption)", async () => {
     const user = userEvent.setup();
     render(<Photos />);
-    const { alt } = photos.items[2];
+    const { alt, caption } = photos.items[2];
 
     await user.click(thumbs()[2]);
     // jsdom não nomeia o figure pelo figcaption (navegadores sim): checa a estrutura direto
     const figure = within(screen.getByRole("dialog")).getByRole("figure");
     expect(within(figure).getByRole("img", { name: alt })).toBeInTheDocument();
-    expect(figure.querySelector("figcaption")).toHaveTextContent(alt);
+    expect(figure.querySelector("figcaption")).toHaveTextContent(new RegExp(`^${caption}$`));
   });
 
   test("clicar numa miniatura abre a foto ampliada", async () => {

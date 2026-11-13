@@ -1,5 +1,6 @@
 import { Inter, Space_Grotesk } from "next/font/google";
 import { getSiteUrl } from "@/lib/siteUrl";
+import { siteDescription as description, siteTitle as title } from "@/lib/seo";
 import "./globals.css";
 
 // Texto do site, H1 e números: fonte variável, um arquivo cobre 300 (light) a 700 (bold)
@@ -17,9 +18,6 @@ const inter = Inter({
   display: "swap",
 });
 
-const title = "Welinton Carmelo · Videomaker & Estratégia";
-const description =
-  "Videos que contam historias e conectam marcas e pessoas.";
 export const metadata = {
   metadataBase: new URL(getSiteUrl()),
   title,

@@ -94,7 +94,7 @@ export const work = {
       desc: "Cine Vista, cinema a céu aberto no meio de São Paulo",
       video: "https://rm7tmby09itxgh0l.public.blob.vercel-storage.com/Cine%20Vista%20-%20SP.mp4",
       image: cover01,
-      alt: "Aftermovie",
+      alt: "Escada rolante chegando ao painel Cine Vista, com duas pessoas à frente",
     },
     {
       id: 2,
@@ -105,7 +105,7 @@ export const work = {
       desc: "Heineken Floating Bar, um bar flutuante sobre o Rio Pinheiros - São Paulo | SP.",
       video: "https://rm7tmby09itxgh0l.public.blob.vercel-storage.com/Heineken%20Floating%20Bar%20-%20SP.mp4",
       image: cover02,
-      alt: "Aftermovie",
+      alt: "Fachada do Heineken Floating Bar com letreiro neon verde, à noite",
     },
     {
       id: 3,
@@ -116,7 +116,7 @@ export const work = {
       desc: "Rotina de um lugar de chegadas e partidas.",
       video: "https://rm7tmby09itxgh0l.public.blob.vercel-storage.com/Rodoviaria%20Rio%20de%20Janeiro.mp4",
       image: cover03,
-      alt: " Registros do cotidiano",
+      alt: "Cidade sob nuvens carregadas com o letreiro 'Um filme de Welinton Carmelo'",
     },
     {
       id: 4,
@@ -127,7 +127,7 @@ export const work = {
       desc: "Aftermovie para operação da empresa Quality Eventos, em um dos eventos mais importantes do Circuito Sertanejo.",
       video: "https://rm7tmby09itxgh0l.public.blob.vercel-storage.com/Jaguari%C3%BAna%20Rodeo%20Festival%202025Este%20%C3%A9%20um%20dos%20eventos%20mais%20importantes%20do%20Circuito%20Sertanejo.mp4",
       image: cover04,
-      alt: "Aftermovie",
+      alt: "Entrada da arena do Circuito Sertanejo em Jaguariúna, à noite",
     },
     {
       id: 5,
@@ -138,7 +138,7 @@ export const work = {
       desc: "Hasta La Vegan uma hamburgueria vegana na cidade de Americana - SP.",
       video: "https://rm7tmby09itxgh0l.public.blob.vercel-storage.com/Eat.mp4",
       image: cover05,
-      alt: "Experiência",
+      alt: "Quadro de letras com a frase 'Eat more plants' na hamburgueria vegana",
     },
     {
       id: 6,
@@ -149,7 +149,7 @@ export const work = {
       desc: "Treinanando a criatividade com a criação de um vídeo para a divulgação do Samsung Buds Live.",
       video: "https://rm7tmby09itxgh0l.public.blob.vercel-storage.com/Samsung%20Buds%20Live.mp4",
       image: cover06,
-      alt: "Autoral",
+      alt: "Mão segurando o estojo preto dos fones Samsung Galaxy Buds Live",
     },
   ],
 };
@@ -183,14 +183,15 @@ export const photos = {
   lead: "O cotidiano não é comum quando você observa.",
 
   items: [
-    { id: 1, image: photo01, alt: "Ciclista" },
-    { id: 2, image: photo02, alt: "Sombras" },
-    { id: 3, image: photo03, alt: "Moldura" },
-    { id: 4, image: photo04, alt: "Palhaços" },
-    { id: 5, image: photo05, alt: "Lua" },
-    { id: 6, image: photo06, alt: "Presente" },
-    { id: 7, image: photo07, alt: "Quero-quero" },
-    { id: 8, image: photo08, alt: "Folhas" },
-    { id: 9, image: photo09, alt: "Trabalhadores" },
+    // caption: legenda de 1 palavra no lightbox; alt: descreve a foto (leitor de tela e Google Imagens)
+    { id: 1, image: photo01, caption: "Ciclista", alt: "Ciclista passa por placas de ciclovia e de proibido motos numa rua arborizada" },
+    { id: 2, image: photo02, caption: "Lua", alt: "Meia-lua iluminada no céu escuro da noite" },
+    { id: 3, image: photo03, caption: "Palhaços", alt: "Duas pessoas fantasiadas de palhaço com balões vermelhos numa praça molhada de chuva" },
+    { id: 4, image: photo04, caption: "Presente", alt: "Placa laranja 'Mantente presente' coberta de adesivos numa calçada" },
+    { id: 5, image: photo05, caption: "Folhas", alt: "Folhas secas com penas espetadas flutuando em água verde e transparente" },
+    { id: 6, image: photo06, caption: "Trabalhadores", alt: "Dois trabalhadores descansando atrás de uma cerca de arame, em preto e branco" },
+    { id: 7, image: photo07, caption: "Quero-quero", alt: "Quero-quero caminhando no gramado de um evento em montagem" },
+    { id: 8, image: photo08, caption: "Sombras", alt: "Rua sob a sombra das árvores com um carro branco e placa de fiscalização" },
+    { id: 9, image: photo09, caption: "Moldura", alt: "Moldura de papel enquadra um motociclista cruzando a rua arborizada" },
   ],
 };
