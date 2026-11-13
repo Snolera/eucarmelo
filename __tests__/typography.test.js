@@ -24,6 +24,12 @@ describe("Tipografia", () => {
     expect(root).toMatch(/--text-body-color:\s*var\(--color-text-soft\);/);
   });
 
+  // Decisão do dev: no desktop (>= 1024px) o parágrafo sobe para 25px; o mobile segue em 16px
+  test("no desktop o token do parágrafo vai para 25px (1.5625rem)", () => {
+    const css = read("app/globals.css");
+    expect(css).toMatch(/@media \(min-width: 1024px\)\s*\{\s*:root\s*\{\s*--text-body-size:\s*1\.5625rem;/);
+  });
+
   test.each([
     ["components/SectionHeading/SectionHeading.module.css", "headingLead"], // Fotografia, Serviços e Sobre (composes)
     ["sections/Services/Services.module.css", "servicesText"], // texto dos cards

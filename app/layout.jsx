@@ -17,10 +17,9 @@ const inter = Inter({
   display: "swap",
 });
 
-const title = "Welinton Carmelo · Videomaker para Instagram";
+const title = "Welinton Carmelo · Videomaker & Estratégia";
 const description =
-  "Reels e stories gravados no celular para marcas que vivem no feed. Fale com @eucarmelo pelo direct do Instagram.";
-
+  "Videos que contam historias e conectam marcas e pessoas.";
 export const metadata = {
   metadataBase: new URL(getSiteUrl()),
   title,

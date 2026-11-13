@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
-const VISIBLE_SHARE = 0.6; // 60%
+const VISIBLE_SHARE = 0.4; // 40%
 
 // Limiares de 0 a 1 em passos de 5%: o callback roda conforme a seção entra na tela
 const THRESHOLDS = Array.from({ length: 21 }, (_, i) => i / 20);
